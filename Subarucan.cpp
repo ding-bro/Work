@@ -1,4 +1,4 @@
-// SubaruKwpSystem.cpp: implementation of the CSubaruKwpSystem class.
+// SubaruKwpSystem.cpp: implementation of the CSubaruKwpSystem class.     ..
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -46,7 +46,7 @@ CSubaruBaseCanApp::~CSubaruBaseCanApp()
     }
 }
 
-// °²È«·ÃÎÊËã·¨
+// å®‰å…¨è®¿é—®ç®—æ³•
 W_ErrorCode CSubaruBaseCanApp::ProtectCal()
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
@@ -152,7 +152,7 @@ W_ErrorCode CSubaruBaseCanApp::SendAndRecive(const CBinary SendCmd, CBinary& bin
     return rect;
 }
 
-// ½øÏµÍ³ºóµÄËùÓĞÑ¯ÎÊÃüÁî·¢ËÍºÍ±£´æ»Ø¸´
+// è¿›ç³»ç»Ÿåçš„æ‰€æœ‰è¯¢é—®å‘½ä»¤å‘é€å’Œä¿å­˜å›å¤
 W_ErrorCode    CSubaruBaseCanApp::SendAndSaveEnterCmd()
 {
     W_ErrorCode        rect = CErrorCode::EC_SUCCESS;
@@ -165,22 +165,22 @@ W_ErrorCode    CSubaruBaseCanApp::SendAndSaveEnterCmd()
     vector<vector<string>> SearchResault;
     CBinary    bin22f197("\x22\xf1\x97", 3);
     CBinary    bin22f182("\x22\xf1\x82", 3);
-    CBinary bin221000("\x22\x10\x00", 3);    //»Ø¸´ÁË´ËÃüÁîµÄÏµÍ³»á¸ù¾İ»Ø¸´·¢ËÍ221001 --- 22100A
+    CBinary bin221000("\x22\x10\x00", 3);    //å›å¤äº†æ­¤å‘½ä»¤çš„ç³»ç»Ÿä¼šæ ¹æ®å›å¤å‘é€221001 --- 22100A
     W_I16    cmp221000[2] = { 0, 0 };
 
     EnterRecSet.clear();
-    if (FALSE == SubaMenuComd.OpenTabFile(Subaru_MenuComd_CBF))   //½øÈëÃüÁî¼¯ºÏ
+    if (FALSE == SubaMenuComd.OpenTabFile(Subaru_MenuComd_CBF))   //è¿›å…¥å‘½ä»¤é›†åˆ
         return CErrorCode::EC_DATA;
 
-    vctStr.push_back(SystemNum);  // SystemNumÔÚ EnterSystem()º¯Êı ÖĞ½øĞĞÉ¸Ñ¡
-    SubaMenuComd.SearchString(SearchResault, FALSE, 0, 0, vctStr);  // ÒÔ SystemNum ÔÚ SubaMenuComd ÖĞËÑË÷
-    if (SearchResault.size() == 0)//ÓĞĞ©ÏµÍ³Ã»ÓĞÕâĞ©ÃüÁî
+    vctStr.push_back(SystemNum);  // SystemNumåœ¨ EnterSystem()å‡½æ•° ä¸­è¿›è¡Œç­›é€‰
+    SubaMenuComd.SearchString(SearchResault, FALSE, 0, 0, vctStr);  // ä»¥ SystemNum åœ¨ SubaMenuComd ä¸­æœç´¢
+    if (SearchResault.size() == 0)//æœ‰äº›ç³»ç»Ÿæ²¡æœ‰è¿™äº›å‘½ä»¤
         return rect;
     for (W_I16 i = 0; i < SearchResault.size(); i++)
     {
         SendFlag = true;
         binAns.Clear();
-        binTemp = String2Binary(SearchResault[i][3]);  //  binTemp = SubaMenuComd µÚ3ÁĞ
+        binTemp = String2Binary(SearchResault[i][3]);  //  binTemp = SubaMenuComd ç¬¬3åˆ—
         if (0x00 == StringToHex(SearchResault[i][3]))
             break;
         if (0 == i && 3 == binTemp.GetByteCount())    // i == 0 && SubaMenuComd[3] == 3
@@ -188,18 +188,18 @@ W_ErrorCode    CSubaruBaseCanApp::SendAndSaveEnterCmd()
         else if (0 == i)
             startPos = 2;
 
-        NeedCmdNum = StringToHex(SearchResault[i][1].c_str());  // NeedCmdNum = SubaMenuComd µÚ1ÁĞ
-        CmpValue = StringToHex(SearchResault[i][2].c_str());  // CmpValue = SubaMenuComd µÚ2ÁĞ
-        ALLposNum = StringToHex(SearchResault[i][4].c_str());  // ALLposNum =  SubaMenuComd µÚ4ÁĞ
-        Pos0Num = StringToHex(SearchResault[i][5].c_str()); // Pos0Num = SubaMenuComd µÚ5ÁĞ
-        if (0 != NeedCmdNum)   // NeedCmdNum = 0 £¬±Ø·¢ÃüÁî
+        NeedCmdNum = StringToHex(SearchResault[i][1].c_str());  // NeedCmdNum = SubaMenuComd ç¬¬1åˆ—
+        CmpValue = StringToHex(SearchResault[i][2].c_str());  // CmpValue = SubaMenuComd ç¬¬2åˆ—
+        ALLposNum = StringToHex(SearchResault[i][4].c_str());  // ALLposNum =  SubaMenuComd ç¬¬4åˆ—
+        Pos0Num = StringToHex(SearchResault[i][5].c_str()); // Pos0Num = SubaMenuComd ç¬¬5åˆ—
+        if (0 != NeedCmdNum)   // NeedCmdNum = 0 ï¼Œå¿…å‘å‘½ä»¤
         {
             SendFlag = false;
             for (map<W_I16, W_I16>::iterator pMap = EnterRecSet.begin(); pMap != EnterRecSet.end(); pMap++)
             {
-                if (pMap->first == NeedCmdNum)  // Èç¹û´æ·Å»Ö¸´Êı¾İmapµÄkeyÖµ == NeedCmdNum(ÉÏÒ»ÌõÃüÁîµÄ×îºóÒ»Î»)
+                if (pMap->first == NeedCmdNum)  // å¦‚æœå­˜æ”¾æ¢å¤æ•°æ®mapçš„keyå€¼ == NeedCmdNum(ä¸Šä¸€æ¡å‘½ä»¤çš„æœ€åä¸€ä½)
                 {   // ->->->->->->->->
-                    if (pMap->second & CmpValue)   // Ã¿4Î»ÎªÒ»×é£¬´æ´¢µÄÊı¾İµÄ×îºóÒ»Î» & SubaMenuComd[2] ÎªÕæµÄ»°£¬SendFlagÖÃÎªtrue
+                    if (pMap->second & CmpValue)   // æ¯4ä½ä¸ºä¸€ç»„ï¼Œå­˜å‚¨çš„æ•°æ®çš„æœ€åä¸€ä½ & SubaMenuComd[2] ä¸ºçœŸçš„è¯ï¼ŒSendFlagç½®ä¸ºtrue
                         SendFlag = true;
                     break;
                 }
@@ -209,20 +209,20 @@ W_ErrorCode    CSubaruBaseCanApp::SendAndSaveEnterCmd()
         {
             SendFlag = false;
         }
-        if (SendFlag)   // µ±SendFlagÎªtrueÊ±£¬·¢ÃüÁî
+        if (SendFlag)   // å½“SendFlagä¸ºtrueæ—¶ï¼Œå‘å‘½ä»¤
             binAns = SubaruCanSendReceive(binTemp);
         if (binAns.GetByteCount() <= 0 || binAns[0] == 0x7f)
             binAns.Clear();
-        // ->->->->->->->   Pos0NumÎªkeyÖµ  »Ø¸´Êı¾İÎªvalueÖµ
-        for (W_I16 j = 0; j < ALLposNum && j + startPos < binAns.GetByteCount(); j++)  // ½«ÉÏÒ»Ìõ»Ø¸´ÃüÁîµÄ[3] ~ [6]Î»´æ´¢ÆğÀ´
-            EnterRecSet[Pos0Num + j] = binAns[j + startPos];    // ½«Ã¿Ìõ»Ø¸´µÄÊı¾İµÄ×îºó4Î»ÎªÒ»×é´æ´¢ÆğÀ´
+        // ->->->->->->->   Pos0Numä¸ºkeyå€¼  å›å¤æ•°æ®ä¸ºvalueå€¼
+        for (W_I16 j = 0; j < ALLposNum && j + startPos < binAns.GetByteCount(); j++)  // å°†ä¸Šä¸€æ¡å›å¤å‘½ä»¤çš„[3] ~ [6]ä½å­˜å‚¨èµ·æ¥
+            EnterRecSet[Pos0Num + j] = binAns[j + startPos];    // å°†æ¯æ¡å›å¤çš„æ•°æ®çš„æœ€å4ä½ä¸ºä¸€ç»„å­˜å‚¨èµ·æ¥
     }
 
     if (1 == SubaruBRZ_SET->VehicleStatus)
     {
-        binAns = SubaruCanSendReceive(bin22f182);    //ÉĞ²»Çå³şÃüÁî×÷ÓÃ
+        binAns = SubaruCanSendReceive(bin22f182);    //å°šä¸æ¸…æ¥šå‘½ä»¤ä½œç”¨
 
-        //Ñ¯ÎÊÏµÍ³Ãû×Ö
+        //è¯¢é—®ç³»ç»Ÿåå­—
         binAns = SubaruCanSendReceive(bin22f197);
         if (binAns.GetByteCount() > 0 && binAns[0] != 0x7f)
         {
@@ -281,14 +281,14 @@ W_ErrorCode CSubaruBaseCanApp::New_EnterSystem()
     vector<vector<string>> SearchResault;
 
     SetMode(Suba_Can);  // Suba_Can
-    rfRet = InitComm(Suba_Can);    // ³õÊ¼»¯CANÍ¨ĞÅ     ·¢ÃüÁî¢Ù
+    rfRet = InitComm(Suba_Can);    // åˆå§‹åŒ–CANé€šä¿¡     å‘å‘½ä»¤â‘ 
     if (!rfRet.GetByteCount())
     {
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
         return CErrorCode::EC_COMMUNICATION;
     }
 
-    AnsforEnter = SubaruCanSendReceive(SubaruBRZ_SET->EnterCMD);   // ·¢ÃüÁî¢Ú
+    AnsforEnter = SubaruCanSendReceive(SubaruBRZ_SET->EnterCMD);   // å‘å‘½ä»¤â‘¡
     if (AnsforEnter.GetByteCount() < 5 || 0x7f == AnsforEnter[0])
     {
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
@@ -310,8 +310,8 @@ W_ErrorCode CSubaruBaseCanApp::New_EnterSystem()
     SubaruBRZ_SET->SysFlag = true;
 
 
-    //CErrorCode::SetLastError(CErrorCode::EC_SUCCESS);     // ÃüÁî
-    //// ·¢ËÍÑ¯ÎÊÃüÁî,½«»Ø¸´±àÂë
+    //CErrorCode::SetLastError(CErrorCode::EC_SUCCESS);     // å‘½ä»¤
+    //// å‘é€è¯¢é—®å‘½ä»¤,å°†å›å¤ç¼–ç 
     //if (CErrorCode::EC_SUCCESS != (rect = SendAndSaveEnterCmd()))
     //{
     //    CErrorCode::SetLastError(CErrorCode::EC_SUCCESS);
@@ -335,14 +335,14 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
     vector<vector<string>> SearchResault;
 
     SetMode(Suba_Can);  // Suba_Can
-    rfRet = InitComm(Suba_Can);    // ³õÊ¼»¯CANÍ¨ĞÅ     ·¢ÃüÁî¢Ù
+    rfRet = InitComm(Suba_Can);    // åˆå§‹åŒ–CANé€šä¿¡     å‘å‘½ä»¤â‘ 
     if (!rfRet.GetByteCount())
     {
         CErrorCode::SetLastError(CErrorCode::EC_COMMUNICATION);
         return CErrorCode::EC_COMMUNICATION;
     }
 
-    AnsforEnter = SubaruCanSendReceive(SubaruBRZ_SET->EnterCMD);   // ·¢ÃüÁî¢Ú
+    AnsforEnter = SubaruCanSendReceive(SubaruBRZ_SET->EnterCMD);   // å‘å‘½ä»¤â‘¡
     if (AnsforEnter.GetByteCount() < 5 || 0x7f == AnsforEnter[0])
     {
         CErrorCode::SetLastError(CErrorCode::EC_COMMUNICATION);
@@ -362,17 +362,17 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
         AnsforEnter.DeleteByte(i);
 
     SubaruBRZ_SET->SysFlag = true;
-    //µÃµ½ÏµÍ³±àºÅ
-    if (FALSE == SubaGotoFile.OpenTabFile(Subaru_GotoFile_CBF))  //½øÈëÃüÁîÈ¡ÖµÇø¼ä(²¿·ÖÏµÍ³Ã»ÓĞ×ñÑ­)
+    //å¾—åˆ°ç³»ç»Ÿç¼–å·
+    if (FALSE == SubaGotoFile.OpenTabFile(Subaru_GotoFile_CBF))  //è¿›å…¥å‘½ä»¤å–å€¼åŒºé—´(éƒ¨åˆ†ç³»ç»Ÿæ²¡æœ‰éµå¾ª)
     {
         CErrorCode::SetLastError(CErrorCode::EC_DATA);
         return CErrorCode::EC_DATA;
     }
-    vctStr.push_back(SubaruBRZ_SET->SubaDLLPrefix);  // ÔÚ SubaCANProInto()º¯Êı ÖĞ½øĞĞÉ¸Ñ¡
-    SubaGotoFile.SearchString(SearchResault, FALSE, 0, 0, vctStr);  // ÒÔ SubaDLLPrefix ÔÚ SubaGotoFile µÄµÚ0ÁĞËÑË÷
+    vctStr.push_back(SubaruBRZ_SET->SubaDLLPrefix);  // åœ¨ SubaCANProInto()å‡½æ•° ä¸­è¿›è¡Œç­›é€‰
+    SubaGotoFile.SearchString(SearchResault, FALSE, 0, 0, vctStr);  // ä»¥ SubaDLLPrefix åœ¨ SubaGotoFile çš„ç¬¬0åˆ—æœç´¢
     if (SearchResault.size() <= 0)
     {
-        SubaGotoFile.SearchString(SearchResault, FALSE, 1, 1, vctStr);  // Èç¹ûÈ¡³öÀ´ SubaDLLPrefix µÚ0ÁĞÃ»ÓĞ£¬ÔòÔÚSubaGotoFileµÄµÚÒ»ÁĞËÑË÷
+        SubaGotoFile.SearchString(SearchResault, FALSE, 1, 1, vctStr);  // å¦‚æœå–å‡ºæ¥ SubaDLLPrefix ç¬¬0åˆ—æ²¡æœ‰ï¼Œåˆ™åœ¨SubaGotoFileçš„ç¬¬ä¸€åˆ—æœç´¢
         if (SearchResault.size() <= 0)
         {
             CErrorCode::SetLastError(CErrorCode::EC_DATA);
@@ -380,9 +380,9 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
         }
     }
     string TempSysNum = "";
-    for (W_I16 i = 0; i < SearchResault.size(); i++)    // É¸Ñ¡ SystemNum
+    for (W_I16 i = 0; i < SearchResault.size(); i++)    // ç­›é€‰ SystemNum
     {
-        SystemNum = SearchResault[i][2];  // SystemNum = SubaGotoFileÖĞµÄµÚ2ÁĞ
+        SystemNum = SearchResault[i][2];  // SystemNum = SubaGotoFileä¸­çš„ç¬¬2åˆ—
         if (SearchResault.size() > 1)
         {
             if (AnsforEnter.GetByteCount() != 3)
@@ -400,10 +400,10 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
             else
             {
                 if ("000000" == SearchResault[i][4] && "ffffff" == SearchResault[i][5])
-                    break;//TempSysNum = SystemNum;                 // Ö»ÓĞ·ûºÏÌõ¼ş²ÅÄÜÈ¡ SystemNum
+                    break;//TempSysNum = SystemNum;                 // åªæœ‰ç¬¦åˆæ¡ä»¶æ‰èƒ½å– SystemNum
                 else if ((AnsforEnter.Compare(String2Binary(SearchResault[i][4])) >= 0 && AnsforEnter.Compare(String2Binary(SearchResault[i][5])) <= 0)
-                    && (SubaruBRZ_SET->SubaDLLPrefix_GoFile == SearchResault[i][3]))   // EnterCMD »Ø¸´µÄÊı¾İÒª´óÓÚ SubaGotoFile[4] ²¢ÇÒÒªĞ¡ÓÚ SubaGotoFile[5]
-                    break;    // ÔÚSubaCANProInto[1] ÖĞÈ¡³öµÄ SubaDLLPrefix_GoFile == SubaGotoFile[3]  (È¡SystemNumµÄËÑË÷·¶Î§)
+                    && (SubaruBRZ_SET->SubaDLLPrefix_GoFile == SearchResault[i][3]))   // EnterCMD å›å¤çš„æ•°æ®è¦å¤§äº SubaGotoFile[4] å¹¶ä¸”è¦å°äº SubaGotoFile[5]
+                    break;    // åœ¨SubaCANProInto[1] ä¸­å–å‡ºçš„ SubaDLLPrefix_GoFile == SubaGotoFile[3]  (å–SystemNumçš„æœç´¢èŒƒå›´)
             }
             SystemNum = "";
         }
@@ -428,7 +428,7 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
     }
     if ("00000007" == SystemNum)//if ("DBFTA000" == SystemNum)
     {
-        // BRZ³µĞÍ °²È«ÆøÄÒÏµÍ³ °²È«½øÈë
+        // BRZè½¦å‹ å®‰å…¨æ°”å›Šç³»ç»Ÿ å®‰å…¨è¿›å…¥
         CBinary bin2701("\x27\x01\x4b\x2d", 4);
         CBinary bin2702("\x27\x02", 2);
         CBinary binAns;
@@ -464,7 +464,7 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
     }
 
     CErrorCode::SetLastError(CErrorCode::EC_SUCCESS);
-    // ·¢ËÍÑ¯ÎÊÃüÁî,½«»Ø¸´±àÂë
+    // å‘é€è¯¢é—®å‘½ä»¤,å°†å›å¤ç¼–ç 
     if (CErrorCode::EC_SUCCESS != (rect = SendAndSaveEnterCmd()))
     {
         CErrorCode::SetLastError(CErrorCode::EC_SUCCESS);
@@ -477,7 +477,7 @@ W_ErrorCode CSubaruBaseCanApp::EnterSystem()
     return rect;
 }
 
-//É¸Ñ¡²Ëµ¥
+//ç­›é€‰èœå•
 W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
@@ -496,11 +496,11 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
     SpecfunsSet.clear();
     GetDS.clear();
 
-    if (FALSE == SubaMenuShow.OpenTabFile(Subaru_MenuShow_CBF))  //¹¦ÄÜ²Ëµ¥
+    if (FALSE == SubaMenuShow.OpenTabFile(Subaru_MenuShow_CBF))  //åŠŸèƒ½èœå•
         return CErrorCode::EC_DATA;
 
-    /* ²éÕÒ¹ıÂË²»·ûºÏÌõ¼şµÄ²Ëµ¥Ïî */
-    vctStr.push_back(SystemNum);  // ²åÈë SystemNum = SubaGotoFile[2]
+    /* æŸ¥æ‰¾è¿‡æ»¤ä¸ç¬¦åˆæ¡ä»¶çš„èœå•é¡¹ */
+    vctStr.push_back(SystemNum);  // æ’å…¥ SystemNum = SubaGotoFile[2]
     SubaMenuShow.SearchString(SearchResault, FALSE, 0, 0, vctStr);
     for (W_I16 i = 0; i < SearchResault.size(); i++)
     {
@@ -509,7 +509,7 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
             continue;
 
         iFlag = 0;
-        if (vctStr[1] == "FF")    // ÅĞ¶Ï SubaMenuShow ÖĞµÄµÚ1ÁĞÊı¾İ
+        if (vctStr[1] == "FF")    // åˆ¤æ–­ SubaMenuShow ä¸­çš„ç¬¬1åˆ—æ•°æ®
         {
             iFlag = 1;
         }
@@ -517,9 +517,9 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
         {
             for (map<W_I16, W_I16>::iterator pMap = EnterRecSet.begin(); pMap != EnterRecSet.end(); pMap++)
             {
-                if (pMap->first == StringToHex(vctStr[2]))    // SubaMenuShow[2] == ´æ·Å»Ø¸´Êı¾İmapµÄkeyÖµ
+                if (pMap->first == StringToHex(vctStr[2]))    // SubaMenuShow[2] == å­˜æ”¾å›å¤æ•°æ®mapçš„keyå€¼
                 {
-                    if (pMap->second & StringToHex(vctStr[3]))    // SubaMenuShow[3] & ´æ·Å»Ø¸´Êı¾İmapµÄvalueÖµ
+                    if (pMap->second & StringToHex(vctStr[3]))    // SubaMenuShow[3] & å­˜æ”¾å›å¤æ•°æ®mapçš„valueå€¼
                         iFlag = 1;
                     break;
                 }
@@ -538,37 +538,37 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
                 }
             }
         }
-        if (1 == iFlag)   // iFlag Îª1´æÈëÏî
+        if (1 == iFlag)   // iFlag ä¸º1å­˜å…¥é¡¹
         {
-            /* ÔÚÎÄ¼şGotoMenuÀïÓĞÒ»ÏîÌõ¼ş,ÒòÎªÖ»ÓĞÒ»¸öÏµÍ³ÕæÕıĞèÒªÊ¹ÓÃÕâ¸ö,ËùÒÔÖ±½ÓĞ´ÔÚ´úÂëÀï */
+            /* åœ¨æ–‡ä»¶GotoMenué‡Œæœ‰ä¸€é¡¹æ¡ä»¶,å› ä¸ºåªæœ‰ä¸€ä¸ªç³»ç»ŸçœŸæ­£éœ€è¦ä½¿ç”¨è¿™ä¸ª,æ‰€ä»¥ç›´æ¥å†™åœ¨ä»£ç é‡Œ */
             //if ("00000087" != SystemNum || "60351620" != vctStr[5])//if ("DBFUO000" != SystemNum || "00003262" != vctStr[5])
             //    MenuShow.push_back(vctStr);
             //else if (CBinary("\x00\x00\x01", 3) == AnsforEnter && "02871620" == vctStr[4])//else if (CBinary("\x00\x00\x01", 3) == AnsforEnter && "00008000" == vctStr[4])
             //    MenuShow.push_back(vctStr);
             //else if ("fcf81620" == vctStr[4])//else if ("00008001" == vctStr[4])
-            MenuShow.push_back(vctStr);  // ½«É¸Ñ¡ºÃµÄÊı¾İ²åÈë MenuShow ÖĞ
+            MenuShow.push_back(vctStr);  // å°†ç­›é€‰å¥½çš„æ•°æ®æ’å…¥ MenuShow ä¸­
         }
     }
 
     vecCmd.clear();
-    /* ¶Á¹ÊÕÏÂë Çå¹ÊÕÏÂë */
-    for (W_I16 i = 0; i < MenuShow.size(); i++)  // ±éÀúÉ¸Ñ¡ºÃµÄÊı¾İ
+    /* è¯»æ•…éšœç  æ¸…æ•…éšœç  */
+    for (W_I16 i = 0; i < MenuShow.size(); i++)  // éå†ç­›é€‰å¥½çš„æ•°æ®
     {
         iFlag = 0;
         vctStr = MenuShow[i];
         if (vctStr[7] == "e8021620" && MenuNum.size() <= 0 && SystemNum != "00000075")//if (vctStr[7] == "000005ea" && MenuNum.size() <= 0)
-        {                                                // ¸ù¾İ MenuShow µÚ7ÁĞÅĞ¶ÏÊÇ·ñÎª "e8021620"
+        {                                                // æ ¹æ® MenuShow ç¬¬7åˆ—åˆ¤æ–­æ˜¯å¦ä¸º "e8021620"
             vecCmd.push_back(vctStr[7]);
             iFlag = 1;
-            MenuNum[MenuCode++] = 0;  // ¸ù¾İ "e8021620" µÄÊıÁ¿£¬mapÈİÆ÷²åÈë 0 ºÍ 1
+            MenuNum[MenuCode++] = 0;  // æ ¹æ® "e8021620" çš„æ•°é‡ï¼Œmapå®¹å™¨æ’å…¥ 0 å’Œ 1
             MenuNum[MenuCode++] = 1;
         }
         // iFlag
-        for (W_I16 j = i + 1; j < MenuShow.size() && 1 == iFlag; j++)  // Âú×ãvctStr[7] == "e8021620" && MenuNum.size() <= 0 && SystemNum != "00000075²Å»áÖ´ĞĞ
+        for (W_I16 j = i + 1; j < MenuShow.size() && 1 == iFlag; j++)  // æ»¡è¶³vctStr[7] == "e8021620" && MenuNum.size() <= 0 && SystemNum != "00000075æ‰ä¼šæ‰§è¡Œ
         {
-            if (MenuShow[j][5] == vctStr[7])     // ÔÚSystemNumËÑË÷·¶Î§ÏÂ£¬Èç¹û[5] = e8021620
+            if (MenuShow[j][5] == vctStr[7])     // åœ¨SystemNumæœç´¢èŒƒå›´ä¸‹ï¼Œå¦‚æœ[5] = e8021620
             {
-                ReadTroubleMode.push_back(MenuShow[j][6]);   // ·ûºÏÌõ¼şµÄ²åÈë[6]£¬´æÈë¶ÁÂëÄ£Ê½ÖĞ£¬ÎªÏÂ·½¶ÁÂë×ö×¼±¸
+                ReadTroubleMode.push_back(MenuShow[j][6]);   // ç¬¦åˆæ¡ä»¶çš„æ’å…¥[6]ï¼Œå­˜å…¥è¯»ç æ¨¡å¼ä¸­ï¼Œä¸ºä¸‹æ–¹è¯»ç åšå‡†å¤‡
             }
         }
         /*for (W_I16 j = 0; j < vecCmd.size(); j++)
@@ -596,29 +596,29 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
     if (Auto_Scan == m_AutoScan)
         return rect;
 
-    /* ¶ÁÊı¾İÁ÷ */
-    for (W_I16 i = 0; i < MenuShow.size(); i++)   // ÅĞ¶ÏÊÇ·ñÒª³öÏÖÊı¾İÁ÷¹¦ÄÜ
+    /* è¯»æ•°æ®æµ */
+    for (W_I16 i = 0; i < MenuShow.size(); i++)   // åˆ¤æ–­æ˜¯å¦è¦å‡ºç°æ•°æ®æµåŠŸèƒ½
     {
         vctStr = MenuShow[i];
         if ("eb021620" == vctStr[7]) //if ("000005e9" == vctStr[7])
         {
-            MenuNum[MenuCode++] = 2;   // ²åÈë2
+            MenuNum[MenuCode++] = 2;   // æ’å…¥2
             CSearchString SubaData;
-            if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))  //Êı¾İÁ÷¿â
+            if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))  //æ•°æ®æµåº“
                 return CErrorCode::EC_DATA;
             vctStr.clear();
             vctStr.push_back(SystemNum);
-            SubaData.SearchString(GetDS, FALSE, 0, 0, vctStr);    // ÒÔÏµÍ³±àºÅËÑË÷,´æÈëGetDS
+            SubaData.SearchString(GetDS, FALSE, 0, 0, vctStr);    // ä»¥ç³»ç»Ÿç¼–å·æœç´¢,å­˜å…¥GetDS
             break;
         }
     }
     CSearchString datadefvalue;
-    if (FALSE == datadefvalue.OpenTabFile(Subaru_DataDefValue_CBF))  //²¿·ÖÊı¾İÁ÷Ìõ¼şÃüÁî±àºÅ
+    if (FALSE == datadefvalue.OpenTabFile(Subaru_DataDefValue_CBF))  //éƒ¨åˆ†æ•°æ®æµæ¡ä»¶å‘½ä»¤ç¼–å·
         return CErrorCode::EC_DATA;
     vctStr.clear();
     vctStr.push_back(SystemNum);
     SearchResault.clear();
-    datadefvalue.SearchString(SearchResault, FALSE, 0, 0, vctStr);  // ÒÔÏµÍ³±àºÅËÑË÷
+    datadefvalue.SearchString(SearchResault, FALSE, 0, 0, vctStr);  // ä»¥ç³»ç»Ÿç¼–å·æœç´¢
     W_I16 ShortTemp;
     W_I16 ShortTemp1;
     for (W_I16 i = 0; i < SearchResault.size(); i++)
@@ -627,11 +627,11 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
         ShortTemp1 = StringToHex(SearchResault[i][2]);
         EnterRecSet[ShortTemp] |= ShortTemp1;
     }
-    /* É¸Ñ¡Êı¾İÁ÷ µÚÒ»´ÎÉ¸Ñ¡(¸ù¾İ½øÈëÃüÁî,²¿·ÖÏµÍ³ÓĞÌØÊâ¹ıÂË) */
-    SearchResault.clear();    //×÷ÎªGetDSTemp
+    /* ç­›é€‰æ•°æ®æµ ç¬¬ä¸€æ¬¡ç­›é€‰(æ ¹æ®è¿›å…¥å‘½ä»¤,éƒ¨åˆ†ç³»ç»Ÿæœ‰ç‰¹æ®Šè¿‡æ»¤) */
+    SearchResault.clear();    //ä½œä¸ºGetDSTemp
     for (W_I16 i = 0; i < GetDS.size(); i++)
     {
-        if (GetDS[i].size() < 20 || "00002001" == GetDS[i][GetDS[i].size() - 1]  // ×îºóÒ»Ïî
+        if (GetDS[i].size() < 20 || "00002001" == GetDS[i][GetDS[i].size() - 1]  // æœ€åä¸€é¡¹
             || "00002002" == GetDS[i][GetDS[i].size() - 1] || "00002003" == GetDS[i][GetDS[i].size() - 1])
             continue;
         if ("00000007" == GetDS[i][0] && "00000001" != GetDS[i][GetDS[i].size() - 1])//if ("DBFTA000" == GetDS[i][0] && "00000001" != GetDS[i][GetDS[i].size() - 1])
@@ -642,13 +642,13 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
         ShortTemp1 = StringToHex(GetDS[i][4]);
         for (map<W_I16, W_I16>::iterator pMap = EnterRecSet.begin(); pMap != EnterRecSet.end(); pMap++)
         {
-            if (pMap->first == ShortTemp && (ShortTemp1 & pMap->second))  // Subaru_Data[3] == »Ø¸´Êı¾İkeyÖµ  &&  Subaru_Data[4] & »Ø¸´Êı¾İvalueÖµ
+            if (pMap->first == ShortTemp && (ShortTemp1 & pMap->second))  // Subaru_Data[3] == å›å¤æ•°æ®keyå€¼  &&  Subaru_Data[4] & å›å¤æ•°æ®valueå€¼
             {
-                iFlag = 1;    // É¸Ñ¡Êı¾İÁ÷·¢ËÍÃüÁî
+                iFlag = 1;    // ç­›é€‰æ•°æ®æµå‘é€å‘½ä»¤
                 break;
             }
         }
-        if (SystemNum == "00000083") //×¤³µÖÆ¶¯ÏµÍ³Ö»·¢Ò»Ìõ½øÈëÃüÁî£¬Ã»ÓĞÉ¸Ñ¡ÃüÁî
+        if (SystemNum == "00000083") //é©»è½¦åˆ¶åŠ¨ç³»ç»Ÿåªå‘ä¸€æ¡è¿›å…¥å‘½ä»¤ï¼Œæ²¡æœ‰ç­›é€‰å‘½ä»¤
             iFlag = 1;
         if (iFlag)
             SearchResault.push_back(GetDS[i]);
@@ -656,7 +656,7 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
     GetDS.clear();
     GetDS = SearchResault;
 
-    /* BRZ³µĞÍÃ»ÓĞÌØÊâ¹¦ÄÜ */
+    /* BRZè½¦å‹æ²¡æœ‰ç‰¹æ®ŠåŠŸèƒ½ */
     if (2 == SubaruBRZ_SET->VehicleStatus)
     {
         if (SystemNum == "00000010")
@@ -664,7 +664,7 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
         return rect;
     }
 
-    /* ECU¹æ¸ñĞÅÏ¢ Ö»ÓĞ¸ÃÏµÍ³ÓĞÌØÊâ¹¦ÄÜ£¬²Å»áÓĞECU¹æ¸ñĞÅÏ¢*/
+    /* ECUè§„æ ¼ä¿¡æ¯ åªæœ‰è¯¥ç³»ç»Ÿæœ‰ç‰¹æ®ŠåŠŸèƒ½ï¼Œæ‰ä¼šæœ‰ECUè§„æ ¼ä¿¡æ¯*/
     for (W_I16 i = 0; i < MenuShow.size(); i++)
     {
         if ("7a241620" == MenuShow[i][5] && "55351620" == MenuShow[i][7])//if ("00003257" == MenuShow[i][5])
@@ -675,7 +675,7 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
             binSearchID = CBinary("\x00", 1);
             binSearchID += binSystemNum[3];
             binSearchID += String2Binary(MenuShow[i][6]);
-            string         strData = GetStringValue(Subaru_SubaSpfunction_File, binSearchID);   //Ë§Ñ¡ÌØÊâ¹¦ÄÜµÄÏÔÊ¾²Ëµ¥
+            string         strData = GetStringValue(Subaru_SubaSpfunction_File, binSearchID);   //å¸…é€‰ç‰¹æ®ŠåŠŸèƒ½çš„æ˜¾ç¤ºèœå•
             if (!strData.size())
                 return rect = CErrorCode::EC_DATA;
             profile.InitManager(strData);
@@ -702,16 +702,16 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
 #endif
     vector<vector<string>> menuTemp;
     vector<vector<string>> IDTemp;
-    /* ÌØÊâ¹¦ÄÜ */
+    /* ç‰¹æ®ŠåŠŸèƒ½ */
     for (W_I16 i = 0; i < MenuShow.size(); i++)
     {
-        if ("7a241620" == MenuShow[i][7] || "651f1620" == MenuShow[i][7])//if ("00002378" == MenuShow[i][7])651f1620Îª×¤³µÖÆ¶¯ÏµÍ³¶ÀÓĞµÄ
+        if ("7a241620" == MenuShow[i][7] || "651f1620" == MenuShow[i][7])//if ("00002378" == MenuShow[i][7])651f1620ä¸ºé©»è½¦åˆ¶åŠ¨ç³»ç»Ÿç‹¬æœ‰çš„
         {
             vctStr.clear();
             vctStr.push_back(MenuShow[i][7]);
             vctStr.push_back(MenuShow[i][6]);
             IDTemp.push_back(vctStr);
-            /* ½«ËùÓĞÌØÊâ¹¦ÄÜ±£´æÎª ÌØÊâ¹¦ÄÜ->Â·¾¶2->Â·¾¶3->...ÌØÊâ¹¦ÄÜÃû->ÌØÊâ¹¦ÄÜID */
+            /* å°†æ‰€æœ‰ç‰¹æ®ŠåŠŸèƒ½ä¿å­˜ä¸º ç‰¹æ®ŠåŠŸèƒ½->è·¯å¾„2->è·¯å¾„3->...ç‰¹æ®ŠåŠŸèƒ½å->ç‰¹æ®ŠåŠŸèƒ½ID */
             for (W_I16 j = i; j < MenuShow.size(); j++)
             {
                 for (W_I16 k = 0; k < IDTemp.size(); k++)
@@ -748,9 +748,9 @@ W_ErrorCode    CSubaruBaseCanApp::GetMenu(map<W_I16, W_I16>& MenuNum)
             break;
         }
     }
-    /* ¼ÓÔØÒÑÌí¼Ó´úÂëµÄÌØÊâ¹¦ÄÜÈÎÎñID */
+    /* åŠ è½½å·²æ·»åŠ ä»£ç çš„ç‰¹æ®ŠåŠŸèƒ½ä»»åŠ¡ID */
     SpecFunsIDSet();
-    /* É¸Ñ¡³öÒÑÓĞ´úÂëµÄID */
+    /* ç­›é€‰å‡ºå·²æœ‰ä»£ç çš„ID */
     for (W_I16 i = 0; i < IDTemp.size(); i++)
     {
         for (W_I16 j = 0; j < SpecFunsID.size(); j++)
@@ -781,20 +781,20 @@ W_I16 CSubaruBaseCanApp::New_MenuAndProcess()
         {
             switch (m_specFuncID)
             {
-            case 0x028f4f20: {binMenu = HexString2Binary("53200000003C"); rect = SpecFunsID_028f4f20(binMenu); break; }        // ¸ü»»DPF                              
-            case 0x028e4f20: {binMenu = HexString2Binary("53200000003D"); rect = SpecFunsID_028e4f20(binMenu); break; }        // ¸üĞÂDPF                              
-            case 0x028d4f20: {binMenu = HexString2Binary("532000000042"); rect = SpecFunsID_028d4f20(binMenu); break; }        //¸ü»»»úÓÍ                              
-            case 0x028c4f20: {binMenu = HexString2Binary("530000010182"); rect = SpecFunsID_028c4f20(binMenu); break; }        //¶ÁÈ¡DPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£ECM -> TOOL
-            case 0x028b4f20: {binMenu = HexString2Binary("530000010186"); rect = SpecFunsID_028b4f20(binMenu); break; }        //Ğ´ÈëDPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£TOOL -> ECM
-            case 0x02674f20: {binMenu = HexString2Binary("534d62111620"); rect = SpecFunsID_02674f20(binMenu); break; }        //ĞÂ×¢²áÅçÓÍÆ÷´úÂë£¨TOOLÖÁECM£©         
-            case 0x02664f20: {binMenu = HexString2Binary("534d63111620"); rect = SpecFunsID_02664f20(binMenu); break; }        //¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¨ECMÖÁTOOL£©           
-            case 0x02644f20: {binMenu = HexString2Binary("532000000051"); rect = SpecFunsID_02644f20(binMenu); break; }        //ÅçÓÍÆ÷´úÂëÏÔÊ¾                        
-            case 0x02071a20: {binMenu = HexString2Binary("53200000005D"); rect = SpecFunsID_02071a20(binMenu); break; }        //·ÀµÁËøÏµÍ³                                
-            case 0x02764f20: {binMenu = HexString2Binary("532000000087"); rect = SpecFunsID_02764f20(binMenu); break; }        //È¼ÓÍÅçÉäÆ÷ÅçÉäÁ¿¼ÇÒä                  
-            case 0x02061b20: {binMenu = HexString2Binary("53200002001e"); rect = SpecFunsID_02061b20(binMenu); break; }        //VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½
-            case 0x02021b20: {binMenu = HexString2Binary("534dcf761620"); rect = SpecFunsID_02021b20(binMenu); break; }        //É²³µÎ¬»¤Ä£Ê½
-            case 0x32667620: {binMenu = HexString2Binary("53200002002b"); rect = SpecFunsID_32667620(binMenu); break; }        //²Á³ıÎŞÔ¿IDÂë
-            case 0x42667620: {binMenu = HexString2Binary("53200002002a"); rect = SpecFunsID_42667620(binMenu); break; }        //ÎŞÔ¿³× ID ×¢²á
+            case 0x028f4f20: {binMenu = HexString2Binary("53200000003C"); rect = SpecFunsID_028f4f20(binMenu); break; }        // æ›´æ¢DPF                              
+            case 0x028e4f20: {binMenu = HexString2Binary("53200000003D"); rect = SpecFunsID_028e4f20(binMenu); break; }        // æ›´æ–°DPF                              
+            case 0x028d4f20: {binMenu = HexString2Binary("532000000042"); rect = SpecFunsID_028d4f20(binMenu); break; }        //æ›´æ¢æœºæ²¹                              
+            case 0x028c4f20: {binMenu = HexString2Binary("530000010182"); rect = SpecFunsID_028c4f20(binMenu); break; }        //è¯»å–DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚ECM -> TOOL
+            case 0x028b4f20: {binMenu = HexString2Binary("530000010186"); rect = SpecFunsID_028b4f20(binMenu); break; }        //å†™å…¥DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚TOOL -> ECM
+            case 0x02674f20: {binMenu = HexString2Binary("534d62111620"); rect = SpecFunsID_02674f20(binMenu); break; }        //æ–°æ³¨å†Œå–·æ²¹å™¨ä»£ç ï¼ˆTOOLè‡³ECMï¼‰         
+            case 0x02664f20: {binMenu = HexString2Binary("534d63111620"); rect = SpecFunsID_02664f20(binMenu); break; }        //è¯»å–å–·æ²¹å™¨ä»£ç ï¼ˆECMè‡³TOOLï¼‰           
+            case 0x02644f20: {binMenu = HexString2Binary("532000000051"); rect = SpecFunsID_02644f20(binMenu); break; }        //å–·æ²¹å™¨ä»£ç æ˜¾ç¤º                        
+            case 0x02071a20: {binMenu = HexString2Binary("53200000005D"); rect = SpecFunsID_02071a20(binMenu); break; }        //é˜²ç›—é”ç³»ç»Ÿ                                
+            case 0x02764f20: {binMenu = HexString2Binary("532000000087"); rect = SpecFunsID_02764f20(binMenu); break; }        //ç‡ƒæ²¹å–·å°„å™¨å–·å°„é‡è®°å¿†                  
+            case 0x02061b20: {binMenu = HexString2Binary("53200002001e"); rect = SpecFunsID_02061b20(binMenu); break; }        //VSCï¼ˆVDCï¼‰ä¸­é—´å€¼è®¾ç½®æ¨¡å¼
+            case 0x02021b20: {binMenu = HexString2Binary("534dcf761620"); rect = SpecFunsID_02021b20(binMenu); break; }        //åˆ¹è½¦ç»´æŠ¤æ¨¡å¼
+            case 0x32667620: {binMenu = HexString2Binary("53200002002b"); rect = SpecFunsID_32667620(binMenu); break; }        //æ“¦é™¤æ— é’¥IDç 
+            case 0x42667620: {binMenu = HexString2Binary("53200002002a"); rect = SpecFunsID_42667620(binMenu); break; }        //æ— é’¥åŒ™ ID æ³¨å†Œ
             }
             if (rect != CErrorCode::EC_SUCCESS)
                 FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
@@ -809,7 +809,7 @@ W_I16 CSubaruBaseCanApp::New_MenuAndProcess()
     //rect = GetMenu(MenuNum);
     //if (CErrorCode::EC_SUCCESS != rect)
     //    return rect;
-    //if (0 == MenuNum.size())    //532000000006        "ÏµÍ³²»Ö§³Ö"
+    //if (0 == MenuNum.size())    //532000000006        "ç³»ç»Ÿä¸æ”¯æŒ"
     //{
     //    if (Auto_Scan != m_AutoScan)
     //        FxShowMessageBox(STD_TTL_MSG_INFORMATION, CBinary("\x53\x20\x00\x00\x00\x06", 6), DF_MB_OK, DT_LEFT);
@@ -818,7 +818,7 @@ W_I16 CSubaruBaseCanApp::New_MenuAndProcess()
 
     //if (SystemName.length() > 0 && Auto_Scan != m_AutoScan)
     //{
-    //    /* ÏÔÊ¾ÏµÍ³Ãû */
+    //    /* æ˜¾ç¤ºç³»ç»Ÿå */
     //    for (W_I16 i = SystemName.length() - 1; i >= 0; i--)
     //    {
     //        if (0x20 == SystemName.at(i) || 0x7f == SystemName.at(i))
@@ -836,24 +836,24 @@ W_I16 CSubaruBaseCanApp::New_MenuAndProcess()
         //for (W_I16 i = 0; i < MenuNum.size(); i++)
         //{
         //    if (0x00 == MenuNum[i])
-        //        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x01", 6));    // ¶ÁÂë
+        //        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x01", 6));    // è¯»ç 
         //    else if (0x01 == MenuNum[i])
-        //        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x02", 6));    // ÇåÂë
+        //        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x02", 6));    // æ¸…ç 
         //    else if (0x02 == MenuNum[i])
-        //        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x03", 6));    // ¶ÁÊı¾İÁ÷
+        //        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x03", 6));    // è¯»æ•°æ®æµ
         //    else if (0x03 == MenuNum[i])
-        //        iMenu.AddOneItem(CBinary("\x53\x20\x00\x01\x00\x02", 6));    // ECU¹æ¸ñĞÅÏ¢
+        //        iMenu.AddOneItem(CBinary("\x53\x20\x00\x01\x00\x02", 6));    // ECUè§„æ ¼ä¿¡æ¯
         //    else if (0x0f == MenuNum[i])
-        //        iMenu.AddOneItem(STD_INFO_SPECIAL_FUNCTIONS);                // ÌØÊâ¹¦ÄÜ
+        //        iMenu.AddOneItem(STD_INFO_SPECIAL_FUNCTIONS);                // ç‰¹æ®ŠåŠŸèƒ½
         //}
 
         iMenu.InitCtrl(CBinary("\x53\x00\x00\x00\x02\x00", 6));
-        iMenu.AddOneItem(CBinary("\x53\x20\x00\x01\x00\x02", 6));    // ECU¹æ¸ñĞÅÏ¢
-        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x01", 6));    // ¶Á¹ÊÕÏÂë
-        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x02", 6));   // Çå¹ÊÕÏÂë
-        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x03", 6));    // ¶ÁÊı¾İÁ÷
-        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x13", 6));    // ¶¯×÷²âÊÔ
-        iMenu.AddOneItem(STD_INFO_SPECIAL_FUNCTIONS);                // ÌØÊâ¹¦ÄÜ
+        iMenu.AddOneItem(CBinary("\x53\x20\x00\x01\x00\x02", 6));    // ECUè§„æ ¼ä¿¡æ¯
+        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x01", 6));    // è¯»æ•…éšœç 
+        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x02", 6));   // æ¸…æ•…éšœç 
+        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x03", 6));    // è¯»æ•°æ®æµ
+        iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x13", 6));    // åŠ¨ä½œæµ‹è¯•
+        iMenu.AddOneItem(STD_INFO_SPECIAL_FUNCTIONS);                // ç‰¹æ®ŠåŠŸèƒ½
 
 
         if (Auto_Scan != m_AutoScan)
@@ -874,29 +874,29 @@ W_I16 CSubaruBaseCanApp::New_MenuAndProcess()
 
         switch (iSelect)
         {
-        case 0x00:    // ¶ÁECU¹æ¸ñĞÅÏ¢
+        case 0x00:    // è¯»ECUè§„æ ¼ä¿¡æ¯
             //rect = ReadEcuInfo();
             rect = Read_computer_info();
             break;
-        case 0x01:    // ¹ÊÕÏÂë
+        case 0x01:    // æ•…éšœç 
             rect = New_ReadTroubleCode();
             if (CErrorCode::EC_ECU_REFUSE == rect)
                 FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_THE_SELECTED_FUNCTION_IS_NOT_SUPPORTED, DF_MB_OK, DT_LEFT);
             else
                 New_SubaruCanDtcShow();
             break;
-        case 0x02:  // Çå¹ÊÕÏÂë
+        case 0x02:  // æ¸…æ•…éšœç 
             rect = New_ClearTroubleCode();
             break;
-        case 0x03:    // Êı¾İÁ÷
+        case 0x03:    // æ•°æ®æµ
             //rect = DataStream();
             rect = New_DataStream();
             break;
-        case 0x04:    // ¶¯×÷²âÊÔ
+        case 0x04:    // åŠ¨ä½œæµ‹è¯•
              //rect = ReadEcuInfo();
             rect = Act_Test();
             break;
-        case 0x05:    // ÌØÊâ¹¦ÄÜ
+        case 0x05:    // ç‰¹æ®ŠåŠŸèƒ½
             rect = SpecialFunction();
             break;
 
@@ -919,20 +919,20 @@ W_I16 CSubaruBaseCanApp::MenuAndProcess()
         {
             switch (m_specFuncID)
             {
-            case 0x028f4f20: {binMenu = HexString2Binary("53200000003C"); rect = SpecFunsID_028f4f20(binMenu); break; }        // ¸ü»»DPF                              
-            case 0x028e4f20: {binMenu = HexString2Binary("53200000003D"); rect = SpecFunsID_028e4f20(binMenu); break; }        // ¸üĞÂDPF                              
-            case 0x028d4f20: {binMenu = HexString2Binary("532000000042"); rect = SpecFunsID_028d4f20(binMenu); break; }        //¸ü»»»úÓÍ                              
-            case 0x028c4f20: {binMenu = HexString2Binary("530000010182"); rect = SpecFunsID_028c4f20(binMenu); break; }        //¶ÁÈ¡DPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£ECM -> TOOL
-            case 0x028b4f20: {binMenu = HexString2Binary("530000010186"); rect = SpecFunsID_028b4f20(binMenu); break; }        //Ğ´ÈëDPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£TOOL -> ECM
-            case 0x02674f20: {binMenu = HexString2Binary("534d62111620"); rect = SpecFunsID_02674f20(binMenu); break; }        //ĞÂ×¢²áÅçÓÍÆ÷´úÂë£¨TOOLÖÁECM£©         
-            case 0x02664f20: {binMenu = HexString2Binary("534d63111620"); rect = SpecFunsID_02664f20(binMenu); break; }        //¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¨ECMÖÁTOOL£©           
-            case 0x02644f20: {binMenu = HexString2Binary("532000000051"); rect = SpecFunsID_02644f20(binMenu); break; }        //ÅçÓÍÆ÷´úÂëÏÔÊ¾                        
-            case 0x02071a20: {binMenu = HexString2Binary("53200000005D"); rect = SpecFunsID_02071a20(binMenu); break; }        //·ÀµÁËøÏµÍ³                                
-            case 0x02764f20: {binMenu = HexString2Binary("532000000087"); rect = SpecFunsID_02764f20(binMenu); break; }        //È¼ÓÍÅçÉäÆ÷ÅçÉäÁ¿¼ÇÒä                  
-            case 0x02061b20: {binMenu = HexString2Binary("53200002001e"); rect = SpecFunsID_02061b20(binMenu); break; }        //VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½
-            case 0x02021b20: {binMenu = HexString2Binary("534dcf761620"); rect = SpecFunsID_02021b20(binMenu); break; }        //É²³µÎ¬»¤Ä£Ê½
-            case 0x32667620: {binMenu = HexString2Binary("53200002002b"); rect = SpecFunsID_32667620(binMenu); break; }        //²Á³ıÎŞÔ¿IDÂë
-            case 0x42667620: {binMenu = HexString2Binary("53200002002a"); rect = SpecFunsID_42667620(binMenu); break; }        //ÎŞÔ¿³× ID ×¢²á
+            case 0x028f4f20: {binMenu = HexString2Binary("53200000003C"); rect = SpecFunsID_028f4f20(binMenu); break; }        // æ›´æ¢DPF                              
+            case 0x028e4f20: {binMenu = HexString2Binary("53200000003D"); rect = SpecFunsID_028e4f20(binMenu); break; }        // æ›´æ–°DPF                              
+            case 0x028d4f20: {binMenu = HexString2Binary("532000000042"); rect = SpecFunsID_028d4f20(binMenu); break; }        //æ›´æ¢æœºæ²¹                              
+            case 0x028c4f20: {binMenu = HexString2Binary("530000010182"); rect = SpecFunsID_028c4f20(binMenu); break; }        //è¯»å–DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚ECM -> TOOL
+            case 0x028b4f20: {binMenu = HexString2Binary("530000010186"); rect = SpecFunsID_028b4f20(binMenu); break; }        //å†™å…¥DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚TOOL -> ECM
+            case 0x02674f20: {binMenu = HexString2Binary("534d62111620"); rect = SpecFunsID_02674f20(binMenu); break; }        //æ–°æ³¨å†Œå–·æ²¹å™¨ä»£ç ï¼ˆTOOLè‡³ECMï¼‰         
+            case 0x02664f20: {binMenu = HexString2Binary("534d63111620"); rect = SpecFunsID_02664f20(binMenu); break; }        //è¯»å–å–·æ²¹å™¨ä»£ç ï¼ˆECMè‡³TOOLï¼‰           
+            case 0x02644f20: {binMenu = HexString2Binary("532000000051"); rect = SpecFunsID_02644f20(binMenu); break; }        //å–·æ²¹å™¨ä»£ç æ˜¾ç¤º                        
+            case 0x02071a20: {binMenu = HexString2Binary("53200000005D"); rect = SpecFunsID_02071a20(binMenu); break; }        //é˜²ç›—é”ç³»ç»Ÿ                                
+            case 0x02764f20: {binMenu = HexString2Binary("532000000087"); rect = SpecFunsID_02764f20(binMenu); break; }        //ç‡ƒæ²¹å–·å°„å™¨å–·å°„é‡è®°å¿†                  
+            case 0x02061b20: {binMenu = HexString2Binary("53200002001e"); rect = SpecFunsID_02061b20(binMenu); break; }        //VSCï¼ˆVDCï¼‰ä¸­é—´å€¼è®¾ç½®æ¨¡å¼
+            case 0x02021b20: {binMenu = HexString2Binary("534dcf761620"); rect = SpecFunsID_02021b20(binMenu); break; }        //åˆ¹è½¦ç»´æŠ¤æ¨¡å¼
+            case 0x32667620: {binMenu = HexString2Binary("53200002002b"); rect = SpecFunsID_32667620(binMenu); break; }        //æ“¦é™¤æ— é’¥IDç 
+            case 0x42667620: {binMenu = HexString2Binary("53200002002a"); rect = SpecFunsID_42667620(binMenu); break; }        //æ— é’¥åŒ™ ID æ³¨å†Œ
             }
             if (rect != CErrorCode::EC_SUCCESS)
                 FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
@@ -947,7 +947,7 @@ W_I16 CSubaruBaseCanApp::MenuAndProcess()
     rect = GetMenu(MenuNum);
     if (CErrorCode::EC_SUCCESS != rect)
         return rect;
-    if (0 == MenuNum.size())    //532000000006        "ÏµÍ³²»Ö§³Ö"
+    if (0 == MenuNum.size())    //532000000006        "ç³»ç»Ÿä¸æ”¯æŒ"
     {
         if (Auto_Scan != m_AutoScan)
             FxShowMessageBox(STD_TTL_MSG_INFORMATION, CBinary("\x53\x20\x00\x00\x00\x06", 6), DF_MB_OK, DT_LEFT);
@@ -955,7 +955,7 @@ W_I16 CSubaruBaseCanApp::MenuAndProcess()
     }
     if (SystemName.length() > 0 && Auto_Scan != m_AutoScan)
     {
-        /* ÏÔÊ¾ÏµÍ³Ãû */
+        /* æ˜¾ç¤ºç³»ç»Ÿå */
         for (W_I16 i = SystemName.length() - 1; i >= 0; i--)
         {
             if (0x20 == SystemName.at(i) || 0x7f == SystemName.at(i))
@@ -974,15 +974,15 @@ W_I16 CSubaruBaseCanApp::MenuAndProcess()
         for (W_I16 i = 0; i < MenuNum.size(); i++)
         {
             if (0x00 == MenuNum[i])
-                iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x01", 6));    // ¶ÁÂë
+                iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x01", 6));    // è¯»ç 
             else if (0x01 == MenuNum[i])
-                iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x02", 6));    // ÇåÂë
+                iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x02", 6));    // æ¸…ç 
             else if (0x02 == MenuNum[i])
-                iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x03", 6));    // ¶ÁÊı¾İÁ÷
+                iMenu.AddOneItem(CBinary("\x53\x00\x00\x00\x02\x03", 6));    // è¯»æ•°æ®æµ
             else if (0x03 == MenuNum[i])
-                iMenu.AddOneItem(CBinary("\x53\x20\x00\x01\x00\x02", 6));    // ECU¹æ¸ñĞÅÏ¢
+                iMenu.AddOneItem(CBinary("\x53\x20\x00\x01\x00\x02", 6));    // ECUè§„æ ¼ä¿¡æ¯
             else if (0x0f == MenuNum[i])
-                iMenu.AddOneItem(STD_INFO_SPECIAL_FUNCTIONS);                // ÌØÊâ¹¦ÄÜ
+                iMenu.AddOneItem(STD_INFO_SPECIAL_FUNCTIONS);                // ç‰¹æ®ŠåŠŸèƒ½
         }
         if (Auto_Scan != m_AutoScan)
             iSelect = iMenu.ShowCtrl();
@@ -1002,7 +1002,7 @@ W_I16 CSubaruBaseCanApp::MenuAndProcess()
 
         switch (MenuNum[iSelect])
         {
-        case 0x00:    // ¶ÁÂë
+        case 0x00:    // è¯»ç 
             FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
             rect = ReadTroubleCode();
             if (CErrorCode::EC_ECU_REFUSE == rect)
@@ -1012,17 +1012,17 @@ W_I16 CSubaruBaseCanApp::MenuAndProcess()
             else
                 SubaruCanDtcShow();
             break;
-        case 0x01:    // ÇåÂë
+        case 0x01:    // æ¸…ç 
             FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
             rect = ClearTroubleCode();
             break;
-        case 0x02:    // Êı¾İÁ÷
+        case 0x02:    // æ•°æ®æµ
             rect = DataStream();
             break;
-        case 0x03:    // ECUĞÅÏ¢
+        case 0x03:    // ECUä¿¡æ¯
             rect = ReadEcuInfo();
             break;
-        case 0x0f:    // ÌØÊâ¹¦ÄÜ
+        case 0x0f:    // ç‰¹æ®ŠåŠŸèƒ½
             rect = SpecialFunction();
             break;
         }
@@ -1039,7 +1039,7 @@ W_ErrorCode CSubaruBaseCanApp::Read_computer_info()
     CBinary binAns;
     string    strTemp, strItem, ROMID;
     CBinary bin22f182("\x22\xf1\x82", 3);
-    CBinary binTitle("\x53\x20\x00\x01\x00\x02", 6);  // ECU¹æ¸ñĞÅÏ¢
+    CBinary binTitle("\x53\x20\x00\x01\x00\x02", 6);  // ECUè§„æ ¼ä¿¡æ¯
 
     W_I16    counts = 0;
 
@@ -1062,8 +1062,8 @@ W_ErrorCode CSubaruBaseCanApp::Read_computer_info()
     }
 
     uiEcuInfo.AddOneItem(CBinary("\x53\x60\x01\x00\x0B\xDD", 6), ROMID);  // ROMID
-    uiEcuInfo.AddOneItem(FxGetStdString(CBinary("\x53\x5E\x00\x00\x02\x24", 6)) + FxGetStdString(CBinary("\x53\x60\x01\x00\x07\xEB", 6)), "000000");  // ¹¤¾ßID
-    uiEcuInfo.AddOneItem(CBinary("\x01\x00\x00\x00\x03\x40", 6), FxGetStdString(CBinary("\x53\x60\x01\x00\x07\x95", 6)));  // Ğ­Òé
+    uiEcuInfo.AddOneItem(FxGetStdString(CBinary("\x53\x5E\x00\x00\x02\x24", 6)) + FxGetStdString(CBinary("\x53\x60\x01\x00\x07\xEB", 6)), "000000");  // å·¥å…·ID
+    uiEcuInfo.AddOneItem(CBinary("\x01\x00\x00\x00\x03\x40", 6), FxGetStdString(CBinary("\x53\x60\x01\x00\x07\x95", 6)));  // åè®®
     uiEcuInfo.ShowCtrl();
 
     return rect;
@@ -1102,7 +1102,7 @@ W_ErrorCode CSubaruBaseCanApp::ReadEcuInfo()
             binAns = SubaruCanSendReceive(bin22f189);
             needLen = 16;
         }
-        //else if ("" == ECUInfo[i][6])//ÒÔÏÂ¼¸¸öĞèÒª½â¾öµÄÄ£Ê½
+        //else if ("" == ECUInfo[i][6])//ä»¥ä¸‹å‡ ä¸ªéœ€è¦è§£å†³çš„æ¨¡å¼
         //{  00270720 \01270720 \03360720 \03370720 \06270720 \07170720 \10851620    
         //}
         if (binAns.GetByteCount() > 0 && 0x7f != binAns[0])
@@ -1146,8 +1146,8 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
     strData = GetStringValue(Country_Ecu_File, Ecu_Id_Select[0]);
     if (!strData.size())
         return rect = CErrorCode::EC_DATA;
-    profile.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
-    strMenu = profile.GetItemValue(Subaru_DTC_TTL, Subaru_ReadDtc_TXT);    // »ñÈ¡Òª·¢ËÍµÄ¶ÁÂëÃüÁî
+    profile.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
+    strMenu = profile.GetItemValue(Subaru_DTC_TTL, Subaru_ReadDtc_TXT);    // è·å–è¦å‘é€çš„è¯»ç å‘½ä»¤
 
     SeparatorString(strMenu, ",", str_ReadDtc);
 
@@ -1164,10 +1164,10 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
     SubaruBRZ_SET->DtcSet.clear();
     for (W_I16 i = 0; i < bin_ReadDtc.GetByteCount(); i++)
     {
-        binAns = SubaruCanSendReceive(bin_ReadDtc[i]);     // ×¢Òâ£ºABSÉ²³µÏµÍ³»Ø¸´µÄ¶³½áÖ¡Êı¾İ¹ı³¤£¬ÄÚ´æÔ½½ç
-        if (binAns.GetByteCount() > 0 && i == 0)  // Ö»²åÈë19 02 AF
+        binAns = SubaruCanSendReceive(bin_ReadDtc[i]);     // æ³¨æ„ï¼šABSåˆ¹è½¦ç³»ç»Ÿå›å¤çš„å†»ç»“å¸§æ•°æ®è¿‡é•¿ï¼Œå†…å­˜è¶Šç•Œ
+        if (binAns.GetByteCount() > 0 && i == 0)  // åªæ’å…¥19 02 AF
         {
-            bgAns.Append(binAns);  // ²åÈë 19 02 AF µÄ»Ø¸´Êı¾İ
+            bgAns.Append(binAns);  // æ’å…¥ 19 02 AF çš„å›å¤æ•°æ®
         }
     }
 
@@ -1179,26 +1179,26 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
     for (W_I16 k = 0; k < bgAns.GetByteCount(); k++)
     {
         binAns = bgAns[k];
-        if (binAns.GetByteCount() < 4)  // ¿ØÖÆÎ»ÅĞ¶Ï¹ÊÕÏÂë
+        if (binAns.GetByteCount() < 4)  // æ§åˆ¶ä½åˆ¤æ–­æ•…éšœç 
             return CErrorCode::EC_SUCCESS;
         else if (0x7f == binAns[0])
             return CErrorCode::EC_SUCCESS;
     }
 
-    str_value_select.clear();  // Çå¿Õ£¬±ÜÃâ·µ»Øºó£¬¹ÊÕÏÂëÖØµş
+    str_value_select.clear();  // æ¸…ç©ºï¼Œé¿å…è¿”å›åï¼Œæ•…éšœç é‡å 
     for (W_I16 k = 0; k < bgAns.GetByteCount(); k++)
     {
         binAns = bgAns[k];
         binAns.DeleteByte(0);
         binAns.DeleteByte(0);
         binAns.DeleteByte(0);
-        binAns.DeleteByte(0);  // È¥³ı4¸ö¿ØÖÆÎ»ºó
+        binAns.DeleteByte(0);  // å»é™¤4ä¸ªæ§åˆ¶ä½å
 
-        CBinary text;  // ÁÙÊ±×´Ì¬ÎÄ±¾
-        CBinaryGroup bin_text_temp;  // ÁÙÊ±´æ·Å×´Ì¬ÎÄ±¾  (ÓÃÓÚÅÅĞò)
-        vector<string>str_value_temp;  // ÁÙÊ±´æ·Å¹ÊÕÏÂë»Ø¸´Êı¾İ  (ÓÃÓÚÅÅĞò)
+        CBinary text;  // ä¸´æ—¶çŠ¶æ€æ–‡æœ¬
+        CBinaryGroup bin_text_temp;  // ä¸´æ—¶å­˜æ”¾çŠ¶æ€æ–‡æœ¬  (ç”¨äºæ’åº)
+        vector<string>str_value_temp;  // ä¸´æ—¶å­˜æ”¾æ•…éšœç å›å¤æ•°æ®  (ç”¨äºæ’åº)
 
-        for (W_I16 i = 0; i + 2 < binAns.GetByteCount(); i += 4)    // 4¸öÎª1×é£¬Ç°2Î»Îª¹ÊÕÏÂë£¬µÚ3Î»Îª×´Ì¬¿ØÖÆ£¬µÚ4Î»ÎªÌî³äÎ»
+        for (W_I16 i = 0; i + 2 < binAns.GetByteCount(); i += 4)    // 4ä¸ªä¸º1ç»„ï¼Œå‰2ä½ä¸ºæ•…éšœç ï¼Œç¬¬3ä½ä¸ºçŠ¶æ€æ§åˆ¶ï¼Œç¬¬4ä½ä¸ºå¡«å……ä½
         {
             int bin1 = binAns[i];
             int bin2 = binAns[i + 1];
@@ -1207,12 +1207,12 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
 
             if (binAns[i] != 0x00 || binAns[i + 1] != 0x00)
             {
-                if (binAns[i + 2] & 0x02)  //ÏàÓë ÎªÕæÕâÏÔÊ¾³ö¶ÔÓ¦µÄ 02¿ØÖÆµ±Ç°¹ÊÕÏÂë 08¿ØÖÆÀúÊ·¹ÊÕÏÂë
+                if (binAns[i + 2] & 0x02)  //ç›¸ä¸ ä¸ºçœŸè¿™æ˜¾ç¤ºå‡ºå¯¹åº”çš„ 02æ§åˆ¶å½“å‰æ•…éšœç  08æ§åˆ¶å†å²æ•…éšœç 
                 {
-                    text = CBinary("\x53\x4D\x50\x27\x16\x20", 6);  // µ±Ç°
-                    Dtcstatus_text.Append(text);   // ²åÈëÖÁ×´Ì¬ÎÄ±¾ÈİÆ÷ÖĞ
+                    text = CBinary("\x53\x4D\x50\x27\x16\x20", 6);  // å½“å‰
+                    Dtcstatus_text.Append(text);   // æ’å…¥è‡³çŠ¶æ€æ–‡æœ¬å®¹å™¨ä¸­
 
-                    // Ç°Á½Î»¹ÊÕÏÂëÊıÖµÆ´½Ó
+                    // å‰ä¸¤ä½æ•…éšœç æ•°å€¼æ‹¼æ¥
                     char buf[500];
                     strTemp = "";
                     sprintf(buf, "%02X", binAns[i]);
@@ -1220,14 +1220,14 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
                     sprintf(buf, "%02X", binAns[i + 1]);
                     strTemp += buf;
 
-                    str_value_select.push_back(strTemp);  // ´æ·Å¹ÊÕÏÂëÃ¿¸ö»Ø¸´Êı¾İµÄÍ·Á½Î»  (Ö»°Ñµ±Ç°×´Ì¬µÄÊı¾İ²åÈëÕâ¸öÈİÆ÷ÖĞ£¬ÓÃÓÚÅÅĞò)
+                    str_value_select.push_back(strTemp);  // å­˜æ”¾æ•…éšœç æ¯ä¸ªå›å¤æ•°æ®çš„å¤´ä¸¤ä½  (åªæŠŠå½“å‰çŠ¶æ€çš„æ•°æ®æ’å…¥è¿™ä¸ªå®¹å™¨ä¸­ï¼Œç”¨äºæ’åº)
                 }
                 else if (binAns[i + 2] & 0x08)
                 {
-                    text = CBinary("\x53\x5D\x00\x00\x38\xD0", 6);  // ÀúÊ·
+                    text = CBinary("\x53\x5D\x00\x00\x38\xD0", 6);  // å†å²
                     bin_text_temp.Append(text);
 
-                    // Ç°Á½Î»¹ÊÕÏÂëÊıÖµÆ´½Ó
+                    // å‰ä¸¤ä½æ•…éšœç æ•°å€¼æ‹¼æ¥
                     char buf[500];
                     strTemp = "";
                     sprintf(buf, "%02X", binAns[i]);
@@ -1235,14 +1235,14 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
                     sprintf(buf, "%02X", binAns[i + 1]);
                     strTemp += buf;
 
-                    str_value_temp.push_back(strTemp);  // ´æ·Å¹ÊÕÏÂëÃ¿¸ö»Ø¸´Êı¾İµÄÍ·Á½Î»
+                    str_value_temp.push_back(strTemp);  // å­˜æ”¾æ•…éšœç æ¯ä¸ªå›å¤æ•°æ®çš„å¤´ä¸¤ä½
                 }
                 else
                 {
-                    text = CBinary("\x53\x5D\x00\x00\x32\x4D", 6);  // Î´¶¨
+                    text = CBinary("\x53\x5D\x00\x00\x32\x4D", 6);  // æœªå®š
                     bin_text_temp.Append(text);
 
-                    // Ç°Á½Î»¹ÊÕÏÂëÊıÖµÆ´½Ó
+                    // å‰ä¸¤ä½æ•…éšœç æ•°å€¼æ‹¼æ¥
                     char buf[500];
                     strTemp = "";
                     sprintf(buf, "%02X", binAns[i]);
@@ -1250,11 +1250,11 @@ W_ErrorCode CSubaruBaseCanApp::New_ReadTroubleCode()
                     sprintf(buf, "%02X", binAns[i + 1]);
                     strTemp += buf;
 
-                    str_value_temp.push_back(strTemp);  // ´æ·Å¹ÊÕÏÂëÃ¿¸ö»Ø¸´Êı¾İµÄÍ·Á½Î»
+                    str_value_temp.push_back(strTemp);  // å­˜æ”¾æ•…éšœç æ¯ä¸ªå›å¤æ•°æ®çš„å¤´ä¸¤ä½
                 }
             }
         }
-        // ½«ÁÙÊ±µÄ×´Ì¬ÎÄ±¾ºÍ»Ø¸´Êı¾İ²åÈëĞèÒªµÄÈİÆ÷ÖĞ
+        // å°†ä¸´æ—¶çš„çŠ¶æ€æ–‡æœ¬å’Œå›å¤æ•°æ®æ’å…¥éœ€è¦çš„å®¹å™¨ä¸­
         for (int j = 0; j < bin_text_temp.GetByteCount(); j++)
         {
             Dtcstatus_text.Append(bin_text_temp[j]);
@@ -1283,11 +1283,11 @@ W_ErrorCode CSubaruBaseCanApp::ReadTroubleCode()
     vector<vector<W_I16>> iReadListSet;
     vector<vector<string>> SearchReasault;
 
-    if (FALSE == SubaRead.OpenTabFile(Subaru_Read_CBF))  //¶ÁÂëÃüÁîºÍ·½Ê½
+    if (FALSE == SubaRead.OpenTabFile(Subaru_Read_CBF))  //è¯»ç å‘½ä»¤å’Œæ–¹å¼
         return CErrorCode::EC_ECU_REFUSE;
 
     vecStr.push_back(SystemNum);
-    SubaRead.SearchString(SearchReasault, FALSE, 0, 0, vecStr);   // ÒÔ SystemNum ÎªÄÚÈİÉ¸Ñ¡
+    SubaRead.SearchString(SearchReasault, FALSE, 0, 0, vecStr);   // ä»¥ SystemNum ä¸ºå†…å®¹ç­›é€‰
 
     StatusCmp.clear();
     cmdSet.clear();
@@ -1299,12 +1299,12 @@ W_ErrorCode CSubaruBaseCanApp::ReadTroubleCode()
             {
                 if (MenuShow[k][6] == ReadTroubleMode[i])  // MenuShow[6] = SubaRead[i][1]
                 {
-                    strTemp = ReadTroubleMode[i].substr(0, 4);//ĞÂ¿â07161520  06161520µÄÖµºó8¸ö×Ö½ÚÊÇÒ»ÑùµÄ ºóÃæµÄ×´Ì¬»á½«Ç°ÃæµÄ¸²¸Çµô
+                    strTemp = ReadTroubleMode[i].substr(0, 4);//æ–°åº“07161520  06161520çš„å€¼å8ä¸ªå­—èŠ‚æ˜¯ä¸€æ ·çš„ åé¢çš„çŠ¶æ€ä¼šå°†å‰é¢çš„è¦†ç›–æ‰
                     IntTemp = StringToHex(strTemp);
                     StatusCmp[IntTemp] = FxGetStdString(CBinary("\x53\x4d", 2) + String2Binary(MenuShow[k][7]));   // 534d + MenuShow[7]
                 }
             }
-            if (ReadTroubleMode[i] == SearchReasault[j][1])  // ¶Ô [1]~[6] ½øĞĞ×ª»»
+            if (ReadTroubleMode[i] == SearchReasault[j][1])  // å¯¹ [1]~[6] è¿›è¡Œè½¬æ¢
             {
                 ivecTemp.clear();
                 strTemp = ReadTroubleMode[i].substr(0, 4);
@@ -1323,7 +1323,7 @@ W_ErrorCode CSubaruBaseCanApp::ReadTroubleCode()
     }
     if (cmdSet.size() <= 0)
         return CErrorCode::EC_SUCCESS;
-    if ((0x01 == iReadListSet[0][2] || 0x02 == iReadListSet[0][2]) && ReadTroubleMode.size() > 1)  // ×ª»»Íê³Éºó½øĞĞÅĞ¶Ï
+    if ((0x01 == iReadListSet[0][2] || 0x02 == iReadListSet[0][2]) && ReadTroubleMode.size() > 1)  // è½¬æ¢å®Œæˆåè¿›è¡Œåˆ¤æ–­
     {
         cmdSet.clear();
         cmdSet.push_back(String2Binary(SearchReasault[0][4] + SearchReasault[0][SearchReasault[0].size() - 1]));
@@ -1358,7 +1358,7 @@ W_ErrorCode CSubaruBaseCanApp::ReadTroubleCode()
     for (W_I16 k = 0; k < bgAns.GetByteCount(); k++)
     {
         binAns = bgAns[k];
-        if (binAns.GetByteCount() < 4 && (0x01 == iReadListSet[0][1] || 0x02 == iReadListSet[0][1]))  // Í¨¹ı¿ØÖÆÎ»ÅĞ¶Ï¹ÊÕÏÂë
+        if (binAns.GetByteCount() < 4 && (0x01 == iReadListSet[0][1] || 0x02 == iReadListSet[0][1]))  // é€šè¿‡æ§åˆ¶ä½åˆ¤æ–­æ•…éšœç 
             return CErrorCode::EC_SUCCESS;
         else if ((0x01 == iReadListSet[0][1] || 0x02 == iReadListSet[0][1]) && 0x7f == binAns[0])
             return CErrorCode::EC_SUCCESS;
@@ -1372,13 +1372,13 @@ W_ErrorCode CSubaruBaseCanApp::ReadTroubleCode()
             binAns.DeleteByte(0);
             binAns.DeleteByte(0);
             binAns.DeleteByte(0);
-            binAns.DeleteByte(0);  // È¥³ı4¸ö¿ØÖÆÎ»ºó
+            binAns.DeleteByte(0);  // å»é™¤4ä¸ªæ§åˆ¶ä½å
             for (W_I16 i = 0; i + 2 < binAns.GetByteCount(); i += 4)
             {
                 int bin1 = binAns[i];
                 int bin2 = binAns[i + 1];
                 int bin3 = binAns[i + 2];
-                if ((binAns[i] != 0x00 || binAns[i + 1] != 0x00) && (binAns[i + 2] & iReadListSet[k][2]))//ÏàÓë ÎªÕæÕâÏÔÊ¾³ö¶ÔÓ¦µÄ 02¿ØÖÆµ±Ç°¹ÊÕÏÂë 08¿ØÖÆ¹ıÈ¥¹ÊÕÏÂë
+                if ((binAns[i] != 0x00 || binAns[i + 1] != 0x00) && (binAns[i + 2] & iReadListSet[k][2]))//ç›¸ä¸ ä¸ºçœŸè¿™æ˜¾ç¤ºå‡ºå¯¹åº”çš„ 02æ§åˆ¶å½“å‰æ•…éšœç  08æ§åˆ¶è¿‡å»æ•…éšœç 
                 {
                     char buf[3];
                     strTemp = "";
@@ -1401,10 +1401,10 @@ W_ErrorCode CSubaruBaseCanApp::ReadTroubleCode()
             }
         }
 
-        // ÅÅĞò ½«µ±Ç°¹ÊÕÏÏÔÊ¾µ½Ç°Ãæ
+        // æ’åº å°†å½“å‰æ•…éšœæ˜¾ç¤ºåˆ°å‰é¢
         for (W_I16 i = 0; i < SubaruBRZ_SET->DtcSet.size() && StatusCmp.size() > 0; i++)
         {
-            if (SubaruBRZ_SET->DtcSet[i][1] == FxGetStdString(CBinary("\x53\x4D\xDE\x3D\x16\x20", 6)))//µ±Ç°¹ÊÕÏ:CBinary("\x53\x4D\x00\x00\x3A\xDC", 6)
+            if (SubaruBRZ_SET->DtcSet[i][1] == FxGetStdString(CBinary("\x53\x4D\xDE\x3D\x16\x20", 6)))//å½“å‰æ•…éšœ:CBinary("\x53\x4D\x00\x00\x3A\xDC", 6)
             {
                 W_I16 j = 0;
                 vector<string> vecTemp;
@@ -1482,15 +1482,15 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
     vector<vector<string>> SearchResault;
 
 
-    for (int i = 0; i < str_value_select.size(); i++)  // É¸Ñ¡ËÑË÷Ïî
+    for (int i = 0; i < str_value_select.size(); i++)  // ç­›é€‰æœç´¢é¡¹
     {
         CBinary m_id = CBinary("\x00\x00", 2);
-        CBinary Dtc_id = HexString2Binary(System_Search_Id);  // Ñ¡²Ëµ¥Ê±¼Ç×¡µÄµã»÷ÏîË÷Òı
-        CBinary value_id = HexString2Binary(str_value_select[i]);  // ¶ÁÂëÃüÁî»Ø¸´µÄÊı¾İ
+        CBinary Dtc_id = HexString2Binary(System_Search_Id);  // é€‰èœå•æ—¶è®°ä½çš„ç‚¹å‡»é¡¹ç´¢å¼•
+        CBinary value_id = HexString2Binary(str_value_select[i]);  // è¯»ç å‘½ä»¤å›å¤çš„æ•°æ®
 
         Dtc_id += m_id;
         Dtc_id += value_id;
-        Dtc_id += CBinary("\x00\x07", 2);   // Suba_Dtc_Dex_ ÖĞÆ´½ÓµÄÈıÏî
+        Dtc_id += CBinary("\x00\x07", 2);   // Suba_Dtc_Dex_ ä¸­æ‹¼æ¥çš„ä¸‰é¡¹
 
         Dtcvalue_select.Append(Dtc_id);
     }
@@ -1498,22 +1498,22 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
 
     for (int i = 0; i < Dtcvalue_select.GetByteCount(); i++)
     {
-        binTemp = CBinary(STD_STANDARD"\x13", 6);    //Çë²Î¿¼³µÁ¾Î¬ĞŞÊÖ²á
+        binTemp = CBinary(STD_STANDARD"\x13", 6);    //è¯·å‚è€ƒè½¦è¾†ç»´ä¿®æ‰‹å†Œ
 
-        strData = GetStringValue(Suba_DTC_NEW_CBF, Dtcvalue_select[i]);  // ËÑË÷Æ´½ÓµÄÖµ
+        strData = GetStringValue(Suba_DTC_NEW_CBF, Dtcvalue_select[i]);  // æœç´¢æ‹¼æ¥çš„å€¼
         if (!strData.size())
         {
-            Dtctext_all.Append(binTemp);  // Èç¹ûËÑË÷²»µ½£¬ÔòÏÔÊ¾ "Çë²Î¿¼³µÁ¾Î¬ĞŞÊÖ²á"
+            Dtctext_all.Append(binTemp);  // å¦‚æœæœç´¢ä¸åˆ°ï¼Œåˆ™æ˜¾ç¤º "è¯·å‚è€ƒè½¦è¾†ç»´ä¿®æ‰‹å†Œ"
         }
         else
         {
-            profile.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
-            string strtemp = profile.GetItemValue(Subaru_DTC_TTL, Subaru_DtcText_TXT);  // DtcText ¹ÊÕÏÂëÏÔÊ¾ÎÄ±¾
+            profile.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
+            string strtemp = profile.GetItemValue(Subaru_DTC_TTL, Subaru_DtcText_TXT);  // DtcText æ•…éšœç æ˜¾ç¤ºæ–‡æœ¬
 
             CBinary bin_temp = HexString2Binary(strtemp);
             CBinary bin = CBinary("\x53\x5D", 2);
             bin += bin_temp;
-            Dtctext_all.Append(bin);  // ²åÈëÉ¸Ñ¡µÄ DtcText ,CBinary
+            Dtctext_all.Append(bin);  // æ’å…¥ç­›é€‰çš„ DtcText ,CBinary
         }
     }
 
@@ -1530,9 +1530,9 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
         char buf_s[100];
         char buf_t[100];
         char buf_fo[100];
-        char* m_byte = &str_value_select[i][0];   // È¡»Ø¸´Êı¾İ×éÖĞµÄÃ¿Ò»Ïî  char* È¡Ö·£¬È¡»Ø¸´Êı¾İÖĞÃ¿Ò»ÏîµÄstringÖµ
+        char* m_byte = &str_value_select[i][0];   // å–å›å¤æ•°æ®ç»„ä¸­çš„æ¯ä¸€é¡¹  char* å–å€ï¼Œå–å›å¤æ•°æ®ä¸­æ¯ä¸€é¡¹çš„stringå€¼
 
-        // ·ÖÀëÎª char µ¥¸ö×Ö½Ú
+        // åˆ†ç¦»ä¸º char å•ä¸ªå­—èŠ‚
         char first_byte = m_byte[0];
         char second_byte = m_byte[1];
         char third_byte = m_byte[2];
@@ -1544,25 +1544,25 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
         sprintf(buf_s, "%c", second_byte);
         sprintf(buf_t, "%c", third_byte);
         sprintf(buf_fo, "%c", fourth_byte);
-        str_first += buf_f;   // string: µÚ1Î»
-        str_second += buf_s; // string: µÚ2Î»
-        str_third += buf_t; // string: µÚ3Î»
-        str_fourth += buf_fo; // string: µÚ4Î»
-        str_one = str_first + str_second;    // »Ø¸´Êı¾İ×éÖĞµÄµÚÒ»¸ö×Ö½ÚÆ´½Ó£¬ÓÃÓÚÅĞ¶Ï PCBU
+        str_first += buf_f;   // string: ç¬¬1ä½
+        str_second += buf_s; // string: ç¬¬2ä½
+        str_third += buf_t; // string: ç¬¬3ä½
+        str_fourth += buf_fo; // string: ç¬¬4ä½
+        str_one = str_first + str_second;    // å›å¤æ•°æ®ç»„ä¸­çš„ç¬¬ä¸€ä¸ªå­—èŠ‚æ‹¼æ¥ï¼Œç”¨äºåˆ¤æ–­ PCBU
 
         CBinary bin_one = HexString2Binary(str_one);
         //CBinary ding = CBinary("\x40",1);
 
-        if (bin_one < CBinary("\x40", 1))   // µ±µÚÒ»¸ö×Ö½Ú < 0x40Ê±£¬ÏÔÊ¾Îª "P" += »Ø¸´ÃüÁî
+        if (bin_one < CBinary("\x40", 1))   // å½“ç¬¬ä¸€ä¸ªå­—èŠ‚ < 0x40æ—¶ï¼Œæ˜¾ç¤ºä¸º "P" += å›å¤å‘½ä»¤
         {
             first_byte = 'P';
             string str;
             sprintf(buf_f, "%c", first_byte);  // char -> string
             str += buf_f;
-            str += str_value_select[i];  // Æ´½Ó
+            str += str_value_select[i];  // æ‹¼æ¥
             str_change_value.push_back(str);
         }
-        else if (bin_one >= CBinary("\x40", 1) && bin_one < CBinary("\x80", 1))  // µ±µÚÒ»¸ö×Ö½Ú >= 0x40 && < 0x80Ê±£¬ÏÔÊ¾Îª  ("C"+Ìí¼Ó×Ö½Ú) += »Ø¸´ÃüÁî
+        else if (bin_one >= CBinary("\x40", 1) && bin_one < CBinary("\x80", 1))  // å½“ç¬¬ä¸€ä¸ªå­—èŠ‚ >= 0x40 && < 0x80æ—¶ï¼Œæ˜¾ç¤ºä¸º  ("C"+æ·»åŠ å­—èŠ‚) += å›å¤å‘½ä»¤
         {
             first_byte = 'C';
             string str, str_add;
@@ -1586,21 +1586,21 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
             {
                 str_add = "3";
             }
-            str += str_add;  //  C Æ´½Ó Ìí¼Ó×Ö½Ú
+            str += str_add;  //  C æ‹¼æ¥ æ·»åŠ å­—èŠ‚
 
             vector<string>vstr_temp;
             vstr_temp.push_back(str_second);
             vstr_temp.push_back(str_third);
             vstr_temp.push_back(str_fourth);
 
-            // Æ´½Ó
-            str += vstr_temp[0];  // È¡³ıÁËÍ·×Ö½ÚÖ®Íâ£¬Ê£ÏÂµÄÈıÎ»×Ö½Ú   
+            // æ‹¼æ¥
+            str += vstr_temp[0];  // å–é™¤äº†å¤´å­—èŠ‚ä¹‹å¤–ï¼Œå‰©ä¸‹çš„ä¸‰ä½å­—èŠ‚   
             str += vstr_temp[1];
             str += vstr_temp[2];
 
             str_change_value.push_back(str);
         }
-        else if (bin_one >= CBinary("\x80", 1) && bin_one < CBinary("\xC0", 1))  // µ±µÚÒ»¸ö×Ö½Ú >= 0x80 && < 0xC0Ê±£¬ÏÔÊ¾Îª  ("B"+Ìí¼Ó×Ö½Ú) += »Ø¸´ÃüÁî
+        else if (bin_one >= CBinary("\x80", 1) && bin_one < CBinary("\xC0", 1))  // å½“ç¬¬ä¸€ä¸ªå­—èŠ‚ >= 0x80 && < 0xC0æ—¶ï¼Œæ˜¾ç¤ºä¸º  ("B"+æ·»åŠ å­—èŠ‚) += å›å¤å‘½ä»¤
         {
             first_byte = 'B';
             string str, str_add;
@@ -1636,7 +1636,7 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
 
             str_change_value.push_back(str);
         }
-        else if (bin_one >= CBinary("\xC0", 1) && bin_one <= CBinary("\xFF", 1))  // µ±µÚÒ»¸ö×Ö½Ú >= 0xC0 && <= 0xFFÊ±£¬ÏÔÊ¾Îª  ("U"+Ìí¼Ó×Ö½Ú) += »Ø¸´ÃüÁî
+        else if (bin_one >= CBinary("\xC0", 1) && bin_one <= CBinary("\xFF", 1))  // å½“ç¬¬ä¸€ä¸ªå­—èŠ‚ >= 0xC0 && <= 0xFFæ—¶ï¼Œæ˜¾ç¤ºä¸º  ("U"+æ·»åŠ å­—èŠ‚) += å›å¤å‘½ä»¤
         {
             first_byte = 'U';
             string str, str_add;
@@ -1675,16 +1675,16 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanDtcShow()
         uiTrouble.AddOneItem(str_change_value[i], FxGetStdString(Dtctext_all[i]), FxGetStdString(Dtcstatus_text[i]));
     }
 
-    uiTrouble.EnableClearDTC(false);  // Çå³ı¹ÊÕÏÂëÏÔÊ¾
+    uiTrouble.EnableClearDTC(false);  // æ¸…é™¤æ•…éšœç æ˜¾ç¤º
 
-    int select = uiTrouble.ShowCtrl();  // ÏÔÊ¾¹ÊÕÏÂë
+    int select = uiTrouble.ShowCtrl();  // æ˜¾ç¤ºæ•…éšœç 
 
     str_change_value.clear();
     Dtctext_all.Clear();
     Dtcstatus_text.Clear();
 
 
-    //int select = uiTrouble.ShowCtrl();  // ÏÔÊ¾¹ÊÕÏÂë
+    //int select = uiTrouble.ShowCtrl();  // æ˜¾ç¤ºæ•…éšœç 
     //while (1)
     //{
     //    int select = uiTrouble.ShowCtrl();
@@ -1712,7 +1712,7 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanDtcShow()
     vector<string>    vecStr;
     vector<vector<string>> SearchResault;
 
-    if (FALSE == SubaDTC.OpenTabFile(Subaru_DTC_CBF))  //¹ÊÕÏÂë²éÑ¯
+    if (FALSE == SubaDTC.OpenTabFile(Subaru_DTC_CBF))  //æ•…éšœç æŸ¥è¯¢
         return CErrorCode::EC_DATA;
 
     vecStr.push_back(SystemNum);
@@ -1725,10 +1725,10 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanDtcShow()
 #endif
     for (W_I16 i = 0; i < SubaruBRZ_SET->DtcSet.size(); i++)
     {
-        binTemp = CBinary(STD_STANDARD"\x13", 6);    //Çë²Î¿¼³µÁ¾Î¬ĞŞÊÖ²á
+        binTemp = CBinary(STD_STANDARD"\x13", 6);    //è¯·å‚è€ƒè½¦è¾†ç»´ä¿®æ‰‹å†Œ
         for (W_I16 j = 0; j < SearchResault.size(); j++)
         {
-            if (CompareStringIsEquation(SubaruBRZ_SET->DtcSet[i][0], SearchResault[j][1]) && (SearchResault[j][2] != "0000"))//ÎªffffµÄÊ±ºò²ÅÊÇĞèÒªµÄ¹ÊÕÏÂëÄÚÈİ
+            if (CompareStringIsEquation(SubaruBRZ_SET->DtcSet[i][0], SearchResault[j][1]) && (SearchResault[j][2] != "0000"))//ä¸ºffffçš„æ—¶å€™æ‰æ˜¯éœ€è¦çš„æ•…éšœç å†…å®¹
             {
                 binTemp = String2Binary(SearchResault[j][3]);
                 break;
@@ -1767,12 +1767,12 @@ W_ErrorCode CSubaruBaseCanApp::New_ClearTroubleCode()
     CFileManager profile;
 
 
-    if (DF_IDNO == FxShowMessageBox(STD_TTL_MSG_ERASEDTC, STD_TXT_MSG_ENGINEOFFKEYON, DF_MB_YESNO, DT_LEFT))  // µã»ğ¿ª¹ØÊÇ·ñ´ò¿ª£¬ÒıÇæÊÇ·ñ¹Ø±Õ
+    if (DF_IDNO == FxShowMessageBox(STD_TTL_MSG_ERASEDTC, STD_TXT_MSG_ENGINEOFFKEYON, DF_MB_YESNO, DT_LEFT))  // ç‚¹ç«å¼€å…³æ˜¯å¦æ‰“å¼€ï¼Œå¼•æ“æ˜¯å¦å…³é—­
         return CErrorCode::EC_SUCCESS;
-    if (DF_IDNO == FxShowMessageBox(STD_TTL_MSG_ERASEDTC, STD_INFO_DO_DELETE_DTC_FREEZE, DF_MB_YESNO, DT_CENTER))  // ¹ÊÕÏÂëÓë¶³½áÊı¾İ½«±»É¾³ı
+    if (DF_IDNO == FxShowMessageBox(STD_TTL_MSG_ERASEDTC, STD_INFO_DO_DELETE_DTC_FREEZE, DF_MB_YESNO, DT_CENTER))  // æ•…éšœç ä¸å†»ç»“æ•°æ®å°†è¢«åˆ é™¤
         return CErrorCode::EC_SUCCESS;
 
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);  // Óë³µÁ¾Í¨ĞÅÖĞ
+    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);  // ä¸è½¦è¾†é€šä¿¡ä¸­
 
     CBinary bin2202("\x22\x02\x05", 3);
     CBinary bin22f1("\x22\xF1\x00", 3);
@@ -1801,7 +1801,7 @@ W_ErrorCode CSubaruBaseCanApp::New_ClearTroubleCode()
 
 
     binTemp.Clear();
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal())) //°²È«·ÃÎÊ
+    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal())) //å®‰å…¨è®¿é—®
     {
         SendAndRecive(bin22f1, binAns);
         SendAndRecive(bin1001, binAns);
@@ -1836,17 +1836,17 @@ W_ErrorCode CSubaruBaseCanApp::New_ClearTroubleCode()
 
     FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
     Sleep(500);
-    FxShowMessageBox(STD_TTL_MSG_ERASEDTC, CBinary("\x53\x5F\x00\x00\x00\x14", 6), DF_MB_OK, DT_CENTER);  // ÇåÂëÃüÁîÒÑÖ´ĞĞ
+    FxShowMessageBox(STD_TTL_MSG_ERASEDTC, CBinary("\x53\x5F\x00\x00\x00\x14", 6), DF_MB_OK, DT_CENTER);  // æ¸…ç å‘½ä»¤å·²æ‰§è¡Œ
     Sleep(1000);
 
 
 SENDDTC:
-    // ¶ÁÈ¡¹ÊÕÏÂëÃüÁî
+    // è¯»å–æ•…éšœç å‘½ä»¤
     strData = GetStringValue(Country_Ecu_File, Ecu_Id_Select[0]);
     if (!strData.size())
         return rect = CErrorCode::EC_DATA;
-    profile.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
-    strMenu = profile.GetItemValue(Subaru_DTC_TTL, Subaru_ReadDtc_TXT);    // »ñÈ¡Òª·¢ËÍµÄ¶ÁÂëÃüÁî
+    profile.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
+    strMenu = profile.GetItemValue(Subaru_DTC_TTL, Subaru_ReadDtc_TXT);    // è·å–è¦å‘é€çš„è¯»ç å‘½ä»¤
 
     SeparatorString(strMenu, ",", str_ReadDtc);
 
@@ -1903,7 +1903,7 @@ W_ErrorCode CSubaruBaseCanApp::ClearTroubleCode()
         return CErrorCode::EC_SUCCESS;
     }
 
-    if (FALSE == SubaClear.OpenTabFile(Subaru_Clear_CBF))  //ÇåÂëÃüÁî²éÑ¯
+    if (FALSE == SubaClear.OpenTabFile(Subaru_Clear_CBF))  //æ¸…ç å‘½ä»¤æŸ¥è¯¢
         return CErrorCode::EC_DATA;
     vecStr.push_back(SystemNum);
     SubaClear.SearchString(SearchResault, FALSE, 0, 0, vecStr);
@@ -1911,7 +1911,7 @@ W_ErrorCode CSubaruBaseCanApp::ClearTroubleCode()
     vecStr.clear();
     for (W_I16 i = 0; i < MenuShow.size(); i++)
     {
-        if ("e9021620" == MenuShow[i][7])   // ÓëMenushow[7]±È½Ï
+        if ("e9021620" == MenuShow[i][7])   // ä¸Menushow[7]æ¯”è¾ƒ
             vecStr.push_back(MenuShow[i][6]);
     }
     if (vecStr.size() <= 0)
@@ -1941,7 +1941,7 @@ W_ErrorCode CSubaruBaseCanApp::ClearTroubleCode()
         if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binErase, binAns)))
             return rect;
     }
-    else    //°²È«·ÃÎÊ·½Ê½
+    else    //å®‰å…¨è®¿é—®æ–¹å¼
     {
         CBinary bin3101("\x31\x01\xFF\x00\x00\x00", 6);
         CBinary bin3103("\x31\x03\xFF\x00", 4);
@@ -2024,7 +2024,7 @@ W_ErrorCode CSubaruBaseCanApp::QuickClearTroubleCode()
     {
         binAns = SubaruCanSendReceive(binErase);
     }
-    else    //°²È«·ÃÎÊ·½Ê½
+    else    //å®‰å…¨è®¿é—®æ–¹å¼
     {
         CBinary bin3101("\x31\x01\xFF\x00\x00\x00", 6);
         CBinary bin3103("\x31\x03\xFF\x00", 4);
@@ -2071,7 +2071,7 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanGetDsList()
     W_I16 Flag;
     CBinary binTemp, binAns;
 
-    /* ÃüÁî²É¼¯ È¥ÖØ */
+    /* å‘½ä»¤é‡‡é›† å»é‡ */
     for (W_I16 i = 0; i < GetDS.size(); i++)
     {
         if (GetDS[i].size() < 10)
@@ -2081,11 +2081,11 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanGetDsList()
         else
         {
             strTemp = GetDS[i][1];
-            strTemp += GetDS[i][2];    // Æ´½Ó [1] ºÍ [2]
+            strTemp += GetDS[i][2];    // æ‹¼æ¥ [1] å’Œ [2]
             CmdSet.push_back(strTemp);
         }
     }
-    for (W_I16 i = 0; i < CmdSet.size(); i++)  // È¥ÖØ
+    for (W_I16 i = 0; i < CmdSet.size(); i++)  // å»é‡
     {
         for (W_I16 j = i + 1; j < CmdSet.size(); j++)
         {
@@ -2095,7 +2095,7 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanGetDsList()
     }
 
     W_I32 IntTemp;
-    /* ·¢ËÍËùÓĞÊı¾İÁ÷ÃüÁî */
+    /* å‘é€æ‰€æœ‰æ•°æ®æµå‘½ä»¤ */
     for (W_I16 i = 0; i < CmdSet.size(); i++)
     {
         FxProgressBar(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, 100.0 / (float)CmdSet.size() * i);
@@ -2103,16 +2103,16 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanGetDsList()
         binAns = SubaruCanSendReceive(String2Binary(CmdSet[i]));
         if (binAns.GetByteCount() > 0 && 0x7f != binAns[0])
         {
-            // Ö»±£´æ»Ø¸´µÄÓĞĞ§Êı¾İ
+            // åªä¿å­˜å›å¤çš„æœ‰æ•ˆæ•°æ®
             for (W_I16 j = 0; j < String2Binary(CmdSet[i]).GetByteCount() && binAns.GetByteCount() > 0; j++)
                 binAns.DeleteByte(0);
-            AnsSet[IntTemp] = binAns;  // ·ÅÈëAnsSetÖĞ
+            AnsSet[IntTemp] = binAns;  // æ”¾å…¥AnsSetä¸­
         }
     }
 
     W_I32 IntTemp1, IntTemp2, counts = 0;
     vector<vector<string> > vecvecTemp;
-    /* µÚ¶ş´ÎÉ¸Ñ¡ ¸ù¾İ»Ø¸´ÁËµÄÊı¾İÁ÷ÃüÁî */
+    /* ç¬¬äºŒæ¬¡ç­›é€‰ æ ¹æ®å›å¤äº†çš„æ•°æ®æµå‘½ä»¤ */
     for (W_I16 i = 0; i < GetDS.size(); i++)
     {
         Flag = 0;
@@ -2123,8 +2123,8 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanGetDsList()
         IntTemp2 = StringToHex(strTemp);
         for (map<W_I32, CBinary>::iterator pMap = AnsSet.begin(); pMap != AnsSet.end(); pMap++)
         {
-            //if (pMap->first == IntTemp2 && pMap->second.GetByteCount() >= IntTemp + IntTemp1)// »Ø¸´ÁËµÄÃüÁî Èç¹ûÓĞĞ§Êı¾İ³¤¶È²»¹»¸ÃÌõÊı¾İÁ÷ËùĞèÒªµÄ³¤¶È,Ôò²»ÏÔÊ¾¸ÃÊı¾İÁ÷ (Óë²Î¿¼Éè±¸´¦Àí·½Ê½²»Í¬)
-            if (pMap->first == IntTemp2)//ÏÔÊ¾ËùÓĞÊı¾İÁ÷    ½« Æ´½Ó È¥ÖØ ºóµÄÊı¾İ·ÅÈëÈİÆ÷
+            //if (pMap->first == IntTemp2 && pMap->second.GetByteCount() >= IntTemp + IntTemp1)// å›å¤äº†çš„å‘½ä»¤ å¦‚æœæœ‰æ•ˆæ•°æ®é•¿åº¦ä¸å¤Ÿè¯¥æ¡æ•°æ®æµæ‰€éœ€è¦çš„é•¿åº¦,åˆ™ä¸æ˜¾ç¤ºè¯¥æ•°æ®æµ (ä¸å‚è€ƒè®¾å¤‡å¤„ç†æ–¹å¼ä¸åŒ)
+            if (pMap->first == IntTemp2)//æ˜¾ç¤ºæ‰€æœ‰æ•°æ®æµ    å°† æ‹¼æ¥ å»é‡ åçš„æ•°æ®æ”¾å…¥å®¹å™¨
             {
                 Flag = 1;
                 break;
@@ -2146,7 +2146,7 @@ W_ErrorCode CSubaruBaseCanApp::New_SubaruCanGetDsList()
 }
 
 
-/* É¸Ñ¡Êı¾İÁ÷ Ö»½øĞĞÒ»´Î */
+/* ç­›é€‰æ•°æ®æµ åªè¿›è¡Œä¸€æ¬¡ */
 W_ErrorCode CSubaruBaseCanApp::SubaruCanGetDsList()
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
@@ -2157,7 +2157,7 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanGetDsList()
     W_I16 Flag;
     CBinary binTemp, binAns;
 
-    /* ÃüÁî²É¼¯ È¥ÖØ */
+    /* å‘½ä»¤é‡‡é›† å»é‡ */
     for (W_I16 i = 0; i < GetDS.size(); i++)
     {
         if (GetDS[i].size() < 10)
@@ -2167,11 +2167,11 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanGetDsList()
         else
         {
             strTemp = GetDS[i][1];
-            strTemp += GetDS[i][2];    // Æ´½Ó [1] ºÍ [2]
+            strTemp += GetDS[i][2];    // æ‹¼æ¥ [1] å’Œ [2]
             CmdSet.push_back(strTemp);
         }
     }
-    for (W_I16 i = 0; i < CmdSet.size(); i++)  // È¥ÖØ
+    for (W_I16 i = 0; i < CmdSet.size(); i++)  // å»é‡
     {
         for (W_I16 j = i + 1; j < CmdSet.size(); j++)
         {
@@ -2181,7 +2181,7 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanGetDsList()
     }
 
     W_I32 IntTemp;
-    /* ·¢ËÍËùÓĞÊı¾İÁ÷ÃüÁî */
+    /* å‘é€æ‰€æœ‰æ•°æ®æµå‘½ä»¤ */
     for (W_I16 i = 0; i < CmdSet.size(); i++)
     {
         FxProgressBar(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, 100.0 / (float)CmdSet.size() * i);
@@ -2189,16 +2189,16 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanGetDsList()
         binAns = SubaruCanSendReceive(String2Binary(CmdSet[i]));
         if (binAns.GetByteCount() > 0 && 0x7f != binAns[0])
         {
-            // Ö»±£´æ»Ø¸´µÄÓĞĞ§Êı¾İ
+            // åªä¿å­˜å›å¤çš„æœ‰æ•ˆæ•°æ®
             for (W_I16 j = 0; j < String2Binary(CmdSet[i]).GetByteCount() && binAns.GetByteCount() > 0; j++)
                 binAns.DeleteByte(0);
-            AnsSet[IntTemp] = binAns;  // ·ÅÈëAnsSetÖĞ
+            AnsSet[IntTemp] = binAns;  // æ”¾å…¥AnsSetä¸­
         }
     }
 
     W_I32 IntTemp1, IntTemp2, counts = 0;
     vector<vector<string> > vecvecTemp;
-    /* µÚ¶ş´ÎÉ¸Ñ¡ ¸ù¾İ»Ø¸´ÁËµÄÊı¾İÁ÷ÃüÁî */
+    /* ç¬¬äºŒæ¬¡ç­›é€‰ æ ¹æ®å›å¤äº†çš„æ•°æ®æµå‘½ä»¤ */
     for (W_I16 i = 0; i < GetDS.size(); i++)
     {
         Flag = 0;
@@ -2209,8 +2209,8 @@ W_ErrorCode CSubaruBaseCanApp::SubaruCanGetDsList()
         IntTemp2 = StringToHex(strTemp);
         for (map<W_I32, CBinary>::iterator pMap = AnsSet.begin(); pMap != AnsSet.end(); pMap++)
         {
-            //if (pMap->first == IntTemp2 && pMap->second.GetByteCount() >= IntTemp + IntTemp1)// »Ø¸´ÁËµÄÃüÁî Èç¹ûÓĞĞ§Êı¾İ³¤¶È²»¹»¸ÃÌõÊı¾İÁ÷ËùĞèÒªµÄ³¤¶È,Ôò²»ÏÔÊ¾¸ÃÊı¾İÁ÷ (Óë²Î¿¼Éè±¸´¦Àí·½Ê½²»Í¬)
-            if (pMap->first == IntTemp2)//ÏÔÊ¾ËùÓĞÊı¾İÁ÷    ½« Æ´½Ó È¥ÖØ ºóµÄÊı¾İ·ÅÈëÈİÆ÷
+            //if (pMap->first == IntTemp2 && pMap->second.GetByteCount() >= IntTemp + IntTemp1)// å›å¤äº†çš„å‘½ä»¤ å¦‚æœæœ‰æ•ˆæ•°æ®é•¿åº¦ä¸å¤Ÿè¯¥æ¡æ•°æ®æµæ‰€éœ€è¦çš„é•¿åº¦,åˆ™ä¸æ˜¾ç¤ºè¯¥æ•°æ®æµ (ä¸å‚è€ƒè®¾å¤‡å¤„ç†æ–¹å¼ä¸åŒ)
+            if (pMap->first == IntTemp2)//æ˜¾ç¤ºæ‰€æœ‰æ•°æ®æµ    å°† æ‹¼æ¥ å»é‡ åçš„æ•°æ®æ”¾å…¥å®¹å™¨
             {
                 Flag = 1;
                 break;
@@ -2245,7 +2245,7 @@ W_ErrorCode CSubaruBaseCanApp::All_DTS()
     uiDataStream.InitCtrl(Subaru_TTL_ReadData);
 
 
-    // ·¢ËÍËùÓĞµÄÃüÁî
+    // å‘é€æ‰€æœ‰çš„å‘½ä»¤
     for (int i = 0; i < Dts_All_info.size() - 836; i++)
     {
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_ESTABILISHCOMM, DF_MB_NOBUTTON, DT_CENTER);
@@ -2253,7 +2253,7 @@ W_ErrorCode CSubaruBaseCanApp::All_DTS()
         //CBinary m_bin = Dts_All_info[i][2];
         //if (binAns.GetByteCount() <= 0 || binAns[0] == 0x7F || binAns[0] != 0x62 || binAns[1] != m_bin[0] || binAns[2] != m_bin[1])
         //{
-        //    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // Í¨Ñ¶´íÎó
+        //    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // é€šè®¯é”™è¯¯
         //    return CErrorCode::EC_COMMUNICATION;
         //}
 
@@ -2294,23 +2294,23 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
     //map<int,string>m_temp;
     //for (int i = 0; i < Dts_Pid.size(); i++)
     //{
-    //    temp.insert(pair<string,int>(str_Dts_Name[i],i));  // ²åÈëÃû³ÆºÍºÍÃû³Æ¶ÔÓ¦µÄĞòºÅÖµ
+    //    temp.insert(pair<string,int>(str_Dts_Name[i],i));  // æ’å…¥åç§°å’Œå’Œåç§°å¯¹åº”çš„åºå·å€¼
     //}
 
     //for (map<string,int>::iterator it = temp.begin(); it != temp.end(); it++)
     //{
-    //    m_temp.insert(pair<int,string>(it->second,it->first));  // ÒÔĞòºÅÖµÅÅĞò
+    //    m_temp.insert(pair<int,string>(it->second,it->first));  // ä»¥åºå·å€¼æ’åº
     //}
 
     //for (map<int ,string>::iterator it1 =m_temp.begin(); it1 != m_temp.end(); it1++)
     //{
     //    Dts_Pid_map.insert(pair<int ,CBinary>(it1->first,Dts_Pid[it1->first]));
-    //    //Dts_Pid_map.Append(Dts_Pid[it1->first]); // ĞòºÅÖµ¶ÔÓ¦µÄÃüÁî²åÈëÖÁÈİÆ÷
-    //}  // ÃüÁîµÄË³ĞòÓëÃû³ÆµÄË³ĞòÏàÍ¬ÇÒ²»ÖØ¸´
+    //    //Dts_Pid_map.Append(Dts_Pid[it1->first]); // åºå·å€¼å¯¹åº”çš„å‘½ä»¤æ’å…¥è‡³å®¹å™¨
+    //}  // å‘½ä»¤çš„é¡ºåºä¸åç§°çš„é¡ºåºç›¸åŒä¸”ä¸é‡å¤
 
     //for (map<int,string>::iterator it = m_temp.begin(); it != m_temp.end(); it++)
     //{
-    //    uiMut.AddOneItem(FxGetStdString(CBinary("\x53\x5D",2) + HexString2Binary(it->second)));   // ¶àÏîÑ¡Ôñ¿òÌí¼ÓÃû³ÆÏî
+    //    uiMut.AddOneItem(FxGetStdString(CBinary("\x53\x5D",2) + HexString2Binary(it->second)));   // å¤šé¡¹é€‰æ‹©æ¡†æ·»åŠ åç§°é¡¹
     //}
 
 
@@ -2318,13 +2318,13 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
     for (int i = 0; i < Dts_All_info.size(); i++)
     {
         CBinary binname = Dts_All_info[i][0];
-        uiMut.AddOneItem(FxGetStdString(CBinary("\x53\x5D", 2) + binname));   // ¶àÏîÑ¡Ôñ¿òÌí¼ÓÃû³ÆÏî
+        uiMut.AddOneItem(FxGetStdString(CBinary("\x53\x5D", 2) + binname));   // å¤šé¡¹é€‰æ‹©æ¡†æ·»åŠ åç§°é¡¹
     }
 
 
     while (1)
     {
-        iSelect = uiMut.ShowCtrl();  // ÏÔÊ¾Êı¾İÁ÷Ãû³Æ
+        iSelect = uiMut.ShowCtrl();  // æ˜¾ç¤ºæ•°æ®æµåç§°
         if (-1 == iSelect)
         {
             Dts_All_info.clear();
@@ -2333,13 +2333,13 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
 
         //Dts_Pid_show.Clear();
         //Dts_info.clear();
-        //for (W_I16 i = 0; i < Dts_Pid_map.GetByteCount(); i++)  // ÃüÁîµÄË³ĞòÓëÃû³ÆµÄË³ĞòÏàÍ¬ÇÒ²»ÖØ¸´
+        //for (W_I16 i = 0; i < Dts_Pid_map.GetByteCount(); i++)  // å‘½ä»¤çš„é¡ºåºä¸åç§°çš„é¡ºåºç›¸åŒä¸”ä¸é‡å¤
         //{
         //    if (uiMut.GetSel(i) > 0)
         //    {
-        //        Dts_Pid_show.Append(CBinary("\x22",1) + Dts_Pid_map[i]);  // °ÑÑ¡ÖĞµÄÃüÁî²åÈëÈİÆ÷
-        //        Dts_select_search.Append(Dts_search[i]);  // °ÑÑ¡ÖĞµÄËÑË÷Ïî²åÈëÈİÆ÷
-        //        Dts_info.insert(pair<string,string>(str_Dts_Name[i],str_Dts_Unit[i]));   // ½«Ñ¡ÖĞµÄÊı¾İµÄÃû³ÆºÍµ¥Î»²åÈëmapÖĞ
+        //        Dts_Pid_show.Append(CBinary("\x22",1) + Dts_Pid_map[i]);  // æŠŠé€‰ä¸­çš„å‘½ä»¤æ’å…¥å®¹å™¨
+        //        Dts_select_search.Append(Dts_search[i]);  // æŠŠé€‰ä¸­çš„æœç´¢é¡¹æ’å…¥å®¹å™¨
+        //        Dts_info.insert(pair<string,string>(str_Dts_Name[i],str_Dts_Unit[i]));   // å°†é€‰ä¸­çš„æ•°æ®çš„åç§°å’Œå•ä½æ’å…¥mapä¸­
         //    }
         //}
 
@@ -2351,9 +2351,9 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
         //    {
         //        if (uiMut.GetSel(i) > 0)
         //        {
-        //            Dts_Pid_show.Append(CBinary("\x22",1) + it->second);  // °ÑÑ¡ÖĞµÄÃüÁî²åÈëÈİÆ÷
-        //            Dts_select_search.Append(Dts_search[it->first]);  // °ÑÑ¡ÖĞµÄËÑË÷Ïî²åÈëÈİÆ÷
-        //            Dts_info.insert(pair<string,string>(str_Dts_Name[it->first],str_Dts_Unit[it->first]));   // ½«Ñ¡ÖĞµÄÊı¾İµÄÃû³ÆºÍµ¥Î»²åÈëmapÖĞ
+        //            Dts_Pid_show.Append(CBinary("\x22",1) + it->second);  // æŠŠé€‰ä¸­çš„å‘½ä»¤æ’å…¥å®¹å™¨
+        //            Dts_select_search.Append(Dts_search[it->first]);  // æŠŠé€‰ä¸­çš„æœç´¢é¡¹æ’å…¥å®¹å™¨
+        //            Dts_info.insert(pair<string,string>(str_Dts_Name[it->first],str_Dts_Unit[it->first]));   // å°†é€‰ä¸­çš„æ•°æ®çš„åç§°å’Œå•ä½æ’å…¥mapä¸­
         //            break;
         //        }
         //    }
@@ -2361,7 +2361,7 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
 
         for (int i = 0; i < Dts_All_info.size(); i++)
         {
-            if (uiMut.GetSel(i) > 0)  // Ñ¡ÖĞµÄÏî
+            if (uiMut.GetSel(i) > 0)  // é€‰ä¸­çš„é¡¹
             {
                 CBinary binname, binunit, binpid, binsearch;
                 CBinaryGroup bingroup;
@@ -2373,11 +2373,11 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
                 bingroup.Append(binunit);
                 bingroup.Append(binpid);
                 bingroup.Append(binsearch);
-                Dts_select_info.push_back(bingroup);  // ĞÅÏ¢²åÈëÈİÆ÷ÖĞ
+                Dts_select_info.push_back(bingroup);  // ä¿¡æ¯æ’å…¥å®¹å™¨ä¸­
 
-                //Dts_Pid_show.Append(CBinary("\x22",1) + it->second);  // °ÑÑ¡ÖĞµÄÃüÁî²åÈëÈİÆ÷
-                //Dts_select_search.Append(Dts_search[it->first]);  // °ÑÑ¡ÖĞµÄËÑË÷Ïî²åÈëÈİÆ÷
-                //Dts_info.insert(pair<string,string>(str_Dts_Name[it->first],str_Dts_Unit[it->first]));   // ½«Ñ¡ÖĞµÄÊı¾İµÄÃû³ÆºÍµ¥Î»²åÈëmapÖĞ
+                //Dts_Pid_show.Append(CBinary("\x22",1) + it->second);  // æŠŠé€‰ä¸­çš„å‘½ä»¤æ’å…¥å®¹å™¨
+                //Dts_select_search.Append(Dts_search[it->first]);  // æŠŠé€‰ä¸­çš„æœç´¢é¡¹æ’å…¥å®¹å™¨
+                //Dts_info.insert(pair<string,string>(str_Dts_Name[it->first],str_Dts_Unit[it->first]));   // å°†é€‰ä¸­çš„æ•°æ®çš„åç§°å’Œå•ä½æ’å…¥mapä¸­
                 //break;
             }
         }
@@ -2389,7 +2389,7 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
         uiDataStream.SetReferenceCol(false);
         uiDataStream.InitCtrl(Subaru_TTL_ReadData);
 
-        //for(map<string,string>::iterator it = Dts_info.begin(); it != Dts_info.end(); it++)  // Ìí¼ÓÏîÊı¾İÁ÷Ãû³ÆºÍµ¥Î»
+        //for(map<string,string>::iterator it = Dts_info.begin(); it != Dts_info.end(); it++)  // æ·»åŠ é¡¹æ•°æ®æµåç§°å’Œå•ä½
         //{
         //    CBinary bin_name = HexString2Binary(it->first);
         //    CBinary bin_unit = HexString2Binary(it->second);
@@ -2402,7 +2402,7 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
         }
 
 
-        // ·¢ËÍÑ¡ÖĞµÄÃüÁî
+        // å‘é€é€‰ä¸­çš„å‘½ä»¤
         for (int i = 0; i < Dts_select_info.size(); i++)
         {
             FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_ESTABILISHCOMM, DF_MB_NOBUTTON, DT_CENTER);
@@ -2410,31 +2410,31 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
             CBinary m_bin = Dts_select_info[i][2];
             if (binAns.GetByteCount() <= 0 || binAns[0] == 0x7F || binAns[0] != 0x62 || binAns[1] != m_bin[0] || binAns[2] != m_bin[1])
             {
-                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // Í¨Ñ¶´íÎó
+                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // é€šè®¯é”™è¯¯
                 return CErrorCode::EC_COMMUNICATION;
             }
-            str_ret = Express_DTS(binAns, Dts_select_info[i][3]); // Êı¾İÁ÷Ëã·¨´¦Àí
-            uiDataStream.SetItemValue(i, str_ret);   // ÉèÖÃÊı¾İÁ÷Öµ
+            str_ret = Express_DTS(binAns, Dts_select_info[i][3]); // æ•°æ®æµç®—æ³•å¤„ç†
+            uiDataStream.SetItemValue(i, str_ret);   // è®¾ç½®æ•°æ®æµå€¼
         }
 
 
 
         while (1)
         {
-            //for(int i = 0; i < Dts_select_info.size(); i++)   // Ñ­»·¸üĞÂ·¢ÃüÁî
+            //for(int i = 0; i < Dts_select_info.size(); i++)   // å¾ªç¯æ›´æ–°å‘å‘½ä»¤
             //{
             //    binAns = SubaruCanSendReceive(CBinary("\x22",1) + Dts_select_info[i][2]);
             //    CBinary m_bin = Dts_select_info[i][2];
             //    if (binAns.GetByteCount() <= 0 || binAns[0] == 0x7F || binAns[0] != 0x62 || binAns[1] != m_bin[0] || binAns[2] != m_bin[1])
             //    {
-            //        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // Í¨Ñ¶´íÎó
+            //        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // é€šè®¯é”™è¯¯
             //        return CErrorCode::EC_COMMUNICATION;
             //    }
-            //    str_ret = Express_DTS(binAns,Dts_select_info[i][3]); // Êı¾İÁ÷Ëã·¨´¦Àí
-            //    uiDataStream.SetItemValue(i,str_ret);   // ÉèÖÃÊı¾İÁ÷Öµ
+            //    str_ret = Express_DTS(binAns,Dts_select_info[i][3]); // æ•°æ®æµç®—æ³•å¤„ç†
+            //    uiDataStream.SetItemValue(i,str_ret);   // è®¾ç½®æ•°æ®æµå€¼
             //}
 
-            iRet = uiDataStream.ShowCtrl(); // ÏÔÊ¾Êı¾İÁ÷
+            iRet = uiDataStream.ShowCtrl(); // æ˜¾ç¤ºæ•°æ®æµ
             if (iRet == -1)
             {
                 //Dts_All_info.clear();
@@ -2442,17 +2442,17 @@ W_ErrorCode CSubaruBaseCanApp::Make_DTS()
                 break;
             }
 
-            for (int i = 0; i < Dts_select_info.size(); i++)   // Ñ­»·¸üĞÂ·¢ÃüÁî
+            for (int i = 0; i < Dts_select_info.size(); i++)   // å¾ªç¯æ›´æ–°å‘å‘½ä»¤
             {
                 binAns = SubaruCanSendReceive(CBinary("\x22", 1) + Dts_select_info[i][2]);
                 CBinary m_bin = Dts_select_info[i][2];
                 if (binAns.GetByteCount() <= 0 || binAns[0] == 0x7F || binAns[0] != 0x62 || binAns[1] != m_bin[0] || binAns[2] != m_bin[1])
                 {
-                    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // Í¨Ñ¶´íÎó
+                    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);  // é€šè®¯é”™è¯¯
                     return CErrorCode::EC_COMMUNICATION;
                 }
-                str_ret = Express_DTS(binAns, Dts_select_info[i][3]); // Êı¾İÁ÷Ëã·¨´¦Àí
-                uiDataStream.SetItemValue(i, str_ret);   // ÉèÖÃÊı¾İÁ÷Öµ
+                str_ret = Express_DTS(binAns, Dts_select_info[i][3]); // æ•°æ®æµç®—æ³•å¤„ç†
+                uiDataStream.SetItemValue(i, str_ret);   // è®¾ç½®æ•°æ®æµå€¼
             }
 
         }
@@ -2477,12 +2477,12 @@ string CSubaruBaseCanApp::Express_DTS(CBinary binAns, CBinary binsearch)
     strData = GetStringValue(Suba_Suba_DataStream_CBF, binsearch);
     if (!strData.size())
     {
-        FxShowMessageBox(Subaru_TTL_ReadData, CBinary("\x53\x00\x00\x01\x01\x90", 6), DF_MB_OK, DT_CENTER);  // ´ò¿ªÎÄ¼şÊ§°Ü
+        FxShowMessageBox(Subaru_TTL_ReadData, CBinary("\x53\x00\x00\x01\x01\x90", 6), DF_MB_OK, DT_CENTER);  // æ‰“å¼€æ–‡ä»¶å¤±è´¥
         return str_answer;
     }
 
-    // È¡Ëã·¨ĞÅÏ¢
-    SubaDTS.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
+    // å–ç®—æ³•ä¿¡æ¯
+    SubaDTS.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
     strMenu_conv = SubaDTS.GetItemValue(Subaru_Express_TTL, Subaru_ConvMethod_TXT);
     strMenu_bytepos = SubaDTS.GetItemValue(Subaru_Express_TTL, Subaru_BitPos_TXT);
     strMenu_bitsize = SubaDTS.GetItemValue(Subaru_Express_TTL, Subaru_BitSize_TXT);
@@ -2494,7 +2494,7 @@ string CSubaruBaseCanApp::Express_DTS(CBinary binAns, CBinary binsearch)
     strMenu_max = SubaDTS.GetItemValue(Subaru_Express_TTL, Subaru_Max_TXT);
     strMenu_defv = SubaDTS.GetItemValue(Subaru_Express_TTL, Subaru_PDefaultValue_TXT);
 
-    // ÁÙÊ±vector
+    // ä¸´æ—¶vector
     vector<string>str_temp;
     str_temp.push_back(strMenu_conv);
     str_temp.push_back(strMenu_bytepos);
@@ -2506,12 +2506,12 @@ string CSubaruBaseCanApp::Express_DTS(CBinary binAns, CBinary binsearch)
     str_temp.push_back(strMenu_min);
     str_temp.push_back(strMenu_max);
     str_temp.push_back(strMenu_defv);
-    Express_All_info.push_back(str_temp);  // ²åÈëÈİÆ÷ÄÚ
+    Express_All_info.push_back(str_temp);  // æ’å…¥å®¹å™¨å†…
 
 
     for (int i = 0; i < Express_All_info.size(); i++)
     {
-        // Ëã·¨ĞÅÏ¢×ª»»Îªint¿ÉÔËËã
+        // ç®—æ³•ä¿¡æ¯è½¬æ¢ä¸ºintå¯è¿ç®—
         BytePos = atoi(Express_All_info[i][1].c_str());
         BitSize = atoi(Express_All_info[i][2].c_str());
         Significant = atoi(Express_All_info[i][6].c_str());
@@ -2523,9 +2523,9 @@ string CSubaruBaseCanApp::Express_DTS(CBinary binAns, CBinary binsearch)
         Max = atof(Express_All_info[i][8].c_str());
 
 
-        if (Express_All_info[i][0] == "2")  // Ëã·¨Ä£Ê½2
+        if (Express_All_info[i][0] == "2")  // ç®—æ³•æ¨¡å¼2
         {
-            str_answer = ConvMethod_2(binAns, BitSize, Significant, LsbMul, LsbDiv, Offset);  // Ëã·¨Ä£Ê½2¶ÔÓ¦Ëã·¨
+            str_answer = ConvMethod_2(binAns, BitSize, Significant, LsbMul, LsbDiv, Offset);  // ç®—æ³•æ¨¡å¼2å¯¹åº”ç®—æ³•
             break;
         }
 
@@ -2542,21 +2542,21 @@ string CSubaruBaseCanApp::ConvMethod_2(CBinary binAns, int BitSize, int Signific
     float m_answer;
     int binshow = 0;
     int binnum = BitSize / 8;
-    binnum = BitSize % 8 > 0 ? binnum + 1 : binnum;  // ¿ØÖÆÎ»¸öÊıËã·¨  (Bitsize/8)ÓĞÓàÊı+1£¬Ã»ÓĞÓàÊıµÈÓÚ±¾Éí
+    binnum = BitSize % 8 > 0 ? binnum + 1 : binnum;  // æ§åˆ¶ä½ä¸ªæ•°ç®—æ³•  (Bitsize/8)æœ‰ä½™æ•°+1ï¼Œæ²¡æœ‰ä½™æ•°ç­‰äºæœ¬èº«
     int AnsNum = 2 + binnum;
 
-    // È¡Ñ¡ÖĞµÄÊı¾İµÄ»Ø¸´Î»
+    // å–é€‰ä¸­çš„æ•°æ®çš„å›å¤ä½
     for (int i = 3; i <= AnsNum; i++)
     {
-        binshow = (binAns.GetByteAt(i) << (AnsNum - i) * 8) + binshow;   // ×óÒÆÊı¾İ½øĞĞÆ´½Ó
+        binshow = (binAns.GetByteAt(i) << (AnsNum - i) * 8) + binshow;   // å·¦ç§»æ•°æ®è¿›è¡Œæ‹¼æ¥
     }
 
     float temp_value = (binshow * LsbMul / LsbDiv) + (Offset);
-    float pow_value = pow(10.0, Significant);  // Çó¶ÔÓ¦µÄ´ÎÃİ
-    m_answer = temp_value / pow_value;    // Êı¾İ¶ÔÓ¦Ëã·¨
+    float pow_value = pow(10.0, Significant);  // æ±‚å¯¹åº”çš„æ¬¡å¹‚
+    m_answer = temp_value / pow_value;    // æ•°æ®å¯¹åº”ç®—æ³•
 
     char buf[100];
-    sprintf(buf, "%.2f", m_answer);   // ±£Áô2Î»Ğ¡Êı
+    sprintf(buf, "%.2f", m_answer);   // ä¿ç•™2ä½å°æ•°
     str_answer += buf;
 
     return str_answer;
@@ -2581,27 +2581,27 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
     W_I16 MenuCode = 0;
 
 
-    if (FALSE == SubaDTS_Dex.OpenTabFile(Suba_DataStream_Dex_CBF))  //   Êı¾İÁ÷Ë÷ÒıÎÄ¼ş
+    if (FALSE == SubaDTS_Dex.OpenTabFile(Suba_DataStream_Dex_CBF))  //   æ•°æ®æµç´¢å¼•æ–‡ä»¶
     {
         CErrorCode::SetLastError(CErrorCode::EC_DATA);
         return CErrorCode::EC_DATA;
     }
 
-    vctStr.push_back(System_Search_Id);  //  ²åÈëÏµÍ³Ë÷Òı
-    SubaDTS_Dex.SearchString(SearchResault, FALSE, 1, 1, vctStr);  // ËÑË÷ÄÚÈİ
+    vctStr.push_back(System_Search_Id);  //  æ’å…¥ç³»ç»Ÿç´¢å¼•
+    SubaDTS_Dex.SearchString(SearchResault, FALSE, 1, 1, vctStr);  // æœç´¢å†…å®¹
     if (SearchResault.size() <= 0)
     {
         CErrorCode::SetLastError(CErrorCode::EC_DATA);
         return CErrorCode::EC_DATA;
     }
 
-    // Æ´½ÓDTSË÷ÒıÏî
+    // æ‹¼æ¥DTSç´¢å¼•é¡¹
     for (int j = 0; j < SearchResault.size(); j++)
     {
         for (int k = 0; k < SearchResault.size(); k++)
         {
-            // ½¨Á¢ÁÙÊ±±äÁ¿½ÓÊÕÆ´½ÓÖµ
-            string dtstemp = SearchResault[j][k + 1] + SearchResault[j][k + 2] + SearchResault[j][k + 3];    // Æ´½Ó1,2,3Ïî
+            // å»ºç«‹ä¸´æ—¶å˜é‡æ¥æ”¶æ‹¼æ¥å€¼
+            string dtstemp = SearchResault[j][k + 1] + SearchResault[j][k + 2] + SearchResault[j][k + 3];    // æ‹¼æ¥1,2,3é¡¹
             CBinary bintemp = HexString2Binary(dtstemp);
             Dts_search.Append(bintemp);
             break;
@@ -2609,7 +2609,7 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
     }
 
 
-    // ËÑË÷Ë÷ÒıÏî
+    // æœç´¢ç´¢å¼•é¡¹
     for (int i = 0; i < Dts_search.GetByteCount(); i++)
     {
         strData.clear();
@@ -2620,10 +2620,10 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
         strData = GetStringValue(Suba_Suba_DataStream_CBF, Dts_search[i]);
         if (!strData.size())
             return rect = CErrorCode::EC_DATA;
-        SubaDTS.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
-        strMenu = SubaDTS.GetItemValue(Subaru_DS_TTL, Subaru_Name_TXT);    // Êı¾İÁ÷Ãû³Æ
-        strMenu_u = SubaDTS.GetItemValue(Subaru_DS_TTL, Subaru_Unit_TXT);    // Êı¾İÁ÷µ¥Î»
-        strMenu_p = SubaDTS.GetItemValue(Subaru_CMD_TTL, Subaru_Pid_TXT);    // Êı¾İÁ÷·¢ËÍÃüÁî£¬²»¼Ó\x22
+        SubaDTS.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
+        strMenu = SubaDTS.GetItemValue(Subaru_DS_TTL, Subaru_Name_TXT);    // æ•°æ®æµåç§°
+        strMenu_u = SubaDTS.GetItemValue(Subaru_DS_TTL, Subaru_Unit_TXT);    // æ•°æ®æµå•ä½
+        strMenu_p = SubaDTS.GetItemValue(Subaru_CMD_TTL, Subaru_Pid_TXT);    // æ•°æ®æµå‘é€å‘½ä»¤ï¼Œä¸åŠ \x22
         binname = HexString2Binary(strMenu);
         binpid = HexString2Binary(strMenu_p);
         binunit = HexString2Binary(strMenu_u);
@@ -2633,25 +2633,25 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
         bingroup.Append(binpid);
         bingroup.Append(Dts_search[i]);
 
-        Dts_All_info.push_back(bingroup);  // ²åÈëÈİÆ÷ÖĞ
+        Dts_All_info.push_back(bingroup);  // æ’å…¥å®¹å™¨ä¸­
 
         //str_Dts_Name.push_back(strMenu);
         //str_Dts_Unit.push_back(strMenu_u);
         //str_Dts_Pid.push_back(strMenu_p);
 
         //CBinary bin ;
-        //bin = HexString2Binary(str_Dts_Name[i]);   // Ãû³Æ
+        //bin = HexString2Binary(str_Dts_Name[i]);   // åç§°
         //Dts_Name.push_back(bin);
 
-        //bin = HexString2Binary(str_Dts_Unit[i]);   // µ¥Î»
+        //bin = HexString2Binary(str_Dts_Unit[i]);   // å•ä½
         //Dts_Unit.push_back(bin);
 
-        //bin = HexString2Binary(str_Dts_Pid[i]);   // ·¢ËÍÃüÁî
+        //bin = HexString2Binary(str_Dts_Pid[i]);   // å‘é€å‘½ä»¤
         //Dts_Pid.push_back(bin);
     }
 
 
-    // È¥ÖØ
+    // å»é‡
     for (int i = 0; i < Dts_All_info.size(); i++)
     {
         for (int j = i + 1; j < Dts_All_info.size(); j++)
@@ -2677,12 +2677,12 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
         }
         else if (select == 0)
         {
-            rect = All_DTS();  //  ËùÓĞÊı¾İÁ÷
+            rect = All_DTS();  //  æ‰€æœ‰æ•°æ®æµ
             break;
         }
         else
         {
-            rect = Make_DTS();  // ¶¨ÖÆÊı¾İÁ÷
+            rect = Make_DTS();  // å®šåˆ¶æ•°æ®æµ
             break;
         }
     }
@@ -2698,25 +2698,25 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
     //strData = GetStringValue(Country_Vin_File,m_vehicle_type[iSelected]);
     //if(!strData.size())
     //    return ecRet = CErrorCode::EC_DATA;
-    //profile.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
+    //profile.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
     //strMenu = profile.GetItemValue(Subaru_VIN_VEHICLETYPE_TTL,Subaru_VIN_ECUID);  
 
     //SeparatorString(strMenu,",",Vin_Ecu_Id);
 
-    //SeparatorString(Vin_Ecu_Id[iSelMenuItem],"&",Vin_Ecu_Id_Select);   // ¸ù¾İµã»÷Ïî¶ÔÓ¦µÄECUID×é
+    //SeparatorString(Vin_Ecu_Id[iSelMenuItem],"&",Vin_Ecu_Id_Select);   // æ ¹æ®ç‚¹å‡»é¡¹å¯¹åº”çš„ECUIDç»„
 
 
 
-    // ÎŞÊı¾İÁ÷
-    if (GetDS.size() <= 0)   // SubaData¿â
+    // æ— æ•°æ®æµ
+    if (GetDS.size() <= 0)   // SubaDataåº“
     {
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK);
         return rect;
     }
 
     FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_ENTERSYS, DF_MB_NOBUTTON);
-    // µÚÒ»´Î½øÈëĞèÒªÉ¸Ñ¡
-    if (DsSet.size() <= 0)  // µ±Ç°ÏÔÊ¾µÄÊı¾İÁ÷
+    // ç¬¬ä¸€æ¬¡è¿›å…¥éœ€è¦ç­›é€‰
+    if (DsSet.size() <= 0)  // å½“å‰æ˜¾ç¤ºçš„æ•°æ®æµ
     {
         rect = SubaruCanGetDsList();
         if (CErrorCode::EC_SUCCESS != rect)
@@ -2741,12 +2741,12 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
         {
             DsSet = GetDS;
         }
-        else if (0 == iSelect)   //¶¨ÖÆÊı¾İÁ÷
+        else if (0 == iSelect)   //å®šåˆ¶æ•°æ®æµ
         {
             CMultiSelectCtrl uiMut;
             uiMut.InitCtrl(FxGetStdString(Subaru_MSG_SelectDS));
             for (W_I16 i = 0; i < GetDS.size(); i++)
-                uiMut.AddOneItem(FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(GetDS[i][7])));  // 0x53,0x4d + SubaData[7] Êı¾İÁ÷Ãû³Æ
+                uiMut.AddOneItem(FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(GetDS[i][7])));  // 0x53,0x4d + SubaData[7] æ•°æ®æµåç§°
             while (1)
             {
                 iSelect = uiMut.ShowCtrl();
@@ -2757,7 +2757,7 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
                 for (W_I16 i = 0; i < GetDS.size(); i++)
                 {
                     if (0 < uiMut.GetSel(i))
-                        DsSet.push_back(GetDS[i]);   // °ÑÑ¡ÖĞµÄÊı¾İÁ÷Ïî²åÈëÈİÆ÷ÖĞ
+                        DsSet.push_back(GetDS[i]);   // æŠŠé€‰ä¸­çš„æ•°æ®æµé¡¹æ’å…¥å®¹å™¨ä¸­
                 }
                 break;
             }
@@ -2766,7 +2766,7 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
         CDataStreamCtrl uiDataStream;
         CBinaryGroup bgTemp;
-        CBinaryGroup AllCmd;    //ËùÓĞÏÔÊ¾µÄÊı¾İÁ÷µÄÃüÁî
+        CBinaryGroup AllCmd;    //æ‰€æœ‰æ˜¾ç¤ºçš„æ•°æ®æµçš„å‘½ä»¤
         uiDataStream.SetReferenceCol(false);
         uiDataStream.InitCtrl(Subaru_TTL_ReadData);
         for (W_I16 i = 0; i < DsSet.size(); i++)
@@ -2801,7 +2801,7 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
                 iCounts = 0;
             if (UpdataNum.size() > 0)
             {
-                // ÓÃÓÚµÚÒ»Ê±¼ä¸üĞÂĞÂ³öÏÖµÄÁĞ
+                // ç”¨äºç¬¬ä¸€æ—¶é—´æ›´æ–°æ–°å‡ºç°çš„åˆ—
                 mapTemp.clear();
                 for (map<W_I32, bool>::iterator pMap = Updataed.begin(); pMap != Updataed.end(); pMap++)
                 {
@@ -2855,7 +2855,7 @@ W_ErrorCode CSubaruBaseCanApp::New_DataStream()
                 Updataed[UpdataNum[iCounts]] = true;
                 iCounts++;
 
-                // ¼ì²éÒ»±éÏÂÃæĞèÒª¸üĞÂµÄÊÇ·ñÓĞÍ¬ÑùµÄÃüÁîµÄÊı¾İÁ÷,Èç¹ûÓĞÖ±½ÓÊ¹ÓÃÕâÒ»´ÎµÄ»Ø¸´¼ÆËã½á¹û
+                // æ£€æŸ¥ä¸€éä¸‹é¢éœ€è¦æ›´æ–°çš„æ˜¯å¦æœ‰åŒæ ·çš„å‘½ä»¤çš„æ•°æ®æµ,å¦‚æœæœ‰ç›´æ¥ä½¿ç”¨è¿™ä¸€æ¬¡çš„å›å¤è®¡ç®—ç»“æœ
                 for (W_I16 i = iCounts; i < UpdataNum.size(); i++)
                 {
                     if (AllCmd[UpdataNum[i]] == AllCmd[UpdataNum[iCounts - 1]])
@@ -2891,16 +2891,16 @@ W_ErrorCode CSubaruBaseCanApp::DataStream()
 {
     W_ErrorCode    rect = CErrorCode::EC_SUCCESS;
 
-    // ÎŞÊı¾İÁ÷
-    if (GetDS.size() <= 0)   // SubaData¿â
+    // æ— æ•°æ®æµ
+    if (GetDS.size() <= 0)   // SubaDataåº“
     {
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK);
         return rect;
     }
 
     FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_ENTERSYS, DF_MB_NOBUTTON);
-    // µÚÒ»´Î½øÈëĞèÒªÉ¸Ñ¡
-    if (DsSet.size() <= 0)  // µ±Ç°ÏÔÊ¾µÄÊı¾İÁ÷
+    // ç¬¬ä¸€æ¬¡è¿›å…¥éœ€è¦ç­›é€‰
+    if (DsSet.size() <= 0)  // å½“å‰æ˜¾ç¤ºçš„æ•°æ®æµ
     {
         rect = SubaruCanGetDsList();
         if (CErrorCode::EC_SUCCESS != rect)
@@ -2925,12 +2925,12 @@ W_ErrorCode CSubaruBaseCanApp::DataStream()
         {
             DsSet = GetDS;
         }
-        else if (0 == iSelect)   //¶¨ÖÆÊı¾İÁ÷
+        else if (0 == iSelect)   //å®šåˆ¶æ•°æ®æµ
         {
             CMultiSelectCtrl uiMut;
             uiMut.InitCtrl(FxGetStdString(Subaru_MSG_SelectDS));
             for (W_I16 i = 0; i < GetDS.size(); i++)
-                uiMut.AddOneItem(FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(GetDS[i][7])));  // 0x53,0x4d + SubaData[7] Êı¾İÁ÷Ãû³Æ
+                uiMut.AddOneItem(FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(GetDS[i][7])));  // 0x53,0x4d + SubaData[7] æ•°æ®æµåç§°
             while (1)
             {
                 iSelect = uiMut.ShowCtrl();
@@ -2941,7 +2941,7 @@ W_ErrorCode CSubaruBaseCanApp::DataStream()
                 for (W_I16 i = 0; i < GetDS.size(); i++)
                 {
                     if (0 < uiMut.GetSel(i))
-                        DsSet.push_back(GetDS[i]);   // °ÑÑ¡ÖĞµÄÊı¾İÁ÷Ïî²åÈëÈİÆ÷ÖĞ
+                        DsSet.push_back(GetDS[i]);   // æŠŠé€‰ä¸­çš„æ•°æ®æµé¡¹æ’å…¥å®¹å™¨ä¸­
                 }
                 break;
             }
@@ -2950,7 +2950,7 @@ W_ErrorCode CSubaruBaseCanApp::DataStream()
         FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
         CDataStreamCtrl uiDataStream;
         CBinaryGroup bgTemp;
-        CBinaryGroup AllCmd;    //ËùÓĞÏÔÊ¾µÄÊı¾İÁ÷µÄÃüÁî
+        CBinaryGroup AllCmd;    //æ‰€æœ‰æ˜¾ç¤ºçš„æ•°æ®æµçš„å‘½ä»¤
         uiDataStream.SetReferenceCol(false);
         uiDataStream.InitCtrl(Subaru_TTL_ReadData);
         for (W_I16 i = 0; i < DsSet.size(); i++)
@@ -2985,7 +2985,7 @@ W_ErrorCode CSubaruBaseCanApp::DataStream()
                 iCounts = 0;
             if (UpdataNum.size() > 0)
             {
-                // ÓÃÓÚµÚÒ»Ê±¼ä¸üĞÂĞÂ³öÏÖµÄÁĞ
+                // ç”¨äºç¬¬ä¸€æ—¶é—´æ›´æ–°æ–°å‡ºç°çš„åˆ—
                 mapTemp.clear();
                 for (map<W_I32, bool>::iterator pMap = Updataed.begin(); pMap != Updataed.end(); pMap++)
                 {
@@ -3039,7 +3039,7 @@ W_ErrorCode CSubaruBaseCanApp::DataStream()
                 Updataed[UpdataNum[iCounts]] = true;
                 iCounts++;
 
-                // ¼ì²éÒ»±éÏÂÃæĞèÒª¸üĞÂµÄÊÇ·ñÓĞÍ¬ÑùµÄÃüÁîµÄÊı¾İÁ÷,Èç¹ûÓĞÖ±½ÓÊ¹ÓÃÕâÒ»´ÎµÄ»Ø¸´¼ÆËã½á¹û
+                // æ£€æŸ¥ä¸€éä¸‹é¢éœ€è¦æ›´æ–°çš„æ˜¯å¦æœ‰åŒæ ·çš„å‘½ä»¤çš„æ•°æ®æµ,å¦‚æœæœ‰ç›´æ¥ä½¿ç”¨è¿™ä¸€æ¬¡çš„å›å¤è®¡ç®—ç»“æœ
                 for (W_I16 i = iCounts; i < UpdataNum.size(); i++)
                 {
                     if (AllCmd[UpdataNum[i]] == AllCmd[UpdataNum[iCounts - 1]])
@@ -3078,27 +3078,27 @@ W_ErrorCode CSubaruBaseCanApp::Act_Test()
     CFileManager SubaACT;
     string strData, strMenu;
 
-    if (FALSE == Suba_ACT_Dex.OpenTabFile(Suba_ACT_Dex_CBF))  //   ¶¯×÷²âÊÔË÷ÒıÎÄ¼ş
+    if (FALSE == Suba_ACT_Dex.OpenTabFile(Suba_ACT_Dex_CBF))  //   åŠ¨ä½œæµ‹è¯•ç´¢å¼•æ–‡ä»¶
     {
         CErrorCode::SetLastError(CErrorCode::EC_DATA);
         return CErrorCode::EC_DATA;
     }
 
-    vctStr.push_back(System_Search_Id);  //  ²åÈëÏµÍ³Ë÷Òı
-    Suba_ACT_Dex.SearchString(SearchResault, FALSE, 1, 1, vctStr);  // ËÑË÷ÄÚÈİ
+    vctStr.push_back(System_Search_Id);  //  æ’å…¥ç³»ç»Ÿç´¢å¼•
+    Suba_ACT_Dex.SearchString(SearchResault, FALSE, 1, 1, vctStr);  // æœç´¢å†…å®¹
     if (SearchResault.size() <= 0)
     {
         CErrorCode::SetLastError(CErrorCode::EC_DATA);
         return CErrorCode::EC_DATA;
     }
 
-    // Æ´½ÓDTSË÷ÒıÏî
+    // æ‹¼æ¥DTSç´¢å¼•é¡¹
     for (int j = 0; j < SearchResault.size(); j++)
     {
         for (int k = 0; k < SearchResault.size(); k++)
         {
-            // ½¨Á¢ÁÙÊ±±äÁ¿½ÓÊÕÆ´½ÓÖµ
-            string dtstemp = SearchResault[j][k + 1] + SearchResault[j][k + 2];    // Æ´½Ó1,2Ïî
+            // å»ºç«‹ä¸´æ—¶å˜é‡æ¥æ”¶æ‹¼æ¥å€¼
+            string dtstemp = SearchResault[j][k + 1] + SearchResault[j][k + 2];    // æ‹¼æ¥1,2é¡¹
             CBinary bintemp = HexString2Binary(dtstemp);
             Act_search.Append(bintemp);
             break;
@@ -3114,7 +3114,7 @@ W_ErrorCode CSubaruBaseCanApp::Act_Test()
         strData = GetStringValue(Suba_ACT_CBF, Act_search[i]);
         if (!strData.size())
             return rect = CErrorCode::EC_DATA;
-        SubaACT.InitManager(strData);  // ½ØÈ¡¸³Öµ   SetItemValue
+        SubaACT.InitManager(strData);  // æˆªå–èµ‹å€¼   SetItemValue
         strMenu = SubaACT.GetItemValue(Subaru_Act_TTL, Subaru_ACTName_TXT);
         //CBinary bin = HexString2Binary(strMenu);
         //Act_Name.Append(bin);
@@ -3147,7 +3147,7 @@ W_ErrorCode CSubaruBaseCanApp::Act_Test()
 }
 
 
-//Êı¾İÁ÷µÚÊ®ÎåÁĞËã·¨
+//æ•°æ®æµç¬¬åäº”åˆ—ç®—æ³•
 static float CalList15(string CalID)
 {
     float    x = 0;
@@ -3224,7 +3224,7 @@ static float CalList15(string CalID)
 }
 
 
-// Êı¾İÁ÷µÚÊ®ËÄÁĞËã·¨
+// æ•°æ®æµç¬¬åå››åˆ—ç®—æ³•
 static float SubaDataCanCal_getYValue(vector<string>& VecStr, W_U32 x)
 {
     float    y = 0;
@@ -3246,7 +3246,7 @@ static float SubaDataCanCal_getYValue(vector<string>& VecStr, W_U32 x)
         || strCmpVal == "3fd6800000000000" || strCmpVal == "3fd8f5c28f5c28f6" || strCmpVal == "3ff8000000000000" || strCmpVal == "40039eb851eb851f" || strCmpVal == "4004000000000000"
         || strCmpVal == "400999999999999a" || strCmpVal == "4039000000000000" || strCmpVal == "4051c00000000000" || strCmpVal == "bfab51eb851eb852" || strCmpVal == "bfd4d555318abc87"
         || strCmpVal == "bfe1604189374bc7" || strCmpVal == "bff0000000000000" || strCmpVal == "3f3916872b020c4a")
-        ;//ASCIIÂë
+        ;//ASCIIç 
     else if (strCmpVal == "3ee4f8b588e368f1") { y = x * 0.00001; }
     else if (strCmpVal == "3efffb480a5accd5") { y = x * 1.999 / 0xffff; }
     else if (strCmpVal == "3f00624dd2f1a9fc") { y = x * 2.048 / 0xffff; }
@@ -3364,7 +3364,7 @@ static float SubaDataCanCal_getYValue(vector<string>& VecStr, W_U32 x)
 
     y += CalList15(VecStr[2]);
 
-    //if (strCmpVal == "0000000000000000") {;}//ASCIIÂë//case 0x0000
+    //if (strCmpVal == "0000000000000000") {;}//ASCIIç //case 0x0000
     //else if (strCmpVal == "3ee4f8b588e368f1") {y = x * 0.00001;}//case 0x0001
     //else if (strCmpVal == "3ef0000000000000") {;}//NULL//case 0x0002
     //else if (strCmpVal == "3efffb480a5accd5") {y = x * 1.999 / 0xffff;}//case 0x0003
@@ -3560,7 +3560,7 @@ static float SubaDataCanCal_getYValue(vector<string>& VecStr, W_U32 x)
     return y;
 }
 
-/* SubaruData  Êı¾İÁ÷Ëã·¨´¦Àí */
+/* SubaruData  æ•°æ®æµç®—æ³•å¤„ç† */
 string CSubaruBaseCanApp::SubaDataCanCal(CBinary binAns, vector<string> ListData)
 {
     string strRet = "";
@@ -3587,7 +3587,7 @@ string CSubaruBaseCanApp::SubaDataCanCal(CBinary binAns, vector<string> ListData
     }
     string format = FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(ListData[9]));
 
-    // Èç¹ûµÚÊ®ÁĞ´æÔÚËã·¨
+    // å¦‚æœç¬¬ååˆ—å­˜åœ¨ç®—æ³•
     if ("000000b1" == ListData[10])
     {
         strRet = "";
@@ -3746,17 +3746,17 @@ string CSubaruBaseCanApp::SubaDataCanCal(CBinary binAns, vector<string> ListData
     }
 
     vector<string> vecStr;
-    vecStr.push_back(ListData[12]);    // ×´Ì¬ÀàĞÍËã·¨
+    vecStr.push_back(ListData[12]);    // çŠ¶æ€ç±»å‹ç®—æ³•
     vecStr.push_back(ListData[14]);    // x * XX
     vecStr.push_back(ListData[15]);    // x +/-= XX
     vecStr.push_back(ListData[16]);    // x /= XX
     vecStr.push_back(ListData[17]); // x &= XX
     vecStr.push_back(ListData[19]);
 
-    // Switch¸ñÊ½ µ÷ÓÃÎÄ¼şSubaDataBtn.ctv
+    // Switchæ ¼å¼ è°ƒç”¨æ–‡ä»¶SubaDataBtn.ctv
     if ("00000000" != vecStr[0])
     {
-        if (vecStr[0] == "00220156")  //¹Ì¶¨Öµ ·µ»Ø"±±"
+        if (vecStr[0] == "00220156")  //å›ºå®šå€¼ è¿”å›"åŒ—"
             return FxGetStdString(CBinary("\x53\x4D\xD7\x7F\x16\x20", 6));
         if (binAns.GetByteCount() <= startPos)
             return "";
@@ -3781,7 +3781,7 @@ string CSubaruBaseCanApp::SubaDataCanCal(CBinary binAns, vector<string> ListData
         }
         if (0 == DataStatus.size() || 0 == SearchResault.size())
         {
-            // Ö»´ò¿ªÒ»´Î¸ÃÎÄ¼ş,½«ÄÚÈİ¶¼±£´æÔÚDataStatusÖĞ
+            // åªæ‰“å¼€ä¸€æ¬¡è¯¥æ–‡ä»¶,å°†å†…å®¹éƒ½ä¿å­˜åœ¨DataStatusä¸­
             CSearchString SubaDataBtn;
             vector<string> vecTemp;
             if (FALSE == SubaDataBtn.OpenTabFile(Subaru_Data_Btn))
@@ -3797,7 +3797,7 @@ string CSubaruBaseCanApp::SubaDataCanCal(CBinary binAns, vector<string> ListData
         {
             if ("40000000" != SearchResault[i][2])
             {
-                // Èç¹û x Óë µÚÈıÁĞµÈÓÚµÚËÄÁĞ ÏÔÊ¾µÚ5ÁĞµÄÖµ
+                // å¦‚æœ x ä¸ ç¬¬ä¸‰åˆ—ç­‰äºç¬¬å››åˆ— æ˜¾ç¤ºç¬¬5åˆ—çš„å€¼
                 IntTemp1 = StringToHex(SearchResault[i][3]);
                 IntTemp2 = StringToHex(SearchResault[i][4]);
                 if ((x & IntTemp1) == IntTemp2)
@@ -3806,13 +3806,13 @@ string CSubaruBaseCanApp::SubaDataCanCal(CBinary binAns, vector<string> ListData
                     break;
                 }
             }
-            else    // "40000000" ¼´default
+            else    // "40000000" å³default
             {
                 strRet = FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(SearchResault[i][5]));
             }
         }
     }
-    else    //µÚ14ÁĞ¼°15ÁĞËã·¨
+    else    //ç¬¬14åˆ—åŠ15åˆ—ç®—æ³•
     {
         if ("00000089" == ListData[10])//
         {
@@ -3900,65 +3900,65 @@ W_ErrorCode CSubaruBaseCanApp::ActiveTest()
 
 void CSubaruBaseCanApp::SpecFunsIDSet()
 {
-    SpecFunsID.push_back("028f4f20");        // ¸ü»»DPF  ¸ü»»
-    SpecFunsID.push_back("028e4f20");        // ¸üĞÂDPF     ÔÙÉú
-    SpecFunsID.push_back("028d4f20");        //¸ü»»»úÓÍ
-    SpecFunsID.push_back("028c4f20");        //¶ÁÈ¡DPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£ECM -> TOOL
-    SpecFunsID.push_back("028b4f20");        //Ğ´ÈëDPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£TOOL -> ECM
-    SpecFunsID.push_back("02674f20");        //ĞÂ×¢²áÅçÓÍÆ÷´úÂë£¨TOOLÖÁECM£©    
-    SpecFunsID.push_back("02664f20");        //¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¨ECMÖÁTOOL£©
-    SpecFunsID.push_back("02654f20");        //×¢²áÕıÔÚ¶ÁÈ¡µÄ´úÂë£¨TOOLÖÁECM£©
-    SpecFunsID.push_back("02644f20");        //ÅçÓÍÆ÷´úÂëÏÔÊ¾
-    SpecFunsID.push_back("02071120");        //µÇÈëVIN    
-    SpecFunsID.push_back("02871c20");        //È¼ÓÍ±Ã¼ÌµçÆ÷
-    SpecFunsID.push_back("03871c20");        //CPC µç´Å·§
-    SpecFunsID.push_back("00871c20");        //É¢ÈÈÆ÷·çÉÈ¼ÌµçÆ÷
-    SpecFunsID.push_back("01871c20");        //¿Õµ÷Ñ¹Ëõ»ú¼ÌµçÆ÷
-    SpecFunsID.push_back("04871c20");        //PCV µç´Å·§
-    SpecFunsID.push_back("05871c20");        //ÅÅÆø¿ØÖÆµç´Å·§
-    SpecFunsID.push_back("09871c20");        //ÓÍÏäÄÚÁ¦½»»»µç´Å·§
-    SpecFunsID.push_back("0e871c20");        //ÎĞÂÖÔöÑ¹Æ÷·ÏÆø¿Úµç´ÅÏßÈ¦
-    SpecFunsID.push_back("0c871c20");        //¸¨Öú¿ÕÆø×éºÏ·§ 1
-    SpecFunsID.push_back("0d871c20");        //¸¨Öú¿ÕÆø×éºÏ·§ 2
-    SpecFunsID.push_back("12871c20");        //¸¨ÖúÆø±Ã¼ÌµçÆ÷
-    SpecFunsID.push_back("13871c20");        //CPCµç´Å·§2
-    SpecFunsID.push_back("10871c20");        //¸¨ÖúÈ¼ÓÍ±Ã¼ÌµçÆ÷
-    SpecFunsID.push_back("11871c20");        //È¼ÓÍÑ¹ÇĞ»»µç´Å·§
-    SpecFunsID.push_back("16871c20");        //ELCM¿ª¹Ø·§
-    SpecFunsID.push_back("17871c20");        //ELCM±Ã
-    SpecFunsID.push_back("14871c20");        //É²³µÕæ¿Õ±Ã¼ÌµçÆ÷    
-    SpecFunsID.push_back("02071a20");        //·ÀµÁËøÏµÍ³        
-    SpecFunsID.push_back("02774f20");        //È¼ÓÍ±ÃÄÜÂÊ¼ÇÒä
-    SpecFunsID.push_back("02764f20");        //È¼ÓÍÅçÉäÆ÷ÅçÉäÁ¿¼ÇÒä
-    SpecFunsID.push_back("02754f20");        //EGR·§ÃÅ¿ª½Ç¼ÇÒä
-    SpecFunsID.push_back("02374c20");        //ÎĞÂÖÒ¶Æ¬½Ç¼ÇÒä
-    SpecFunsID.push_back("02274c20");        //ÆøÁ÷´«¸ĞÆ÷¼ÇÒä
-    SpecFunsID.push_back("12637620");        //Çå³ıAT¼ÇÒäÖµ
-    SpecFunsID.push_back("42637620");        //AWD ¿ª/¹ØÇĞ»»Ä£Ê½
-    SpecFunsID.push_back("02051b20");        //ABS ĞòÁĞ¿ØÖÆÄ£Ê½
-    SpecFunsID.push_back("02041b20");        //VDC ¼ì²éÄ£Ê½
-    SpecFunsID.push_back("02061b20");        //VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½
-    SpecFunsID.push_back("02021b20");        //É²³µÎ¬»¤Ä£Ê½    
-    SpecFunsID.push_back("d2647620");        //Ä£Ê½ÒÆ¶¯    
-    SpecFunsID.push_back("42667620");        //ÎŞÔ¿³× ID ×¢²á
-    SpecFunsID.push_back("32667620");        //²Á³ıÎŞÔ¿IDÂë    
-    SpecFunsID.push_back("c2607620");        //ÖØĞÂµ÷Áã
+    SpecFunsID.push_back("028f4f20");        // æ›´æ¢DPF  æ›´æ¢
+    SpecFunsID.push_back("028e4f20");        // æ›´æ–°DPF     å†ç”Ÿ
+    SpecFunsID.push_back("028d4f20");        //æ›´æ¢æœºæ²¹
+    SpecFunsID.push_back("028c4f20");        //è¯»å–DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚ECM -> TOOL
+    SpecFunsID.push_back("028b4f20");        //å†™å…¥DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚TOOL -> ECM
+    SpecFunsID.push_back("02674f20");        //æ–°æ³¨å†Œå–·æ²¹å™¨ä»£ç ï¼ˆTOOLè‡³ECMï¼‰    
+    SpecFunsID.push_back("02664f20");        //è¯»å–å–·æ²¹å™¨ä»£ç ï¼ˆECMè‡³TOOLï¼‰
+    SpecFunsID.push_back("02654f20");        //æ³¨å†Œæ­£åœ¨è¯»å–çš„ä»£ç ï¼ˆTOOLè‡³ECMï¼‰
+    SpecFunsID.push_back("02644f20");        //å–·æ²¹å™¨ä»£ç æ˜¾ç¤º
+    SpecFunsID.push_back("02071120");        //ç™»å…¥VIN    
+    SpecFunsID.push_back("02871c20");        //ç‡ƒæ²¹æ³µç»§ç”µå™¨
+    SpecFunsID.push_back("03871c20");        //CPC ç”µç£é˜€
+    SpecFunsID.push_back("00871c20");        //æ•£çƒ­å™¨é£æ‰‡ç»§ç”µå™¨
+    SpecFunsID.push_back("01871c20");        //ç©ºè°ƒå‹ç¼©æœºç»§ç”µå™¨
+    SpecFunsID.push_back("04871c20");        //PCV ç”µç£é˜€
+    SpecFunsID.push_back("05871c20");        //æ’æ°”æ§åˆ¶ç”µç£é˜€
+    SpecFunsID.push_back("09871c20");        //æ²¹ç®±å†…åŠ›äº¤æ¢ç”µç£é˜€
+    SpecFunsID.push_back("0e871c20");        //æ¶¡è½®å¢å‹å™¨åºŸæ°”å£ç”µç£çº¿åœˆ
+    SpecFunsID.push_back("0c871c20");        //è¾…åŠ©ç©ºæ°”ç»„åˆé˜€ 1
+    SpecFunsID.push_back("0d871c20");        //è¾…åŠ©ç©ºæ°”ç»„åˆé˜€ 2
+    SpecFunsID.push_back("12871c20");        //è¾…åŠ©æ°”æ³µç»§ç”µå™¨
+    SpecFunsID.push_back("13871c20");        //CPCç”µç£é˜€2
+    SpecFunsID.push_back("10871c20");        //è¾…åŠ©ç‡ƒæ²¹æ³µç»§ç”µå™¨
+    SpecFunsID.push_back("11871c20");        //ç‡ƒæ²¹å‹åˆ‡æ¢ç”µç£é˜€
+    SpecFunsID.push_back("16871c20");        //ELCMå¼€å…³é˜€
+    SpecFunsID.push_back("17871c20");        //ELCMæ³µ
+    SpecFunsID.push_back("14871c20");        //åˆ¹è½¦çœŸç©ºæ³µç»§ç”µå™¨    
+    SpecFunsID.push_back("02071a20");        //é˜²ç›—é”ç³»ç»Ÿ        
+    SpecFunsID.push_back("02774f20");        //ç‡ƒæ²¹æ³µèƒ½ç‡è®°å¿†
+    SpecFunsID.push_back("02764f20");        //ç‡ƒæ²¹å–·å°„å™¨å–·å°„é‡è®°å¿†
+    SpecFunsID.push_back("02754f20");        //EGRé˜€é—¨å¼€è§’è®°å¿†
+    SpecFunsID.push_back("02374c20");        //æ¶¡è½®å¶ç‰‡è§’è®°å¿†
+    SpecFunsID.push_back("02274c20");        //æ°”æµä¼ æ„Ÿå™¨è®°å¿†
+    SpecFunsID.push_back("12637620");        //æ¸…é™¤ATè®°å¿†å€¼
+    SpecFunsID.push_back("42637620");        //AWD å¼€/å…³åˆ‡æ¢æ¨¡å¼
+    SpecFunsID.push_back("02051b20");        //ABS åºåˆ—æ§åˆ¶æ¨¡å¼
+    SpecFunsID.push_back("02041b20");        //VDC æ£€æŸ¥æ¨¡å¼
+    SpecFunsID.push_back("02061b20");        //VSCï¼ˆVDCï¼‰ä¸­é—´å€¼è®¾ç½®æ¨¡å¼
+    SpecFunsID.push_back("02021b20");        //åˆ¹è½¦ç»´æŠ¤æ¨¡å¼    
+    SpecFunsID.push_back("d2647620");        //æ¨¡å¼ç§»åŠ¨    
+    SpecFunsID.push_back("42667620");        //æ— é’¥åŒ™ ID æ³¨å†Œ
+    SpecFunsID.push_back("32667620");        //æ“¦é™¤æ— é’¥IDç     
+    SpecFunsID.push_back("c2607620");        //é‡æ–°è°ƒé›¶
 
 
     if (SystemNum == "0000001A")
     {
-        SpecFunsID.push_back("01844220");        //µ¡ËÙ¿ØÖÆ                    
-        SpecFunsID.push_back("00844220");        //¹Ì¶¨µ¡ËÙµã»ğ¶¨Ê±            
+        SpecFunsID.push_back("01844220");        //æ€ é€Ÿæ§åˆ¶                    
+        SpecFunsID.push_back("00844220");        //å›ºå®šæ€ é€Ÿç‚¹ç«å®šæ—¶            
     }
-    SpecFunsID.push_back("22637620");        //×Ô¶¯±äËÙÆ÷¼ÇÒäÄ£Ê½                
-    //SpecFunsID.push_back("62667620");        //SCUÇ¿ÖÆĞ£¶ÔÄ£Ê½                
+    SpecFunsID.push_back("22637620");        //è‡ªåŠ¨å˜é€Ÿå™¨è®°å¿†æ¨¡å¼                
+    //SpecFunsID.push_back("62667620");        //SCUå¼ºåˆ¶æ ¡å¯¹æ¨¡å¼                
 
-    SpecFunsID.push_back("02a64f20");        //Á¦´«¸ĞÆ÷Ğ£×¼Ä£Ê½      
-    SpecFunsID.push_back("02a54f20");        //Í£³µÉ²³µµÄÎ¥ÕÂ¼İÊ»Ä£Ê½
-    SpecFunsID.push_back("02a44f20");        //Í£³µÉ²³µ²ğĞ¶Ä£Ê½      
-    SpecFunsID.push_back("02a24f20");        //ÀëºÏÆ÷½áºÏÎ»ÖÃÉè¶¨    
-    SpecFunsID.push_back("02a14f20");        //ÀëºÏÆ÷´«¸ĞÆ÷Ğ£×¼Ä£Ê½  
-    SpecFunsID.push_back("02a34f20");        //²ÎÊı³õÊ¼»¯Ä£Ê½        
+    SpecFunsID.push_back("02a64f20");        //åŠ›ä¼ æ„Ÿå™¨æ ¡å‡†æ¨¡å¼      
+    SpecFunsID.push_back("02a54f20");        //åœè½¦åˆ¹è½¦çš„è¿ç« é©¾é©¶æ¨¡å¼
+    SpecFunsID.push_back("02a44f20");        //åœè½¦åˆ¹è½¦æ‹†å¸æ¨¡å¼      
+    SpecFunsID.push_back("02a24f20");        //ç¦»åˆå™¨ç»“åˆä½ç½®è®¾å®š    
+    SpecFunsID.push_back("02a14f20");        //ç¦»åˆå™¨ä¼ æ„Ÿå™¨æ ¡å‡†æ¨¡å¼  
+    SpecFunsID.push_back("02a34f20");        //å‚æ•°åˆå§‹åŒ–æ¨¡å¼        
 }
 
 W_ErrorCode CSubaruBaseCanApp::SpecialFunction()
@@ -3997,7 +3997,7 @@ W_ErrorCode CSubaruBaseCanApp::ShowSepcialFunMenu(vector<string> SelectedInfo)
         if (flag)
         {
             SpecFunsSetTemp.push_back(SpecfunsSet[i]);
-            if (SelectedInfo.size() == SpecfunsSet[i].size() - 1)    // µ÷ÓÃÌØÊâ¹¦ÄÜID
+            if (SelectedInfo.size() == SpecfunsSet[i].size() - 1)    // è°ƒç”¨ç‰¹æ®ŠåŠŸèƒ½ID
             {
                 binTemp = CBinary(Subaru_IDCAN, 2) + String2Binary(SelectedInfo[SelectedInfo.size() - 1]);
                 W_I32 taskid = StringToHex(SpecfunsSet[i][SpecfunsSet[i].size() - 1]);
@@ -4043,74 +4043,74 @@ W_ErrorCode CSubaruBaseCanApp::SpecialFunsCalID(CBinary binMenu, W_I32 taskid)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
-    DataStatus.clear();    // Ò»Ğ©ÌØÊâ¹¦ÄÜÊ¹ÓÃµÄÊı¾İÁ÷²¢·ÇÆä±¾À´ÏµÍ³µÄ
+    DataStatus.clear();    // ä¸€äº›ç‰¹æ®ŠåŠŸèƒ½ä½¿ç”¨çš„æ•°æ®æµå¹¶éå…¶æœ¬æ¥ç³»ç»Ÿçš„
 
     switch (taskid)
     {
-    case 0x028f4f20: rect = SpecFunsID_028f4f20(binMenu); break;        // ¸ü»»DPF                              
-    case 0x028e4f20: rect = SpecFunsID_028e4f20(binMenu); break;        // ¸üĞÂDPF                              
-    case 0x028d4f20: rect = SpecFunsID_028d4f20(binMenu); break;        //¸ü»»»úÓÍ                              
-    case 0x028c4f20: rect = SpecFunsID_028c4f20(binMenu); break;        //¶ÁÈ¡DPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£ECM -> TOOL
-    case 0x028b4f20: rect = SpecFunsID_028b4f20(binMenu); break;        //Ğ´ÈëDPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£TOOL -> ECM
-    case 0x02674f20: rect = SpecFunsID_02674f20(binMenu); break;        //ĞÂ×¢²áÅçÓÍÆ÷´úÂë£¨TOOLÖÁECM£©         
-    case 0x02664f20: rect = SpecFunsID_02664f20(binMenu); break;        //¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¨ECMÖÁTOOL£©           
-    case 0x02654f20: rect = SpecFunsID_02654f20(binMenu); break;        //×¢²áÕıÔÚ¶ÁÈ¡µÄ´úÂë£¨TOOLÖÁECM£©       
-    case 0x02644f20: rect = SpecFunsID_02644f20(binMenu); break;        //ÅçÓÍÆ÷´úÂëÏÔÊ¾                        
-    case 0x02071120: rect = SpecFunsID_02071120(binMenu); break;        //µÇÈëVIN                               
-    case 0x02871c20: rect = SpecFunsID_02871c20(binMenu); break;        //È¼ÓÍ±Ã¼ÌµçÆ÷                          
-    case 0x03871c20: rect = SpecFunsID_03871c20(binMenu); break;        //CPC µç´Å·§                            
-    case 0x00871c20: rect = SpecFunsID_00871c20(binMenu); break;        //É¢ÈÈÆ÷·çÉÈ¼ÌµçÆ÷                      
-    case 0x01871c20: rect = SpecFunsID_01871c20(binMenu); break;        //¿Õµ÷Ñ¹Ëõ»ú¼ÌµçÆ÷                      
-    case 0x04871c20: rect = SpecFunsID_04871c20(binMenu); break;        //PCV µç´Å·§                            
-    case 0x05871c20: rect = SpecFunsID_05871c20(binMenu); break;        //ÅÅÆø¿ØÖÆµç´Å·§                        
-    case 0x09871c20: rect = SpecFunsID_09871c20(binMenu); break;        //ÓÍÏäÄÚÁ¦½»»»µç´Å·§                    
-    case 0x0e871c20: rect = SpecFunsID_0e871c20(binMenu); break;        //ÎĞÂÖÔöÑ¹Æ÷·ÏÆø¿Úµç´ÅÏßÈ¦              
-    case 0x0c871c20: rect = SpecFunsID_0c871c20(binMenu); break;        //¸¨Öú¿ÕÆø×éºÏ·§ 1                      
-    case 0x0d871c20: rect = SpecFunsID_0d871c20(binMenu); break;        //¸¨Öú¿ÕÆø×éºÏ·§ 2                      
-    case 0x12871c20: rect = SpecFunsID_12871c20(binMenu); break;        //¸¨ÖúÆø±Ã¼ÌµçÆ÷                        
-    case 0x13871c20: rect = SpecFunsID_13871c20(binMenu); break;        //CPCµç´Å·§2                            
-    case 0x10871c20: rect = SpecFunsID_10871c20(binMenu); break;        //¸¨ÖúÈ¼ÓÍ±Ã¼ÌµçÆ÷                      
-    case 0x11871c20: rect = SpecFunsID_11871c20(binMenu); break;        //È¼ÓÍÑ¹ÇĞ»»µç´Å·§                      
-    case 0x16871c20: rect = SpecFunsID_16871c20(binMenu); break;        //ELCM¿ª¹Ø·§                            
-    case 0x17871c20: rect = SpecFunsID_17871c20(binMenu); break;        //ELCM±Ã                                
-    case 0x14871c20: rect = SpecFunsID_14871c20(binMenu); break;        //É²³µÕæ¿Õ±Ã¼ÌµçÆ÷                      
-    case 0x02071a20: rect = SpecFunsID_02071a20(binMenu); break;        //·ÀµÁËøÏµÍ³                            
-    case 0x02774f20: rect = SpecFunsID_02774f20(binMenu); break;        //È¼ÓÍ±ÃÄÜÂÊ¼ÇÒä                        
-    case 0x02764f20: rect = SpecFunsID_02764f20(binMenu); break;        //È¼ÓÍÅçÉäÆ÷ÅçÉäÁ¿¼ÇÒä                  
-    case 0x02754f20: rect = SpecFunsID_02754f20(binMenu); break;        //EGR·§ÃÅ¿ª½Ç¼ÇÒä                       
-    case 0x02374c20: rect = SpecFunsID_02374c20(binMenu); break;        //ÎĞÂÖÒ¶Æ¬½Ç¼ÇÒä                        
-    case 0x02274c20: rect = SpecFunsID_02274c20(binMenu); break;        //ÆøÁ÷´«¸ĞÆ÷¼ÇÒä  
-    case 0x01844220: rect = SpecFunsID_01844220(binMenu); break;        //µ¡ËÙ¿ØÖÆ                
-    case 0x00844220: rect = SpecFunsID_00844220(binMenu); break;        //¹Ì¶¨µ¡ËÙµã»ğ¶¨Ê±
-    case 0x22637620: rect = SpecFunsID_22637620(binMenu); break;        //×Ô¶¯±äËÙÆ÷¼ÇÒäÄ£Ê½
-    case 0x12637620: rect = SpecFunsID_12637620(binMenu); break;        //Çå³ıAT¼ÇÒäÖµ
-    case 0x42637620: rect = SpecFunsID_42637620(binMenu); break;        //AWD ¿ª/¹ØÇĞ»»Ä£Ê½    
-    case 0x02061b20: rect = SpecFunsID_02061b20(binMenu); break;        //VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½
-    case 0x02051b20: rect = SpecFunsID_02051b20(binMenu); break;        //ABS ĞòÁĞ¿ØÖÆÄ£Ê½
-    case 0x02041b20: rect = SpecFunsID_02041b20(binMenu); break;        //VDC ¼ì²éÄ£Ê½
-    case 0x02021b20: rect = SpecFunsID_02021b20(binMenu); break;        //É²³µÎ¬»¤Ä£Ê½
-    case 0xd2647620: rect = SpecFunsID_d2647620(binMenu); break;        //Ä£Ê½ÒÆ¶¯
-    case 0x32667620: rect = SpecFunsID_32667620(binMenu); break;        //²Á³ıÎŞÔ¿IDÂë
-    case 0x42667620: rect = SpecFunsID_42667620(binMenu); break;        //ÎŞÔ¿³× ID ×¢²á
-    case 0xc2607620: rect = SpecFunsID_c2607620(binMenu); break;        //ÖØĞÂµ÷Áã
+    case 0x028f4f20: rect = SpecFunsID_028f4f20(binMenu); break;        // æ›´æ¢DPF                              
+    case 0x028e4f20: rect = SpecFunsID_028e4f20(binMenu); break;        // æ›´æ–°DPF                              
+    case 0x028d4f20: rect = SpecFunsID_028d4f20(binMenu); break;        //æ›´æ¢æœºæ²¹                              
+    case 0x028c4f20: rect = SpecFunsID_028c4f20(binMenu); break;        //è¯»å–DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚ECM -> TOOL
+    case 0x028b4f20: rect = SpecFunsID_028b4f20(binMenu); break;        //å†™å…¥DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚TOOL -> ECM
+    case 0x02674f20: rect = SpecFunsID_02674f20(binMenu); break;        //æ–°æ³¨å†Œå–·æ²¹å™¨ä»£ç ï¼ˆTOOLè‡³ECMï¼‰         
+    case 0x02664f20: rect = SpecFunsID_02664f20(binMenu); break;        //è¯»å–å–·æ²¹å™¨ä»£ç ï¼ˆECMè‡³TOOLï¼‰           
+    case 0x02654f20: rect = SpecFunsID_02654f20(binMenu); break;        //æ³¨å†Œæ­£åœ¨è¯»å–çš„ä»£ç ï¼ˆTOOLè‡³ECMï¼‰       
+    case 0x02644f20: rect = SpecFunsID_02644f20(binMenu); break;        //å–·æ²¹å™¨ä»£ç æ˜¾ç¤º                        
+    case 0x02071120: rect = SpecFunsID_02071120(binMenu); break;        //ç™»å…¥VIN                               
+    case 0x02871c20: rect = SpecFunsID_02871c20(binMenu); break;        //ç‡ƒæ²¹æ³µç»§ç”µå™¨                          
+    case 0x03871c20: rect = SpecFunsID_03871c20(binMenu); break;        //CPC ç”µç£é˜€                            
+    case 0x00871c20: rect = SpecFunsID_00871c20(binMenu); break;        //æ•£çƒ­å™¨é£æ‰‡ç»§ç”µå™¨                      
+    case 0x01871c20: rect = SpecFunsID_01871c20(binMenu); break;        //ç©ºè°ƒå‹ç¼©æœºç»§ç”µå™¨                      
+    case 0x04871c20: rect = SpecFunsID_04871c20(binMenu); break;        //PCV ç”µç£é˜€                            
+    case 0x05871c20: rect = SpecFunsID_05871c20(binMenu); break;        //æ’æ°”æ§åˆ¶ç”µç£é˜€                        
+    case 0x09871c20: rect = SpecFunsID_09871c20(binMenu); break;        //æ²¹ç®±å†…åŠ›äº¤æ¢ç”µç£é˜€                    
+    case 0x0e871c20: rect = SpecFunsID_0e871c20(binMenu); break;        //æ¶¡è½®å¢å‹å™¨åºŸæ°”å£ç”µç£çº¿åœˆ              
+    case 0x0c871c20: rect = SpecFunsID_0c871c20(binMenu); break;        //è¾…åŠ©ç©ºæ°”ç»„åˆé˜€ 1                      
+    case 0x0d871c20: rect = SpecFunsID_0d871c20(binMenu); break;        //è¾…åŠ©ç©ºæ°”ç»„åˆé˜€ 2                      
+    case 0x12871c20: rect = SpecFunsID_12871c20(binMenu); break;        //è¾…åŠ©æ°”æ³µç»§ç”µå™¨                        
+    case 0x13871c20: rect = SpecFunsID_13871c20(binMenu); break;        //CPCç”µç£é˜€2                            
+    case 0x10871c20: rect = SpecFunsID_10871c20(binMenu); break;        //è¾…åŠ©ç‡ƒæ²¹æ³µç»§ç”µå™¨                      
+    case 0x11871c20: rect = SpecFunsID_11871c20(binMenu); break;        //ç‡ƒæ²¹å‹åˆ‡æ¢ç”µç£é˜€                      
+    case 0x16871c20: rect = SpecFunsID_16871c20(binMenu); break;        //ELCMå¼€å…³é˜€                            
+    case 0x17871c20: rect = SpecFunsID_17871c20(binMenu); break;        //ELCMæ³µ                                
+    case 0x14871c20: rect = SpecFunsID_14871c20(binMenu); break;        //åˆ¹è½¦çœŸç©ºæ³µç»§ç”µå™¨                      
+    case 0x02071a20: rect = SpecFunsID_02071a20(binMenu); break;        //é˜²ç›—é”ç³»ç»Ÿ                            
+    case 0x02774f20: rect = SpecFunsID_02774f20(binMenu); break;        //ç‡ƒæ²¹æ³µèƒ½ç‡è®°å¿†                        
+    case 0x02764f20: rect = SpecFunsID_02764f20(binMenu); break;        //ç‡ƒæ²¹å–·å°„å™¨å–·å°„é‡è®°å¿†                  
+    case 0x02754f20: rect = SpecFunsID_02754f20(binMenu); break;        //EGRé˜€é—¨å¼€è§’è®°å¿†                       
+    case 0x02374c20: rect = SpecFunsID_02374c20(binMenu); break;        //æ¶¡è½®å¶ç‰‡è§’è®°å¿†                        
+    case 0x02274c20: rect = SpecFunsID_02274c20(binMenu); break;        //æ°”æµä¼ æ„Ÿå™¨è®°å¿†  
+    case 0x01844220: rect = SpecFunsID_01844220(binMenu); break;        //æ€ é€Ÿæ§åˆ¶                
+    case 0x00844220: rect = SpecFunsID_00844220(binMenu); break;        //å›ºå®šæ€ é€Ÿç‚¹ç«å®šæ—¶
+    case 0x22637620: rect = SpecFunsID_22637620(binMenu); break;        //è‡ªåŠ¨å˜é€Ÿå™¨è®°å¿†æ¨¡å¼
+    case 0x12637620: rect = SpecFunsID_12637620(binMenu); break;        //æ¸…é™¤ATè®°å¿†å€¼
+    case 0x42637620: rect = SpecFunsID_42637620(binMenu); break;        //AWD å¼€/å…³åˆ‡æ¢æ¨¡å¼    
+    case 0x02061b20: rect = SpecFunsID_02061b20(binMenu); break;        //VSCï¼ˆVDCï¼‰ä¸­é—´å€¼è®¾ç½®æ¨¡å¼
+    case 0x02051b20: rect = SpecFunsID_02051b20(binMenu); break;        //ABS åºåˆ—æ§åˆ¶æ¨¡å¼
+    case 0x02041b20: rect = SpecFunsID_02041b20(binMenu); break;        //VDC æ£€æŸ¥æ¨¡å¼
+    case 0x02021b20: rect = SpecFunsID_02021b20(binMenu); break;        //åˆ¹è½¦ç»´æŠ¤æ¨¡å¼
+    case 0xd2647620: rect = SpecFunsID_d2647620(binMenu); break;        //æ¨¡å¼ç§»åŠ¨
+    case 0x32667620: rect = SpecFunsID_32667620(binMenu); break;        //æ“¦é™¤æ— é’¥IDç 
+    case 0x42667620: rect = SpecFunsID_42667620(binMenu); break;        //æ— é’¥åŒ™ ID æ³¨å†Œ
+    case 0xc2607620: rect = SpecFunsID_c2607620(binMenu); break;        //é‡æ–°è°ƒé›¶
 
-    case 0x02a64f20: rect = SpecFunsID_02a64f20(binMenu); break;        //Á¦´«¸ĞÆ÷Ğ£×¼Ä£Ê½
-    case 0x02a54f20: rect = SpecFunsID_02a54f20(binMenu); break;        //Í£³µÉ²³µµÄÎ¥ÕÂ¼İÊ»Ä£Ê½
-    case 0x02a44f20: rect = SpecFunsID_02a44f20(binMenu); break;        //Í£³µÉ²³µ²ğĞ¶Ä£Ê½
-    case 0x02a24f20: rect = SpecFunsID_02a24f20(binMenu); break;        //ÀëºÏÆ÷½áºÏÎ»ÖÃÉè¶¨
-    case 0x02a14f20: rect = SpecFunsID_02a14f20(binMenu); break;        //ÀëºÏÆ÷´«¸ĞÆ÷Ğ£×¼Ä£Ê½
-    case 0x02a34f20: rect = SpecFunsID_02a34f20(binMenu); break;        //²ÎÊı³õÊ¼»¯Ä£Ê½
+    case 0x02a64f20: rect = SpecFunsID_02a64f20(binMenu); break;        //åŠ›ä¼ æ„Ÿå™¨æ ¡å‡†æ¨¡å¼
+    case 0x02a54f20: rect = SpecFunsID_02a54f20(binMenu); break;        //åœè½¦åˆ¹è½¦çš„è¿ç« é©¾é©¶æ¨¡å¼
+    case 0x02a44f20: rect = SpecFunsID_02a44f20(binMenu); break;        //åœè½¦åˆ¹è½¦æ‹†å¸æ¨¡å¼
+    case 0x02a24f20: rect = SpecFunsID_02a24f20(binMenu); break;        //ç¦»åˆå™¨ç»“åˆä½ç½®è®¾å®š
+    case 0x02a14f20: rect = SpecFunsID_02a14f20(binMenu); break;        //ç¦»åˆå™¨ä¼ æ„Ÿå™¨æ ¡å‡†æ¨¡å¼
+    case 0x02a34f20: rect = SpecFunsID_02a34f20(binMenu); break;        //å‚æ•°åˆå§‹åŒ–æ¨¡å¼
     }
 
     return rect;
 }
 
-// ¸ü»»DPF
+// æ›´æ¢DPF
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028f4f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    // 0x53200000003E        "ÊÇ·ñ¸ü»»ÁË²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©£¿"
-    // 0x53200000003F        "ÒÑÖØÖÃ»Ò³¾¶Ñ»ıËÙÂÊºÍÑÌ³¾¶Ñ»ıËÙÂÊ¡£"
+    // 0x53200000003E        "æ˜¯å¦æ›´æ¢äº†æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰ï¼Ÿ"
+    // 0x53200000003F        "å·²é‡ç½®ç°å°˜å †ç§¯é€Ÿç‡å’ŒçƒŸå°˜å †ç§¯é€Ÿç‡ã€‚"
     if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x3E", 6), DF_MB_YESNO, DT_LEFT))
         return rect;
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x3F", 6), DF_MB_OKCANCEL, DT_LEFT))
@@ -4142,8 +4142,8 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028f4f20(CBinary binMenu)
             FxShowMessageBox(binMenu, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK, DT_LEFT);
             return 0;
         }
-        // 0x53200000004B        "ÎŞ·¨ÖØÖÃ»Ò³¾ºÍÑÌ³¾¶Ñ»ıËÙÂÊ"
-        // 0x532000000040        "µ±Ç°Êı¾İÏÔÊ¾/±£³ÖÄ£Ê½¿ÉÓÃÓÚÈ·ÈÏÒÑ¾­ÖØÖÃ»Ò³¾¶Ñ»ıËÙÂÊºÍÑÌ³¾¶Ñ»ıËÙÂÊ¡£"
+        // 0x53200000004B        "æ— æ³•é‡ç½®ç°å°˜å’ŒçƒŸå°˜å †ç§¯é€Ÿç‡"
+        // 0x532000000040        "å½“å‰æ•°æ®æ˜¾ç¤º/ä¿æŒæ¨¡å¼å¯ç”¨äºç¡®è®¤å·²ç»é‡ç½®ç°å°˜å †ç§¯é€Ÿç‡å’ŒçƒŸå°˜å †ç§¯é€Ÿç‡ã€‚"
         if (0x00 == binAns[4])
         {
             if (0x10 == binAns[5])
@@ -4171,7 +4171,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028f4f20(CBinary binMenu)
     return rect;
 }
 
-// ¸üĞÂDPF
+// æ›´æ–°DPF
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
@@ -4190,7 +4190,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
         return rect;
     if (binAns.GetByteCount() > 3 && 0x00 != binAns[3])
     {
-        // 0x532000000041        "ÑÌ³¾¶Ñ»ıËÙÂÊ¹ı¸ß£¬µ¼ÖÂ²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©ÎŞ·¨ÔÙÉú"
+        // 0x532000000041        "çƒŸå°˜å †ç§¯é€Ÿç‡è¿‡é«˜ï¼Œå¯¼è‡´æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰æ— æ³•å†ç”Ÿ"
         FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x41", 6), DF_MB_OK, DT_CENTER);
         return rect;;
     }
@@ -4198,16 +4198,16 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
         return rect;
     if (binAns.GetByteCount() >= 5 && 0xff == binAns[3])
     {
-        // 0x5320000000C2        "²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©ÔÙÉúºÄÊ±¹ı¾Ã£¨Í¨³£³¬¹ı1Ğ¡Ê±£©"
-        // 0x5320000000C3        "½øĞĞ²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©ÔÙÉú"
+        // 0x5320000000C2        "æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰å†ç”Ÿè€—æ—¶è¿‡ä¹…ï¼ˆé€šå¸¸è¶…è¿‡1å°æ—¶ï¼‰"
+        // 0x5320000000C3        "è¿›è¡ŒæŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰å†ç”Ÿ"
         if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC2", 6), DF_MB_OKCANCEL, DT_CENTER))
             return rect;
         if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC3", 6), DF_MB_OKCANCEL, DT_CENTER))
             return rect;
     }
-    // 0x5320000000C0        "ÑÌ³¾¶Ñ»ıËÙÂÊ¹ıµÍ£¬Òò´Ë²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©Ã»ÓĞ±ØÒªÔÙÉú¡£\nÊÇ·ñÇ¿ÖÆÔÙÉú£¿"
-    // 0x5320000000BB        "À­Æğ×¤³µÖÆ¶¯Æ÷¡£"
-    // 0x5320000000C1        "ÇëÁôÒâÊµÊ©¹ı³ÌÖĞ·¢¶¯»ú×ªËÙµÄ±ä»¯Çé¿ö¡£\nÔÙÉúÍê³ÉÖ®Ç°ÇëÁôÔÚ³µÄÚ¡£"
+    // 0x5320000000C0        "çƒŸå°˜å †ç§¯é€Ÿç‡è¿‡ä½ï¼Œå› æ­¤æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰æ²¡æœ‰å¿…è¦å†ç”Ÿã€‚\næ˜¯å¦å¼ºåˆ¶å†ç”Ÿï¼Ÿ"
+    // 0x5320000000BB        "æ‹‰èµ·é©»è½¦åˆ¶åŠ¨å™¨ã€‚"
+    // 0x5320000000C1        "è¯·ç•™æ„å®æ–½è¿‡ç¨‹ä¸­å‘åŠ¨æœºè½¬é€Ÿçš„å˜åŒ–æƒ…å†µã€‚\nå†ç”Ÿå®Œæˆä¹‹å‰è¯·ç•™åœ¨è½¦å†…ã€‚"
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC0", 6), DF_MB_OKCANCEL, DT_LEFT))
         return rect;
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xBB", 6), DF_MB_OKCANCEL, DT_CENTER))
@@ -4246,7 +4246,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
             }
             if (0x01 == binAns[5])
             {
-                // 0x5320000000BD        "²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©ÔÙÉú¹ı³ÌÖĞµÄ\nÑÌ³¾¶Ñ»ıËÙÂÊ "
+                // 0x5320000000BD        "æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰å†ç”Ÿè¿‡ç¨‹ä¸­çš„\nçƒŸå°˜å †ç§¯é€Ÿç‡ "
                 strTemp = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xBD", 6));
                 char buf[4];
                 iTimer = 0;
@@ -4266,7 +4266,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
                     }
                     if (DF_IDCANCEL == FxShowMessageBox(FxGetStdString(binMenu), strTemp + iValue, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
                     {
-                        // "DPF¸üĞÂÍ£Ö¹¡£\nÈçÒªÖØĞÂÔÙÉú£¬¹Ø±Õµã»ğ£¬ÉÔµÈ15Ãë¡£"
+                        // "DPFæ›´æ–°åœæ­¢ã€‚\nå¦‚è¦é‡æ–°å†ç”Ÿï¼Œå…³é—­ç‚¹ç«ï¼Œç¨ç­‰15ç§’ã€‚"
                         string strShow = FxGetStdString(CBinary("\x53\x20\x00\x00\x01\x2C", 6)) + "\n" + FxGetStdString(CBinary("\x53\x20\x00\x00\x01\x2D", 6));
                         if (DF_IDOK == FxShowMessageBox(FxGetStdString(binMenu), strShow, DF_MB_OKCANCEL, DT_LEFT))
                             return rect;
@@ -4287,16 +4287,16 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
     strTemp = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xBA", 6));
     string maohao = ":";
     char buf[3];
-    CMessageBoxCtrl::SetBusyStatus(true);//µÈ´ı10·ÖÖÓ ¼Ó¸öÂ©¶·
+    CMessageBoxCtrl::SetBusyStatus(true);//ç­‰å¾…10åˆ†é’Ÿ åŠ ä¸ªæ¼æ–—
     while (iCountdown--)
     {
         sprintf(buf, strTemp.c_str(), iCountdown / 60);
         iValue = buf;
-        FxShowMessageBox(FxGetStdString(binMenu), iValue, DF_MB_NOBUTTON, DT_CENTER);// 0x5320000000BA        "ÕıÔÚÀäÈ´´ß»¯Æ÷£¬ÇëÉÔµÈ¡£\nÊ£ÓàÊ±¼äÊÇ"
+        FxShowMessageBox(FxGetStdString(binMenu), iValue, DF_MB_NOBUTTON, DT_CENTER);// 0x5320000000BA        "æ­£åœ¨å†·å´å‚¬åŒ–å™¨ï¼Œè¯·ç¨ç­‰ã€‚\nå‰©ä½™æ—¶é—´æ˜¯"
         Sleep(1000);
         if (0 == iCountdown)
         {
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xBF", 6), DF_MB_OK, DT_CENTER);//"²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©ÒÑÍê³ÉÔÙÉú¡£"
+            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xBF", 6), DF_MB_OK, DT_CENTER);//"æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰å·²å®Œæˆå†ç”Ÿã€‚"
             break;
         }
     }
@@ -4305,15 +4305,15 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028e4f20(CBinary binMenu)
     return rect;
 }
 
-// ¸ü»»»úÓÍ
+// æ›´æ¢æœºæ²¹
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028d4f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
-    // 0x532000000043        "ÊÇ·ñ¸ü»»ÁË·¢¶¯»ú»úÓÍ£¿"
+    // 0x532000000043        "æ˜¯å¦æ›´æ¢äº†å‘åŠ¨æœºæœºæ²¹ï¼Ÿ"
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x43", 6), DF_MB_OKCANCEL, DT_CENTER))
         return rect;
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x44", 6), DF_MB_OKCANCEL, DT_CENTER))//»úÓÍÏ¡ÊÍÂÊÒÑÖØÖÃ
+    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x44", 6), DF_MB_OKCANCEL, DT_CENTER))//æœºæ²¹ç¨€é‡Šç‡å·²é‡ç½®
         return rect;
     if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
         return rect;
@@ -4337,13 +4337,13 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028d4f20(CBinary binMenu)
         }
         if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x02 == binAns[5])
         {
-            // 0x532000000045        "»úÓÍÏ¡ÊÍÂÊÒÑÖØÖÃÎªÕı³£±ÈÂÊ"
+            // 0x532000000045        "æœºæ²¹ç¨€é‡Šç‡å·²é‡ç½®ä¸ºæ­£å¸¸æ¯”ç‡"
             FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x45", 6), DF_MB_OK, DT_CENTER);
             break;
         }
         else if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
         {
-            // 0x532000000049        "ÎŞ·¨ÖØÖÃ»úÓÍÏ¡ÊÍÂÊ"
+            // 0x532000000049        "æ— æ³•é‡ç½®æœºæ²¹ç¨€é‡Šç‡"
             FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x49", 6), DF_MB_OK, DT_CENTER);
             return rect;
         }
@@ -4352,7 +4352,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028d4f20(CBinary binMenu)
             return rect;
         }
     }
-    // 0x532000000046        "È·ÈÏÊÇ·ñÒÑ¾­ÔÚ'µ±Ç°Êı¾İÏÔÊ¾ºÍ±£´æ'ÖĞÖØÖÃÁË»úÓÍÏ¡ÊÍÂÊ"
+    // 0x532000000046        "ç¡®è®¤æ˜¯å¦å·²ç»åœ¨'å½“å‰æ•°æ®æ˜¾ç¤ºå’Œä¿å­˜'ä¸­é‡ç½®äº†æœºæ²¹ç¨€é‡Šç‡"
     FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x46", 6), DF_MB_OK, DT_CENTER);
 
     m_pNetLayer->SendReceive(ExitCmd);
@@ -4360,17 +4360,17 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028d4f20(CBinary binMenu)
     return rect;
 }
 
-// ´ÓTempdata.datÎÄ¼şÀïÈ¡³öÊı¾İ
+// ä»Tempdata.datæ–‡ä»¶é‡Œå–å‡ºæ•°æ®
 W_ErrorCode CSubaruBaseCanApp::InforReadfromFile(vector<string>& iData, string List0)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
     CFile fileWrite;
-    CString strFileNamePath = GetExePath();                    // µ±Ç°exeÂ·¾¶
-    strFileNamePath += _T(Subaru_Special_DAT);    // ÎÄ¼şÃû
+    CString strFileNamePath = GetExePath();                    // å½“å‰exeè·¯å¾„
+    strFileNamePath += _T(Subaru_Special_DAT);    // æ–‡ä»¶å
 
     string strTempFileData;
-    /****************************** ¶Á ****************************/
+    /****************************** è¯» ****************************/
     if (fileWrite.Open(strFileNamePath, CFile::modeRead))
     {
         int nBmpLeng = fileWrite.GetLength();
@@ -4388,12 +4388,12 @@ W_ErrorCode CSubaruBaseCanApp::InforReadfromFile(vector<string>& iData, string L
         }
         fileWrite.Close();
     }
-    /****************************** ½âÃÜ ****************************/
+    /****************************** è§£å¯† ****************************/
     string strTemp;
     char ch;
-    // µ¹Ğò
-    // µ¥×Ö½Ú + 0x50
-    // Ë«×Ö½Ú - 0x80
+    // å€’åº
+    // å•å­—èŠ‚ + 0x50
+    // åŒå­—èŠ‚ - 0x80
     strTemp = strTempFileData;
     strTempFileData = "";
     for (W_I16 i = strTemp.length() - 1; i >= 0; i--)
@@ -4408,7 +4408,7 @@ W_ErrorCode CSubaruBaseCanApp::InforReadfromFile(vector<string>& iData, string L
     vector<vector<string>> AlldataSet;
     vector<string> vecStr;
     strTemp = "";
-    // È¡³öÊı¾İ
+    // å–å‡ºæ•°æ®
     for (W_I16 i = 0; i < strTempFileData.length(); i++)
     {
         ch = strTempFileData.at(i);
@@ -4452,17 +4452,17 @@ W_ErrorCode CSubaruBaseCanApp::InforReadfromFile(vector<string>& iData, string L
     return rect;
 }
 
-// ±£´æÊı¾İÖÁÎÄ¼şTempdata.dat
+// ä¿å­˜æ•°æ®è‡³æ–‡ä»¶Tempdata.dat
 W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
     CFile fileWrite;
-    CString strFileNamePath = GetExePath();                    // µ±Ç°exeÂ·¾¶
-    strFileNamePath += _T(Subaru_Special_DAT);    // ÎÄ¼şÃû
+    CString strFileNamePath = GetExePath();                    // å½“å‰exeè·¯å¾„
+    strFileNamePath += _T(Subaru_Special_DAT);    // æ–‡ä»¶å
 
     string strTempFileData;
-    /****************************** ¶Á ****************************/
+    /****************************** è¯» ****************************/
     if (fileWrite.Open(strFileNamePath, CFile::modeRead))
     {
         int nBmpLeng = fileWrite.GetLength();
@@ -4480,12 +4480,12 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
         }
         fileWrite.Close();
     }
-    /****************************** ½âÃÜ ****************************/
+    /****************************** è§£å¯† ****************************/
     string strTemp;
     char ch;
-    // µ¹Ğò
-    // µ¥×Ö½Ú + 0x50
-    // Ë«×Ö½Ú - 0x80
+    // å€’åº
+    // å•å­—èŠ‚ + 0x50
+    // åŒå­—èŠ‚ - 0x80
     strTemp = strTempFileData;
     strTempFileData = "";
     for (W_I16 i = strTemp.length() - 1; i >= 0; i--)
@@ -4500,7 +4500,7 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
     vector<vector<string>> AlldataSet;
     vector<string> vecStr;
     strTemp = "";
-    // È¡³öÊı¾İ
+    // å–å‡ºæ•°æ®
     for (W_I16 i = 0; i < strTempFileData.length(); i++)
     {
         ch = strTempFileData.at(i);
@@ -4532,7 +4532,7 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
             strTemp += ch;
         }
     }
-    /***************************** ¸ü¸Ä ****************************/
+    /***************************** æ›´æ”¹ ****************************/
     for (W_I16 i = 0; i < AlldataSet.size(); i++)
     {
         if (AlldataSet[i][0] == iData[0])
@@ -4547,7 +4547,7 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
     }
     if (0 == AlldataSet.size())
         AlldataSet.push_back(iData);
-    /***************************** ¼ÓÃÜ ***************************/
+    /***************************** åŠ å¯† ***************************/
     strTemp = "";
     for (W_I16 i = 0; i < AlldataSet.size(); i++)
     {
@@ -4560,9 +4560,9 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
                 strTemp += '\t';
         }
     }
-    // µ¹Ğò
-    // µ¥×Ö½Ú - 0x50
-    // Ë«×Ö½Ú + 0x80
+    // å€’åº
+    // å•å­—èŠ‚ - 0x50
+    // åŒå­—èŠ‚ + 0x80
     strTempFileData = "";
     for (W_I16 i = strTemp.length() - 1; i >= 0; i--)
     {
@@ -4573,7 +4573,7 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
             ch -= 0x50;
         strTempFileData += ch;
     }
-    /****************************** Ğ´Èë ****************************/
+    /****************************** å†™å…¥ ****************************/
     if (fileWrite.Open(strFileNamePath, CFile::modeCreate | CFile::modeWrite))
     {
         fileWrite.Write(strTempFileData.c_str(), strTempFileData.length());
@@ -4583,12 +4583,12 @@ W_ErrorCode CSubaruBaseCanApp::InforSaveToFile(vector<string> iData)
     return rect;
 }
 
-// ¶ÁÈ¡DPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£ECM -> TOOL
+// è¯»å–DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚ECM -> TOOL
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028c4f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
-    // 0x53200000004A        "ÊÇ·ñ¿ªÊ¼¶ÁÈ¡²ñÓÍ¿ÅÁ£ÂËÇåÆ÷£¨DPF£©/·¢¶¯»ú»úÓÍÏà¹ØµÄÑ§Ï°Öµ£¿"
+    // 0x53200000004A        "æ˜¯å¦å¼€å§‹è¯»å–æŸ´æ²¹é¢—ç²’æ»¤æ¸…å™¨ï¼ˆDPFï¼‰/å‘åŠ¨æœºæœºæ²¹ç›¸å…³çš„å­¦ä¹ å€¼ï¼Ÿ"
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x4A", 6), DF_MB_OKCANCEL, DT_CENTER))
         return rect;
     if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
@@ -4606,7 +4606,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028c4f20(CBinary binMenu)
     DsCmdSet.push_back("11A4");
     DsCmdSet.push_back("11A5");
 
-    // ½«ËùÓĞÃüÁîÒÔ 22/21 CMD1 CMD2 CMD3...µÄ¸ñÊ½±£´æ
+    // å°†æ‰€æœ‰å‘½ä»¤ä»¥ 22/21 CMD1 CMD2 CMD3...çš„æ ¼å¼ä¿å­˜
     string strTemp = "22";
     for (W_I16 i = 0; i < DsCmdSet.size(); i++)
         strTemp += DsCmdSet[i];
@@ -4719,22 +4719,22 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028c4f20(CBinary binMenu)
 
     iSaveData.push_back(iValue);
     InforSaveToFile(iSaveData);
-    // 0x5320000000B4        "¹Ø±Õµã»ğ¿ª¹Ø¡£\nÈ¡³öµç³Ø£¬¸ü»»ECM¡£\n¸ü»»ECMºó×¢²áÑ§Ï°¶ÁÖµ"
+    // 0x5320000000B4        "å…³é—­ç‚¹ç«å¼€å…³ã€‚\nå–å‡ºç”µæ± ï¼Œæ›´æ¢ECMã€‚\næ›´æ¢ECMåæ³¨å†Œå­¦ä¹ è¯»å€¼"
     FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xCC", 6), DF_MB_OK, DT_CENTER);
     FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xB4", 6), DF_MB_OK, DT_CENTER);
 
     return rect;
 }
 
-// Ğ´ÈëDPF£¯»úÓÍÏà¹ØµÄÑµÁ·Öµ¡£TOOL -> ECM
+// å†™å…¥DPFï¼æœºæ²¹ç›¸å…³çš„è®­ç»ƒå€¼ã€‚TOOL -> ECM
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028b4f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
-    // 0x53,0x00,0x00,0x01,0x01,0x87        "ÊÇ·ñ¿ªÊ¼Ğ´ÈëDPF/·¢¶¯»ú»úÓÍÏà¹ØÑ§Ï°Öµ?"
+    // 0x53,0x00,0x00,0x01,0x01,0x87        "æ˜¯å¦å¼€å§‹å†™å…¥DPF/å‘åŠ¨æœºæœºæ²¹ç›¸å…³å­¦ä¹ å€¼?"
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x87", 6), DF_MB_OKCANCEL, DT_CENTER))
         return rect;
-    // 0x5320000000B5        "È·ÈÏ×¢½âÁĞÖĞÊäÈëµÄĞÅÏ¢Ö¸ÏòÄ¿±ê³µÁ¾"
+    // 0x5320000000B5        "ç¡®è®¤æ³¨è§£åˆ—ä¸­è¾“å…¥çš„ä¿¡æ¯æŒ‡å‘ç›®æ ‡è½¦è¾†"
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xB5", 6), DF_MB_OKCANCEL, DT_CENTER))
         return rect;
 
@@ -4783,7 +4783,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028b4f20(CBinary binMenu)
     rect = InforReadfromFile(iData, "dpf");
     if (iData.size() < 2)
     {
-        // FF0200000001        "ÎŞ¿ÉĞĞÊı¾İ"
+        // FF0200000001        "æ— å¯è¡Œæ•°æ®"
         FxShowMessageBox(binMenu, CBinary("\xFF\x02\x00\x00\x00\x01", 6), DF_MB_OK, DT_CENTER);
         return rect;
     }
@@ -4856,14 +4856,14 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_028b4f20(CBinary binMenu)
         if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binCmd, binRecv)))
             return rect;
     }
-    // 0x5320000000B6        "Ğ´ÈëÒÑÍê³É"
+    // 0x5320000000B6        "å†™å…¥å·²å®Œæˆ"
     FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xB6", 6), DF_MB_OK, DT_CENTER);
     m_pNetLayer->SendReceive(CBinary("\x10\x01", 2));
 
     return rect;
 }
 
-// µÇÈëVIN
+// ç™»å…¥VIN
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02071120(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
@@ -4932,8 +4932,8 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02071120(CBinary binMenu)
                 FxShowMessageBox(FxGetStdString(binMenu), FxGetStdString(CBinary("\x53\x20\x00\x00\x00\x05", 6)) + ErrorChar, DF_MB_OK, DT_LEFT);
             else
             {
-                // 0x5320000000A2        "ÊäÈëµ½ECUµÄVINÂëÊÇis "
-                // 0x5320000000A3        "\nÊÇ·ñÓë³µÉÏÏÔÊ¾µÄVINÅÆÏàÆ¥Åä"
+                // 0x5320000000A2        "è¾“å…¥åˆ°ECUçš„VINç æ˜¯is "
+                // 0x5320000000A3        "\næ˜¯å¦ä¸è½¦ä¸Šæ˜¾ç¤ºçš„VINç‰Œç›¸åŒ¹é…"
                 strShow = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xA2", 6)) + strTemp + FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xA3", 6));
                 if (FxShowMessageBox(FxGetStdString(binMenu), strShow, DF_MB_YESNO, DT_CENTER) == DF_IDNO)
                     continue;
@@ -4978,19 +4978,19 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02071120(CBinary binMenu)
     }
     if (VinCode == strTemp)
     {
-        // 0x5320000000A9        "³É¹¦ÊäÈëVINÂë"        
+        // 0x5320000000A9        "æˆåŠŸè¾“å…¥VINç "        
         FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xA9", 6), DF_MB_OK, DT_CENTER);
     }
     else
     {
-        // 0x5320000000A0        "Ğ´ÈëÊ§°Ü"
+        // 0x5320000000A0        "å†™å…¥å¤±è´¥"
         FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xA0", 6), DF_MB_OK, DT_CENTER);
     }
 
     return rect;
 }
 
-// ĞÂ×¢²áÅçÓÍÆ÷´úÂë£¨TOOLÖÁECM£©
+// æ–°æ³¨å†Œå–·æ²¹å™¨ä»£ç ï¼ˆTOOLè‡³ECMï¼‰
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02674f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
@@ -5020,10 +5020,10 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02674f20(CBinary binMenu)
     while (1)
     {
         uiMenu.InitCtrl(binMenu);
-        // 0x532000000053        "#1ÅçÓÍÆ÷"
-        // 0x532000000054        "#2ÅçÓÍÆ÷"
-        // 0x532000000055        "#3ÅçÓÍÆ÷"
-        // 0x532000000056        "#4ÅçÓÍÆ÷"
+        // 0x532000000053        "#1å–·æ²¹å™¨"
+        // 0x532000000054        "#2å–·æ²¹å™¨"
+        // 0x532000000055        "#3å–·æ²¹å™¨"
+        // 0x532000000056        "#4å–·æ²¹å™¨"
         uiMenu.AddOneItem(CBinary("\x53\x20\x00\x00\x00\x53", 6));
         uiMenu.AddOneItem(CBinary("\x53\x20\x00\x00\x00\x54", 6));
         uiMenu.AddOneItem(CBinary("\x53\x20\x00\x00\x00\x55", 6));
@@ -5049,7 +5049,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02674f20(CBinary binMenu)
                 if (i != vecStrInput.size() - 1)
                     strTemp += 0x20;
             }
-            // 0x5320000000FF        "\nÊÇ·ñ×¢²á£¿"
+            // 0x5320000000FF        "\næ˜¯å¦æ³¨å†Œï¼Ÿ"
             strTemp += FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xFF", 6));
             if (DF_IDCANCEL != FxShowMessageBox(FxGetStdString(binTemp), strTemp, DF_MB_OKCANCEL, DT_LEFT))
             {
@@ -5066,7 +5066,7 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02674f20(CBinary binMenu)
                 binCmd += String2Binary(strInput);
                 if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binCmd, binAns)))
                     break;
-                // 0x5320000000CB        "ÒÑÍê³É×¢²á¡£\nÊÇ·ñ¼ÌĞø×¢²á£¿"
+                // 0x5320000000CB        "å·²å®Œæˆæ³¨å†Œã€‚\næ˜¯å¦ç»§ç»­æ³¨å†Œï¼Ÿ"
                 if (DF_IDCANCEL == FxShowMessageBox(FxGetStdString(binTemp), FxGetStdString(binTemp) + "\n"
                     + FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCB", 6)), DF_MB_OKCANCEL, DT_LEFT))
                     return rect;
@@ -5078,12 +5078,12 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02674f20(CBinary binMenu)
     return rect;
 }
 
-// ¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¨ECMÖÁTOOL£©
+// è¯»å–å–·æ²¹å™¨ä»£ç ï¼ˆECMè‡³TOOLï¼‰
 W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02664f20(CBinary binMenu)
 {
     W_ErrorCode rect = CErrorCode::EC_SUCCESS;
 
-    // 0x53200000005A        "ÊÇ·ñ¿ªÊ¼¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¿"
+    // 0x53200000005A        "æ˜¯å¦å¼€å§‹è¯»å–å–·æ²¹å™¨ä»£ç ï¼Ÿ"
     if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x5A", 6), DF_MB_OKCANCEL, DT_CENTER))
         return rect;
     if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
@@ -5105,10 +5105,10 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02664f20(CBinary binMenu)
             FxShowMessageBox(binMenu, Subaru_TXT_MSG_SYSTEMNOTSUPPORTFUNCTION, DF_MB_OK, DT_CENTER);
             return rect;
         }
-        // 0x532000000053        "#1ÅçÓÍÆ÷"
-        // 0x532000000054        "#2ÅçÓÍÆ÷"
-        // 0x532000000055        "#3ÅçÓÍÆ÷"
-        // 0x532000000056        "#4ÅçÓÍÆ÷"
+        // 0x532000000053        "#1å–·æ²¹å™¨"
+        // 0x532000000054        "#2å–·æ²¹å™¨"
+        // 0x532000000055        "#3å–·æ²¹å™¨"
+        // 0x532000000056        "#4å–·æ²¹å™¨"
         binTemp = CBinary("\x53\x20\x00\x00\x00\x53", 6);
         binTemp.SetByteAt(5, binTemp[5] + i);
         strDisPlay += FxGetStdString(binTemp);
@@ -5125,3277 +5125,6 @@ W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02664f20(CBinary binMenu)
         strDisPlay += "\n";
         iData.push_back(strTemp);
     }
-    // 0x5320000000C7        "ÊÇ·ñ±£´æÊı¾İ£¿"
+    // 0x5320000000C7        "æ˜¯å¦ä¿å­˜æ•°æ®ï¼Ÿ"
     strDisPlay += FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xC7", 6));
-    if (DF_IDCANCEL == FxShowMessageBox(FxGetStdString(binMenu), strDisPlay, DF_MB_OKCANCEL, DT_CENTER))
-        return rect;
-    // 0x5320000000C9        "¹Ø±Õµã»ğ¿ª¹Ø¡£\n²ğĞ¶µç³Ø£¬¸ü»»ECM¡£\n¸ü»»ºó×¢²á¶ÁÈ¡´úÂë¡£"
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC9", 6), DF_MB_OK, DT_CENTER);
-    InforSaveToFile(iData);
-
-    return rect;
-}
-
-// ×¢²áÕıÔÚ¶ÁÈ¡µÄ´úÂë£¨TOOLÖÁECM£©
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02654f20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    string strDisPlay;
-    CBinary bin2E102A("\x2E\x10\x2A", 3);
-    CBinary binTemp, binAns;
-    CBinaryGroup bgCmd;
-    vector<string> iData;
-    InforReadfromFile(iData, "inj");
-    if (iData.size() < 2)
-    {
-        // FF0200000001        "ÎŞ¿ÉĞĞÊı¾İ"
-        FxShowMessageBox(binMenu, CBinary("\xFF\x02\x00\x00\x00\x01", 6), DF_MB_OK, DT_CENTER);
-        return rect;
-    }
-    for (W_I16 i = 0; i < 4; i++)
-    {
-        binTemp = bin2E102A;
-        binTemp.SetByteAt(2, binTemp[2] + i);
-        binTemp += String2Binary(iData[i + 1]);
-        bgCmd.Append(binTemp);
-        // 0x532000000053        "#1ÅçÓÍÆ÷"
-        // 0x532000000054        "#2ÅçÓÍÆ÷"
-        // 0x532000000055        "#3ÅçÓÍÆ÷"
-        // 0x532000000056        "#4ÅçÓÍÆ÷"
-        binTemp = CBinary("\x53\x20\x00\x00\x00\x53", 6);
-        binTemp.SetByteAt(5, binTemp[5] + i);
-        strDisPlay += FxGetStdString(binTemp);
-        strDisPlay += ":";
-        char buf[3];
-        for (W_I16 j = 3; j < bgCmd[i].GetByteCount(); j++)
-        {
-            strDisPlay += itoa(bgCmd[i][j], buf, 16);
-            if (0 == j % 2)
-                strDisPlay += 0x20;
-        }
-        strDisPlay += "\n";
-    }
-    // 0x5320000000FF        "\nÊÇ·ñ×¢²á£¿"
-    strDisPlay += FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xFF", 6));
-    if (DF_IDCANCEL == FxShowMessageBox(FxGetStdString(binMenu), strDisPlay, DF_MB_OKCANCEL, DT_CENTER))
-        return rect;
-    for (W_I16 i = 0; i < bgCmd.GetByteCount(); i++)
-    {
-        if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bgCmd[i], binAns)))
-            return rect;
-    }
-    // 0x53200000005B        "ÒÑÍê³É×¢²á"
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x5B", 6), DF_MB_OK, DT_CENTER);
-
-    return rect;
-}
-
-// ÅçÓÍÆ÷´úÂëÏÔÊ¾
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02644f20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x53200000005A        "ÊÇ·ñ¿ªÊ¼¶ÁÈ¡ÅçÓÍÆ÷´úÂë£¿"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x5A", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-
-    rect = ProtectCal();
-    if (rect != CErrorCode::EC_SUCCESS)
-        return rect;
-
-    CBinary bin22102A("\x22\x10\x2A", 3);
-    CBinary binTemp, binAns;
-    vector<string> injectID;
-    string strTemp;
-
-    for (W_I16 i = 0; i < 4; i++)
-    {
-        binTemp = bin22102A;
-        binTemp.SetByteAt(2, binTemp[2] + i);
-        if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binTemp, binAns)))
-            return rect;
-        if (binAns.GetByteCount() < 18)
-        {
-            FxShowMessageBox(binMenu, Subaru_TXT_MSG_SYSTEMNOTSUPPORT, DF_MB_OK, DT_LEFT);
-            return rect;
-        }
-        for (W_I16 j = 0; j < 3; j++)
-            binAns.DeleteByte(0);
-        strTemp = BinaryToString_MO(binAns);
-        string strTempTemp = "";
-        for (W_I16 j = 0; j < strTemp.length(); j++)
-        {
-            strTempTemp += strTemp.at(j);
-            if (0 == (j + 1) % 4)
-                strTempTemp += 0x20;
-        }
-        injectID.push_back(strTempTemp);
-    }
-    strTemp = "";
-    for (W_I16 i = 0; i < injectID.size(); i++)
-    {
-        binTemp = Subaru_TXT_MSG_InjectID1;
-        binTemp.SetByteAt(5, binTemp[5] + i);
-        strTemp = strTemp + FxGetStdString(binTemp) + ":" + injectID[i] + "\n";
-    }
-    FxShowMessageBox(FxGetStdString(binMenu), strTemp, DF_MB_OK, DT_LEFT);
-
-    return rect;
-}
-
-// È¼ÓÍ±Ã¼ÌµçÆ÷
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11de == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x01, vctStr, binMenu);
-
-    return rect;
-}
-
-// CPC µç´Å·§
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_03871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x10ae == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x02, vctStr, binMenu);
-
-    return rect;
-}
-
-// É¢ÈÈÆ÷·çÉÈ¼ÌµçÆ÷
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_00871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11dc == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x03, vctStr, binMenu);
-
-    return rect;
-}
-
-// ¿Õµ÷Ñ¹Ëõ»ú¼ÌµçÆ÷
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_01871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11da == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x04, vctStr, binMenu);
-
-    return rect;
-}
-
-// PCV µç´Å·§
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_04871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11e2 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x07, vctStr, binMenu);
-
-    return rect;
-}
-
-// ÅÅÆø¿ØÖÆµç´Å·§
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_05871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11e5 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x08, vctStr, binMenu);
-
-    return rect;
-}
-
-// ÓÍÏäÄÚÁ¦½»»»µç´Å·§
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_09871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11e6 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x0C, vctStr, binMenu);
-
-    return rect;
-}
-
-// ÎĞÂÖÔöÑ¹Æ÷·ÏÆø¿Úµç´ÅÏßÈ¦
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_0e871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x10ac == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x1D, vctStr, binMenu);
-
-    return rect;
-}
-
-// ¸¨Öú¿ÕÆø×éºÏ·§ 1
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_0c871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1248 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x1f, vctStr, binMenu);
-
-    return rect;
-}
-
-// ¸¨Öú¿ÕÆø×éºÏ·§ 2
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_0d871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1246 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x10, vctStr, binMenu);
-
-    return rect;
-}
-
-// ¸¨ÖúÆø±Ã¼ÌµçÆ÷
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_12871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1247 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x11, vctStr, binMenu);
-
-    return rect;
-}
-
-// CPCµç´Å·§2
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_13871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x11f0 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x12, vctStr, binMenu);
-
-    return rect;
-}
-
-// ¸¨ÖúÈ¼ÓÍ±Ã¼ÌµçÆ÷
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_10871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1251 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x13, vctStr, binMenu);
-
-    return rect;
-}
-
-// È¼ÓÍÑ¹ÇĞ»»µç´Å·§
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_11871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x124b == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x14, vctStr, binMenu);
-
-    return rect;
-}
-
-// ELCM¿ª¹Ø·§
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_16871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1272 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x20, vctStr, binMenu);
-
-    return rect;
-}
-
-// ELCM±Ã
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_17871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back(SystemNum);
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1273 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x21, vctStr, binMenu);
-
-    return rect;
-}
-
-// É²³µÕæ¿Õ±Ã¼ÌµçÆ÷
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_14871c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    CSearchString SubaData;
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vctStr;
-    vector<vector<string>> SearchResault;
-    vctStr.push_back("0000006B");
-    SubaData.SearchString(SearchResault, FALSE, 0, 0, vctStr);
-    for (W_I16 i = 0; i < SearchResault.size(); i++)
-    {
-        vctStr = SearchResault[i];
-        if (0x1283 == StringToHex(vctStr[2]))
-            break;
-        vctStr.clear();
-    }
-    if (vctStr.size() <= 0)
-        return CErrorCode::EC_DATA;
-
-    rect = ActuatorONOFFOperation(0x22, vctStr, binMenu);
-
-    return rect;
-}
-
-// ÖÂ¶¯Æ÷¿ª¹Ø²Ù×÷->ËùÓĞ¹¦ÄÜÖ÷Òª¹ı³Ì
-W_ErrorCode CSubaruBaseCanApp::ActuatorONOFFOperation(W_U8 cmd, vector<string> dsData, CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    rect = ProtectCal();
-    if (rect != CErrorCode::EC_SUCCESS)
-        return rect;
-    CBinary bin310140("\x31\x01\x40", 3);
-    CBinary bin310340("\x31\x03\x40", 3);
-    CBinary bin310240("\x31\x02\x40", 3);
-    bin310140 += cmd;
-    bin310340 += cmd;
-    bin310240 += cmd;
-
-    CBinary binAns1, binAns2;
-    string strTemp;
-    CActTestCtrl ActTest;
-    ActTest.InitCtrl(binMenu);
-    ActTest.SetFirstRowFixed(false);
-    /*if (atoi(dsData[8].c_str()) > 0)
-    {
-    strTemp = FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(dsData[8]));
-    ActTest.AddOneItem(FxGetStdString(binMenu), strTemp);
-    ActTest.SetColumnWid(38, 38, 24);
-    }
-    else*/
-    //{
-    ActTest.AddOneItem(FxGetStdString(binMenu));
-    ActTest.SetColumnWid(70, 30, 0);
-    //}
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin310140, binAns1)))
-        return rect;
-
-    W_I16 iRet = 0;
-    DWORD iTimer = 0;
-    CBinary binCmd = String2Binary(dsData[1] + dsData[2]);
-    while (1)
-    {
-        if (GetTickCount() > iTimer)
-        {
-            // ¼ä¸ô150ºÁÃë·¢Ò»´ÎÃüÁî
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin310340, binAns1)))
-                return rect;
-        }
-        if (binAns1.GetByteCount() > 5 && 0x00 == binAns1[4] && 0x01 == binAns1[5])
-        {
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binCmd, binAns2)))
-                return rect;
-            for (W_I16 j = 0; j < binCmd.GetByteCount() && binAns2.GetByteCount() > 0; j++)
-                binAns2.DeleteByte(0);
-
-            if (cmd == 0x1D)
-            {
-                char Temp[10];
-                sprintf(Temp, "%.1f", (float)100.0 / 255 * binAns2[0]);
-                strTemp = Temp;
-            }
-            else
-            {
-                // 0x53,0x20,0x00,0x00,0x01,0x01                "OFF"
-                // 0x53,0x20,0x00,0x00,0x00,0xFE                "ON"
-                if (binAns2.GetByteCount() > 0 && 0x00 == binAns2[0])
-                    strTemp = FxGetStdString(CBinary("\x53\x20\x00\x00\x01\x01", 6));
-                else if (binAns2.GetByteCount() > 0 && 0xff == binAns2[0])
-                    strTemp = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xFE", 6));
-                else
-                    strTemp = FxGetStdString(CBinary("\x53\x20\x00\x00\x01\x02", 6));//0x53,0x20,0x00,0x00,0x01,0x02                "---"
-            }
-
-            ActTest.SetItemValue(0, strTemp);
-            iRet = ActTest.ShowCtrl();
-            if (-1 == iRet)
-                break;
-        }
-        else
-        {
-            iRet = FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-            if (DF_IDCANCEL == iRet)
-                return rect;
-        }
-    }
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin310240, binAns1)))
-        return rect;
-    while (1)
-    {
-        if (GetTickCount() > iTimer)
-        {
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin310340, binAns1)))
-                return rect;
-            if (binAns1.GetByteCount() <= 5 || 0x00 != binAns1[4] || 0x01 != binAns1[5])
-                break;
-        }
-        iRet = FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-        if (DF_IDCANCEL == iRet)
-            return rect;
-    }
-
-    return rect;
-}
-
-// È¼ÓÍ±ÃÄÜÂÊ¼ÇÒä
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02774f20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x53200000008B        "ÊÇ·ñ¿ªÊ¼Ñ§Ï°£¿\nÈç¹ûÑ§Ï°¹ı³ÌÖĞÍ¾ÖĞ¶Ï£¬±ØĞëÖØĞÂ¿ªÊ¼£¬Îñ±ØÍê³ÉÑ§Ï°¡£"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x8B", 6), DF_MB_OKCANCEL, DT_CENTER))
-        return rect;
-    // 0x53200000008C        "±ØĞè¹¤×÷Ìõ¼ş¾ùÒÑÂú×ãÖ®ºó²ÅÄÜ¿ªÊ¼Ñ§Ï°¡££¨ÏêÇéÇë²ÎÔÄ¡¶Î¬ĞŞÊÖ²á¡·£©"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x8C", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    // 0x53200000008D        "Æô¶¯·¢¶¯»ú£¬±£³Ö·¢¶¯»úÒÔ2500×ª/·ÖÒÔÉÏµÄ×ªËÙÔËĞĞ5ÃëÒÔÉÏ¡£"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x8D", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    // 0x53200000008E        "·¢¶¯»ú×ªËÙ»ØÎ»ÖÁµ¡ËÙ×´Ì¬¡£¿ªÊ¼Ñ§Ï°¡£"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x8E", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-
-    rect = ProtectCal();
-    if (CErrorCode::EC_SUCCESS != rect)
-        return rect;
-    CBinary bin31017000("\x31\x01\x70\x00", 4);
-    CBinary bin31037000("\x31\x03\x70\x00", 4);
-    CBinary bin31027000("\x31\x02\x70\x00", 4);
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary binTemp, binAns;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31017000, binAns)))
-        return rect;
-
-    CSearchString SubaData;
-    vector<string> DsCmdSet;
-    DsCmdSet.push_back("1253");
-    DsCmdSet.push_back("1172");
-    DsCmdSet.push_back("F405");
-    DsCmdSet.push_back("F40C");
-    DsCmdSet.push_back("F40D");
-    DsCmdSet.push_back("F442");
-    DsCmdSet.push_back("10A6");
-    DsCmdSet.push_back("10A7");
-    DsCmdSet.push_back("F423");
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vecStr;
-    vector<vector<string> > SearchReasault;
-    vector<vector<string> > ReasaultTemp;
-    // ²éÕÒ²¢Æ¥Åä¿âÖĞ´æÔÚµÄÊı¾İÁ÷Ïî
-    vecStr.push_back(SystemNum);
-    SubaData.SearchString(SearchReasault, FALSE, 0, 0, vecStr);
-
-    for (W_I16 j = 0; j < DsCmdSet.size(); j++)
-    {
-        for (W_I16 i = 0; i < SearchReasault.size(); i++)
-        {
-            if (StringToHex(DsCmdSet[j]) == StringToHex(SearchReasault[i][2]))
-            {
-                ReasaultTemp.push_back(SearchReasault[i]);
-                break;
-            }
-        }
-    }
-    if (ReasaultTemp.size() <= 0)
-        return CErrorCode::EC_DATA;
-    // ½«ËùÓĞÃüÁîÒÔ 22/21 CMD1 CMD2 CMD3...µÄ¸ñÊ½±£´æ
-    string strTemp = ReasaultTemp[0][1];
-    for (W_I16 i = 0; i < DsCmdSet.size(); i++)
-        strTemp += DsCmdSet[i];
-    CBinary binDsCmd = String2Binary(strTemp);
-
-    CActTestCtrl ActTest;
-    // 0x5320000000D2        "²»Òª´¥Åö³µÁ¾\n°´¡¾È¡Ïû¡¿Í£Ö¹"
-    ActTest.InitCtrl(CBinary("\x53\x20\x00\x00\x00\xD2", 6));
-    ActTest.SetFirstRowFixed(false);
-    ActTest.SetColumnWid(50, 25, 25);
-    for (W_I16 i = 0; i < 10 && i < (ReasaultTemp.size() + 1); i++)
-    {
-        // 0x5320000000D4        "È¼ÓÍ±ÃÑ§Ï°×´Ì¬"
-        binTemp = CBinary("\x53\x20\x00\x00\x00\xD4", 6);
-        binTemp.SetByteAt(5, binTemp[5] + i);
-        string head;
-        if (i > 1 && 0x00 == StringToHex(ReasaultTemp[i - 1][3]))
-            head = Subaru_SPECMSG;
-        else
-            head = Subaru_IDCAN;
-        if (i > 1)
-            ActTest.AddOneItem(FxGetStdString(binTemp), FxGetStdString(CBinary(head.c_str(), 2) + String2Binary(ReasaultTemp[i - 1][8])));
-        else
-            ActTest.AddOneItem(FxGetStdString(binTemp));
-    }
-
-    DWORD iTimer = 0;
-    W_I16 iRet = 0;
-    W_I16 iTemp;
-    CBinary recv1;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            SendAndRecive(bin31037000, binAns);
-            if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
-                break;
-        }
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x02 == binAns[5]))
-        {
-            if (0x02 == binAns[5])
-                ActTest.m_strTitle = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCF", 6)).c_str();
-
-            // 0x5320000000CE        "Î´Ñ§Ï°"
-            // 0x5320000000CF        "ÒÑ½áÊøÑ§Ï°"
-            if (0x01 == binAns[5])
-                ActTest.SetItemValue(0, FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCE", 6)));
-            else
-                ActTest.SetItemValue(0, FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCF", 6)));
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binDsCmd, recv1)))
-                return rect;
-
-            for (W_I16 i = 0; i < ReasaultTemp.size(); i++)
-            {
-                binTemp.Clear();
-                W_I16 StartPos = 1;
-                for (W_I16 j = 0; j < i; j++)
-                {
-                    StartPos += String2Binary(ReasaultTemp[j][2]).GetByteCount();
-                    StartPos += StringToHex(ReasaultTemp[j][6]);
-                }
-                StartPos += String2Binary(ReasaultTemp[i][2]).GetByteCount();
-                iTemp = StringToHex(ReasaultTemp[i][6]);
-                for (W_I16 j = 0; j < iTemp && StartPos < recv1.GetByteCount(); j++)
-                    binTemp += recv1[StartPos++];
-                strTemp = SubaDataCanCal(binTemp, ReasaultTemp[i]);
-                if (strTemp.length() <= 0)
-                    strTemp = FxGetStdString(CBinary("\x53\x4D\x0E\x58\x16\x20", 6));
-                ActTest.SetItemValue(1 + i, strTemp);
-            }
-            do { iRet = ActTest.ShowCtrl(); } while (0x02 == binAns[5] && -1 != iRet);
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-        if (-1 == iRet)
-            break;
-    }
-    if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x10 == binAns[5]))
-    {
-        // 0x5320000000CD        "Î´ÄÜÍê³ÉÑ§Ï°"
-        // 0x5320000000D3        "¹ı³ÌÒÑÖĞÖ¹"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xCD", 6), DF_MB_OK, DT_CENTER);
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xD3", 6), DF_MB_OK, DT_CENTER);
-    }
-    else if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x02 == binAns[5])
-    {
-        bin31027000.SetByteAt(3, 0x01);
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31027000, binAns)))
-        return rect;
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// È¼ÓÍÅçÉäÆ÷ÅçÉäÁ¿¼ÇÒä
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02764f20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-
-    // 0x5320000000DF        "ÅçÓÍÆ÷ÊÇ·ñÒÑ¸ü»»£¿"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xDF", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    rect = ProtectCal();
-    if (CErrorCode::EC_SUCCESS != rect)
-        return rect;
-
-    CBinary binAns, binTemp;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin31017002("\x31\x01\x70\x02", 4);
-    CBinary bin31037002("\x31\x03\x70\x02", 4);
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31017002, binAns)))
-        return rect;
-
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31037002, binAns)))
-                return rect;
-        }
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x02 == binAns[5])
-            break;
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
-        {
-            // 0x532000000080        "Ö´ĞĞÌõ¼ş²»³ÉÁ¢"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x80", 6), DF_MB_OK, DT_CENTER);
-            return CErrorCode::EC_SUCCESS;
-        }
-        if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-            return rect;
-    }
-
-    // 0x532000000093        "×¢ÒâÑ§Ï°¹ı³ÌÖĞ·¢¶¯»ú×ªËÙµÄ±ä»¯"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x93", 6), DF_MB_OKCANCEL, DT_CENTER))
-        return rect;
-
-    CBinary bin31017001("\x31\x01\x70\x01", 4);
-    CBinary bin31037001("\x31\x03\x70\x01", 4);
-    CBinary bin31027001("\x31\x02\x70\x01", 4);
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31017001, binAns)))
-        return rect;
-
-    CSearchString SubaData;
-    vector<string> DsCmdSet;
-    DsCmdSet.push_back("1254");
-    DsCmdSet.push_back("F405");
-    DsCmdSet.push_back("F40C");
-    DsCmdSet.push_back("F40D");
-    DsCmdSet.push_back("F442");
-    DsCmdSet.push_back("F433");
-    DsCmdSet.push_back("10A6");
-    DsCmdSet.push_back("10A7");
-    DsCmdSet.push_back("F423");
-    DsCmdSet.push_back("111F");
-    DsCmdSet.push_back("112A");
-    DsCmdSet.push_back("112B");
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vecStr;
-    vector<vector<string> > SearchReasault;
-    vector<vector<string> > ReasaultTemp;
-    // ²éÕÒ²¢Æ¥Åä¿âÖĞ´æÔÚµÄÊı¾İÁ÷Ïî
-    vecStr.push_back(SystemNum);
-    SubaData.SearchString(SearchReasault, FALSE, 0, 0, vecStr);
-
-    for (W_I16 j = 0; j < DsCmdSet.size(); j++)
-    {
-        for (W_I16 i = 0; i < SearchReasault.size(); i++)
-        {
-            if (StringToHex(DsCmdSet[j]) == StringToHex(SearchReasault[i][2]))
-            {
-                ReasaultTemp.push_back(SearchReasault[i]);
-                break;
-            }
-        }
-    }
-    if (ReasaultTemp.size() <= 0)
-        return CErrorCode::EC_DATA;
-    // ½«ËùÓĞÃüÁîÒÔ 22/21 CMD1 CMD2 CMD3...µÄ¸ñÊ½±£´æ
-    string strTemp = ReasaultTemp[0][1];
-    for (W_I16 i = 0; i < DsCmdSet.size(); i++)
-        strTemp += DsCmdSet[i];
-    CBinary binDsCmd = String2Binary(strTemp);
-
-    CActTestCtrl ActTest;
-    // 0x5320000000D2        "²»Òª´¥Åö³µÁ¾\n°´¡¾È¡Ïû¡¿Í£Ö¹"
-    ActTest.InitCtrl(CBinary("\x53\x20\x00\x00\x00\xD2", 6));
-    ActTest.SetFirstRowFixed(false);
-    ActTest.SetColumnWid(50, 25, 25);
-    for (W_I16 i = 0; i < 13 && i < (ReasaultTemp.size() + 1); i++)
-    {
-        if (i > 0)
-        {
-            binTemp = CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i - 1][7]);
-            if (0x00 != StringToHex(ReasaultTemp[i - 1][8]))
-                ActTest.AddOneItem(FxGetStdString(binTemp), FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i - 1][8])));
-            else
-                ActTest.AddOneItem(FxGetStdString(binTemp));
-        }
-        else
-        {
-            // 0x5320000000e0        "ÅçÓÍÆ÷È¼ÓÍÅçÉäÁ¿Ñ§Ï°×´Ì¬"
-            binTemp = CBinary("\x53\x20\x00\x00\x00\xe0", 6);
-            ActTest.AddOneItem(FxGetStdString(binTemp));
-        }
-    }
-
-    iTimer = 0;
-    W_I16 iRet = 0;
-    W_I16 iTemp;
-    CBinary recv1;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31037001, binAns)))
-                return rect;
-            if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
-            {
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xE6", 6), DF_MB_OK, DT_LEFT);
-                break;
-            }
-        }
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x02 == binAns[5]))
-        {
-            if (0x02 == binAns[5])
-                ActTest.m_strTitle = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCF", 6)).c_str();
-
-            // 0x5320000000CE        "Î´Ñ§Ï°"
-            // 0x5320000000CF        "ÒÑ½áÊøÑ§Ï°"
-            if (0x01 == binAns[5])
-                ActTest.SetItemValue(0, FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCE", 6)));
-            else
-                ActTest.SetItemValue(0, FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCF", 6)));
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binDsCmd, recv1)))
-                return rect;
-
-            for (W_I16 i = 0; i < ReasaultTemp.size(); i++)
-            {
-                binTemp.Clear();
-                W_I16 StartPos = 1;
-                for (W_I16 j = 0; j < i; j++)
-                {
-                    StartPos += String2Binary(ReasaultTemp[j][2]).GetByteCount();
-                    StartPos += StringToHex(ReasaultTemp[j][6]);
-                }
-                StartPos += String2Binary(ReasaultTemp[i][2]).GetByteCount();
-                iTemp = StringToHex(ReasaultTemp[i][6]);
-                for (W_I16 j = 0; j < iTemp && StartPos < recv1.GetByteCount(); j++)
-                    binTemp += recv1[StartPos++];
-                strTemp = SubaDataCanCal(binTemp, ReasaultTemp[i]);
-                if (strTemp.length() <= 0)
-                    strTemp = FxGetStdString(CBinary("\x53\x4D\x0E\x58\x16\x20", 6));
-                ActTest.SetItemValue(1 + i, strTemp);
-            }
-            do { iRet = ActTest.ShowCtrl(); } while (0x02 == binAns[5] && -1 != iRet);
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-        if (-1 == iRet)
-            break;
-    }
-    // 0x5320000000D3        "¹ı³ÌÒÑÖĞÖ¹"
-    if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x10 == binAns[5]))
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xD3", 6), DF_MB_OK, DT_CENTER);
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31027001, binAns)))
-        return rect;
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// EGR·§ÃÅ¿ª½Ç¼ÇÒä
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02754f20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x532000000091        "ÊÇ·ñ¿ªÊ¼Ñ§Ï°£¿"
-    // 0x532000000092        "ÀäÈ´ÒºÎÂ¶È±£³Ö20¡æµ½60¡æÊ±ÊÇ·ñÄÜÍê³ÉÑ§Ï°£¿"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x91", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x92", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    rect = ProtectCal();
-    if (CErrorCode::EC_SUCCESS != rect)
-        return rect;
-
-    CBinary binTemp, binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin31017003("\x31\x01\x70\x03", 4);
-    CBinary bin31037003("\x31\x03\x70\x03", 4);
-    CBinary bin31027003("\x31\x02\x70\x03", 4);
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31017003, binAns)))
-        return rect;
-
-    CSearchString SubaData;
-    vector<string> DsCmdSet;
-    DsCmdSet.push_back("1257");
-    DsCmdSet.push_back("F405");
-    DsCmdSet.push_back("F442");
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vecStr;
-    vector<vector<string> > SearchReasault;
-    vector<vector<string> > ReasaultTemp;
-    // ²éÕÒ²¢Æ¥Åä¿âÖĞ´æÔÚµÄÊı¾İÁ÷Ïî
-    vecStr.push_back(SystemNum);
-    SubaData.SearchString(SearchReasault, FALSE, 0, 0, vecStr);
-
-    for (W_I16 j = 0; j < DsCmdSet.size(); j++)
-    {
-        for (W_I16 i = 0; i < SearchReasault.size(); i++)
-        {
-            if (StringToHex(DsCmdSet[j]) == StringToHex(SearchReasault[i][2]))
-            {
-                ReasaultTemp.push_back(SearchReasault[i]);
-                break;
-            }
-        }
-    }
-    if (ReasaultTemp.size() <= 0)
-        return CErrorCode::EC_DATA;
-    // ½«ËùÓĞÃüÁîÒÔ 22/21 CMD1 CMD2 CMD3...µÄ¸ñÊ½±£´æ
-    string strTemp = ReasaultTemp[0][1];
-    for (W_I16 i = 0; i < DsCmdSet.size(); i++)
-        strTemp += DsCmdSet[i];
-    CBinary binDsCmd = String2Binary(strTemp);
-
-    CActTestCtrl ActTest;
-    // 0x5320000000EA        "ÕıÔÚÑ§Ï°ÖĞ"
-    ActTest.InitCtrl(CBinary("\x53\x20\x00\x00\x00\xEA", 6));
-    ActTest.SetFirstRowFixed(false);
-    ActTest.SetColumnWid(50, 25, 25);
-    for (W_I16 i = 0; i < 3 && i < ReasaultTemp.size(); i++)
-    {
-        binTemp = CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i][7]);
-        if (0x00 != StringToHex(ReasaultTemp[i][8]))
-            ActTest.AddOneItem(FxGetStdString(binTemp), FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i][8])));
-        else
-            ActTest.AddOneItem(FxGetStdString(binTemp));
-    }
-
-    DWORD iTimer = 0;
-    W_I16 iRet = 0;
-    W_I16 iTemp;
-    CBinary recv1;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31037003, binAns)))
-                return rect;
-            if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
-            {
-                // 0x532000000080        "Ö´ĞĞÌõ¼ş²»³ÉÁ¢"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x80", 6), DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_SUCCESS;
-            }
-        }
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x02 == binAns[5]))
-        {
-            // 0x5320000000E9        "¹Ø±Õµã»ğ¿ª¹Ø¡£¿ª¹Øµã»ğ¿ª¹ØºóÔÚ'µ±Ç°Êı¾İÏÔÊ¾'ÖĞÈ·ÈÏ·ÏÆøÔÙÑ­»·£¨EGR£©Ñ§Ï°×´Ì¬¡£"
-            if (0x02 == binAns[5])
-                ActTest.m_strTitle = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xE9", 6)).c_str();
-
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binDsCmd, recv1)))
-                return rect;
-            for (W_I16 i = 0; i < ReasaultTemp.size(); i++)
-            {
-                binTemp.Clear();
-                W_I16 StartPos = 1;
-                for (W_I16 j = 0; j < i; j++)
-                {
-                    StartPos += String2Binary(ReasaultTemp[j][2]).GetByteCount();
-                    StartPos += StringToHex(ReasaultTemp[j][6]);
-                }
-                StartPos += String2Binary(ReasaultTemp[i][2]).GetByteCount();
-                iTemp = StringToHex(ReasaultTemp[i][6]);
-                for (W_I16 j = 0; j < iTemp && StartPos < recv1.GetByteCount(); j++)
-                    binTemp += recv1[StartPos++];
-                strTemp = SubaDataCanCal(binTemp, ReasaultTemp[i]);
-                if (strTemp.length() <= 0)
-                    strTemp = FxGetStdString(CBinary("\x53\x4D\x0E\x58\x16\x20", 6));
-                ActTest.SetItemValue(i, strTemp);
-            }
-            do { iRet = ActTest.ShowCtrl(); } while (0x02 == binAns[5] && -1 != iRet);
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-        if (-1 == iRet)
-            break;
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31027003, binAns)))
-        return rect;
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// ÎĞÂÖÒ¶Æ¬½Ç¼ÇÒä
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02374c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x532000000091        "ÊÇ·ñ¿ªÊ¼Ñ§Ï°£¿"
-    // 0x53200000008C        "±ØĞè¹¤×÷Ìõ¼ş¾ùÒÑÂú×ãÖ®ºó²ÅÄÜ¿ªÊ¼Ñ§Ï°¡££¨ÏêÇéÇë²ÎÔÄ¡¶Î¬ĞŞÊÖ²á¡·£©"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x91", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x8C", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    rect = ProtectCal();
-    if (CErrorCode::EC_SUCCESS != rect)
-        return rect;
-
-    CBinary binTemp, binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin31017004("\x31\x01\x70\x04", 4);
-    CBinary bin31037004("\x31\x03\x70\x04", 4);
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31017004, binAns)))
-        return rect;
-
-    CSearchString SubaData;
-    vector<string> DsCmdSet;
-    DsCmdSet.push_back("125E");
-    DsCmdSet.push_back("F405");
-    DsCmdSet.push_back("F40C");
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vecStr;
-    vector<vector<string> > SearchReasault;
-    vector<vector<string> > ReasaultTemp;
-    // ²éÕÒ²¢Æ¥Åä¿âÖĞ´æÔÚµÄÊı¾İÁ÷Ïî
-    vecStr.push_back(SystemNum);
-    SubaData.SearchString(SearchReasault, FALSE, 0, 0, vecStr);
-
-    for (W_I16 j = 0; j < DsCmdSet.size(); j++)
-    {
-        for (W_I16 i = 0; i < SearchReasault.size(); i++)
-        {
-            if (StringToHex(DsCmdSet[j]) == StringToHex(SearchReasault[i][2]))
-            {
-                ReasaultTemp.push_back(SearchReasault[i]);
-                break;
-            }
-        }
-    }
-    if (ReasaultTemp.size() <= 0)
-        return CErrorCode::EC_DATA;
-    // ½«ËùÓĞÃüÁîÒÔ 22/21 CMD1 CMD2 CMD3...µÄ¸ñÊ½±£´æ
-    string strTemp = ReasaultTemp[0][1];
-    for (W_I16 i = 0; i < DsCmdSet.size(); i++)
-        strTemp += DsCmdSet[i];
-    CBinary binDsCmd = String2Binary(strTemp);
-
-    CActTestCtrl ActTest;
-    // 0x5320000000D2        "²»Òª´¥Åö³µÁ¾\n°´¡¾È¡Ïû¡¿Í£Ö¹"
-    ActTest.InitCtrl(CBinary("\x53\x20\x00\x00\x00\xD2", 6));
-    ActTest.SetFirstRowFixed(false);
-    ActTest.SetColumnWid(50, 25, 25);
-    for (W_I16 i = 0; i < 3 && i < ReasaultTemp.size(); i++)
-    {
-        binTemp = CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i][7]);
-        if (0x00 != StringToHex(ReasaultTemp[i][8]))
-            ActTest.AddOneItem(FxGetStdString(binTemp), FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i][8])));
-        else
-            ActTest.AddOneItem(FxGetStdString(binTemp));
-    }
-
-    DWORD iTimer = 0;
-    W_I16 iRet = 0;
-    W_I16 iTemp;
-    CBinary recv1;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31037004, binAns)))
-                return rect;
-            if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
-            {
-                // 0x532000000080        "Ö´ĞĞÌõ¼ş²»³ÉÁ¢"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x80", 6), DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_SUCCESS;
-            }
-        }
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x02 == binAns[5]))
-        {
-            // 0x5320000000CF        "ÒÑ½áÊøÑ§Ï°"
-            if (0x02 == binAns[5])
-                ActTest.m_strTitle = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCF", 6)).c_str();
-
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binDsCmd, recv1)))
-                return rect;
-            for (W_I16 i = 0; i < ReasaultTemp.size(); i++)
-            {
-                binTemp.Clear();
-                W_I16 StartPos = 1;
-                for (W_I16 j = 0; j < i; j++)
-                {
-                    StartPos += String2Binary(ReasaultTemp[j][2]).GetByteCount();
-                    StartPos += StringToHex(ReasaultTemp[j][6]);
-                }
-                StartPos += String2Binary(ReasaultTemp[i][2]).GetByteCount();
-                iTemp = StringToHex(ReasaultTemp[i][6]);
-                for (W_I16 j = 0; j < iTemp && StartPos < recv1.GetByteCount(); j++)
-                    binTemp += recv1[StartPos++];
-                strTemp = SubaDataCanCal(binTemp, ReasaultTemp[i]);
-                if (strTemp.length() <= 0)
-                    strTemp = FxGetStdString(CBinary("\x53\x4D\x0E\x58\x16\x20", 6));
-                ActTest.SetItemValue(i, strTemp);
-            }
-            do { iRet = ActTest.ShowCtrl(); } while (0x02 == binAns[5] && -1 != iRet);
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-        if (-1 == iRet)
-            break;
-    }
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// ÆøÁ÷´«¸ĞÆ÷¼ÇÒä
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02274c20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x532000000091        "ÊÇ·ñ¿ªÊ¼Ñ§Ï°£¿"
-    // 0x53200000008C        "±ØĞè¹¤×÷Ìõ¼ş¾ùÒÑÂú×ãÖ®ºó²ÅÄÜ¿ªÊ¼Ñ§Ï°¡££¨ÏêÇéÇë²ÎÔÄ¡¶Î¬ĞŞÊÖ²á¡·£©"
-    // 0x532000000093        "×¢ÒâÑ§Ï°¹ı³ÌÖĞ·¢¶¯»ú×ªËÙµÄ±ä»¯"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x91", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x8C", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x93", 6), DF_MB_OKCANCEL, DT_LEFT))
-        return rect;
-    rect = ProtectCal();
-    if (CErrorCode::EC_SUCCESS != rect)
-        return rect;
-
-    CBinary binTemp, binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin31017005("\x31\x01\x70\x05", 4);
-    CBinary bin31037005("\x31\x03\x70\x05", 4);
-    CBinary bin31027005("\x31\x02\x70\x05", 4);
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31017005, binAns)))
-        return rect;
-
-    CSearchString SubaData;
-    vector<string> DsCmdSet;
-    DsCmdSet.push_back("1261");
-    DsCmdSet.push_back("F405");
-    DsCmdSet.push_back("F40C");
-    DsCmdSet.push_back("F433");
-    DsCmdSet.push_back("F446");
-    if (FALSE == SubaData.OpenTabFile(Subaru_Data_CBF))
-        return CErrorCode::EC_DATA;
-
-    vector<string> vecStr;
-    vector<vector<string> > SearchReasault;
-    vector<vector<string> > ReasaultTemp;
-    // ²éÕÒ²¢Æ¥Åä¿âÖĞ´æÔÚµÄÊı¾İÁ÷Ïî
-    vecStr.push_back(SystemNum);
-    SubaData.SearchString(SearchReasault, FALSE, 0, 0, vecStr);
-
-    for (W_I16 j = 0; j < DsCmdSet.size(); j++)
-    {
-        for (W_I16 i = 0; i < SearchReasault.size(); i++)
-        {
-            if (StringToHex(DsCmdSet[j]) == StringToHex(SearchReasault[i][2]))
-            {
-                ReasaultTemp.push_back(SearchReasault[i]);
-                break;
-            }
-        }
-    }
-    if (ReasaultTemp.size() <= 0)
-        return CErrorCode::EC_DATA;
-    // ½«ËùÓĞÃüÁîÒÔ 22/21 CMD1 CMD2 CMD3...µÄ¸ñÊ½±£´æ
-    string strTemp = ReasaultTemp[0][1];
-    for (W_I16 i = 0; i < DsCmdSet.size(); i++)
-        strTemp += DsCmdSet[i];
-    CBinary binDsCmd = String2Binary(strTemp);
-
-    CActTestCtrl ActTest;
-    // 0x5320000000D2        "²»Òª´¥Åö³µÁ¾\n°´¡¾È¡Ïû¡¿Í£Ö¹"
-    ActTest.InitCtrl(CBinary("\x53\x20\x00\x00\x00\xD2", 6));
-    ActTest.SetFirstRowFixed(false);
-    ActTest.SetColumnWid(50, 25, 25);
-    for (W_I16 i = 0; i < 5 && i < ReasaultTemp.size(); i++)
-    {
-        binTemp = CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i][7]);
-        if (0x00 != StringToHex(ReasaultTemp[i][8]))
-            ActTest.AddOneItem(FxGetStdString(binTemp), FxGetStdString(CBinary(Subaru_IDCAN, 2) + String2Binary(ReasaultTemp[i][8])));
-        else
-            ActTest.AddOneItem(FxGetStdString(binTemp));
-    }
-
-    DWORD iTimer = 0;
-    W_I16 iRet = 0;
-    W_I16 iTemp;
-    CBinary recv1;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31037005, binAns)))
-                return rect;
-            if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && 0x10 == binAns[5])
-            {
-                // 0x5320000000EC        "Ñ§Ï°Ìõ¼ş²»³ÉÁ¢"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xEC", 6), DF_MB_OK, DT_LEFT);
-                break;
-            }
-        }
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x01 == binAns[5] || 0x02 == binAns[5]))
-        {
-            // 0x5320000000CF        "ÒÑ½áÊøÑ§Ï°"
-            if (0x02 == binAns[5])
-                ActTest.m_strTitle = FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xCF", 6)).c_str();
-
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(binDsCmd, recv1)))
-                return rect;
-            for (W_I16 i = 0; i < ReasaultTemp.size(); i++)
-            {
-                binTemp.Clear();
-                W_I16 StartPos = 1;
-                for (W_I16 j = 0; j < i; j++)
-                {
-                    StartPos += String2Binary(ReasaultTemp[j][2]).GetByteCount();
-                    StartPos += StringToHex(ReasaultTemp[j][6]);
-                }
-                StartPos += String2Binary(ReasaultTemp[i][2]).GetByteCount();
-                iTemp = StringToHex(ReasaultTemp[i][6]);
-                for (W_I16 j = 0; j < iTemp && StartPos < recv1.GetByteCount(); j++)
-                    binTemp += recv1[StartPos++];
-                strTemp = SubaDataCanCal(binTemp, ReasaultTemp[i]);
-                if (strTemp.length() <= 0)
-                    strTemp = FxGetStdString(CBinary("\x53\x4D\x0E\x58\x16\x20", 6));
-                ActTest.SetItemValue(i, strTemp);
-            }
-            do { iRet = ActTest.ShowCtrl(); } while (0x02 == binAns[5] && -1 != iRet);
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-        if (-1 == iRet)
-            break;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31027005, binAns)))
-        return rect;
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// ·ÀµÁËøÏµÍ³
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02071a20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binTemp, binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin31015004("\x31\x01\x50\x04", 4);
-    CBinary bin31035004("\x31\x03\x50\x04", 4);
-
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))   // °²È«·ÃÎÊ
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31015004, binAns)))
-        return rect;
-
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 150;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31035004, binAns)))
-                return rect;
-        }
-        // 0x5320000000C4        "Í¨ĞÅÏßÂ·¼ì²é\nÕıÔÚ½øĞĞÖĞ¡­¡­"
-        if (binAns.GetByteCount() > 5 && 0x00 == binAns[4] && (0x02 == binAns[5] || 0x10 == binAns[5]))
-        {
-            // 0x5320000000C6        "Í¨ĞÅÏßÂ·Î´¶ÌÂ·"
-            // 0x532000000080        "Ö´ĞĞÌõ¼ş²»³ÉÁ¢"
-            if (0x02 == binAns[5])
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC6", 6), DF_MB_OK, DT_CENTER);
-            else
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x80", 6), DF_MB_OK, DT_CENTER);
-            break;
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC4", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            // 0x5320000000C5        "ÒÑÖÕÖ¹Í¨ĞÅÏßÂ·¼ì²é"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\xC5", 6), DF_MB_OK, DT_CENTER);
-            break;
-        }
-    }
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// Çå³ıAT¼ÇÒäÖµ
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_12637620(CBinary binMenu)
-{
-
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x53200002000E        "ÈçÒÑÇå³ı×Ô¶¯±äËÙÆ÷£¨AT£©Ñ§Ï°£¬Ì§Æğ³µÁ¾ºóĞèÔÙ´ÎÑ§Ï°×Ô¶¯±äËÙÆ÷£¨AT£©"
-    // 0x53200002000F        "ÊÇ·ñÇå³ıËùÓĞ×Ô¶¯±äËÙÆ÷£¨AT£©Ñ§Ï°£¿"
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x0E", 6), DF_MB_YESNO, DT_CENTER))
-        return rect;
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x0F", 6), DF_MB_YESNO, DT_CENTER))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
-        return rect;
-
-    CBinary bin3101("\x31\x01\xff\x00\x00\x01", 6);
-    CBinary bin3103("\x31\x03\xff\x00", 4);
-    CBinary binAns;
-
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3101, binAns)))
-            return rect;
-        iTimer = 0;
-        while (1)
-        {
-            if (iTimer < GetTickCount())
-            {
-                iTimer = GetTickCount() + 110;
-                if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3103, binAns)))
-                    return rect;
-            }
-            if (binAns.GetByteCount() < 6 || 0x00 != binAns[4] || (0x01 != binAns[5] && 0x02 != binAns[5]))
-            {
-                // 0x532000020010        "Î´Çå³ı×Ô¶¯±äËÙÆ÷£¨AT£©Ñ§Ï°¡£\nÊÇ·ñÔÙÊÔÒ»´Î£¿"
-                if (DF_IDYES == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x10", 6), DF_MB_YESNO, DT_LEFT))
-                    break;
-                return rect;
-            }
-            else if (0x00 == binAns[4] && 0x02 == binAns[5])
-            {
-                // 0x532000020011        "Çå³ıÒÑ½áÊø¡£\n¹Ø±Õµã»ğ¿ª¹Ø¡£\nÔÙ´Î½øĞĞ×Ô¶¯±äËÙÆ÷£¨AT£©Ñ§Ï°¡£"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x11", 6), DF_MB_OK, DT_LEFT);
-                return rect;
-            }
-            else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-            {
-                return rect;
-            }
-        }
-    }
-
-    return rect;
-}
-
-
-// AWD ¿ª/¹ØÇĞ»»Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_42637620(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin221051("\x22\x10\x51", 3);
-    CBinary bin2E1055("\x2E\x10\x55\x00", 4);
-    CBinary bin221056("\x22\x10\x56", 3);
-    CBinary bin221055("\x22\x10\x55", 3);
-    CBinary bin2E10565A("\x2E\x10\x56\x5A", 4);
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221051, binAns)))
-            return rect;
-        if (binAns.GetByteCount() > 3 && 0x00 == binAns[3])
-            break;
-        // 0x532000020045        "Í£³µ£¬´ò¿ªµã»ğ¿ª¹Ø"
-        if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x45", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-            return rect;
-    }
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin2E1055, binAns)))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221056, binAns)))
-        return rect;
-    // 0x53200002004B        "ÏÖÔÚ£¬³µÁ¾ÊÇ·ñ´ÓÈ«ÂÖÇı¶¯£¨AWD£©ÇĞ»»µ½´ò¿ª£¨ON£©£¿"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x4B", 6), DF_MB_OKCANCEL, DT_CENTER))
-        return rect;
-    // 0x53200002004C        "Õû³µÑéÖ¤ºóÊ¼ÖÕ»Øµ½È«ÂÖÇı¶¯¡£"
-    if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x4C", 6), DF_MB_OKCANCEL, DT_CENTER))
-        return rect;
-    CBinary bin221219("\x22\x12\x19", 3);
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221219, binAns)))
-                return rect;
-        }
-        if (binAns.GetByteCount() > 3 && 0xff == binAns[3])
-            break;
-        // 0x532000020047        "ÉèÎªPµ²"
-        if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x47", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-            return rect;
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221051, binAns)))
-        return rect;
-    if (binAns.GetByteCount() < 4 || 0x00 != binAns[3])
-    {
-        // 0x532000020049        "·¢¶¯»ú¹Ø±Õ×´Ì¬ÏÂ´ò¿ªµã»ğ¿ª¹Ø¡£\nÇëÔÙÊÔÒ»´Î"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x49", 6), DF_MB_OK, DT_CENTER);
-        m_pNetLayer->SendReceive(ExitCmd);
-        return rect;
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221056, binAns)))
-        return rect;
-    if (binAns.GetByteCount() < 4 || 0x00 != binAns[3])
-    {
-        // 0x53200002004D        "ÇĞ»»Ê§°Ü£¡ÇëÖØÊÔ¡£"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x4D", 6), DF_MB_OK, DT_CENTER);
-        m_pNetLayer->SendReceive(ExitCmd);
-        return rect;
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin2E10565A, binAns)))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221055, binAns)))
-        return rect;
-    if (binAns.GetByteCount() < 4 || 0xff != binAns[3])
-    {
-        // 0x53200002004D        "ÇĞ»»Ê§°Ü£¡ÇëÖØÊÔ¡£"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x4D", 6), DF_MB_OK, DT_CENTER);
-    }
-    else if (CErrorCode::EC_SUCCESS == (rect = SendAndRecive(bin221056, binAns)))
-    {
-        // 0x53200002004A        "ÒÑÇĞ»»µ½È«ÂÖÇı¶¯£¨AWD£©¡£ÈçÒª·µ»Øµ½Ç°ÖÃÇ°Çı£¨FF£©£¬ÇëÔÙ´ÎÖ´ĞĞ»ù±¾Ä£Ê½"
-        if (binAns.GetByteCount() > 3 && 0x00 == binAns[3])
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x4A", 6), DF_MB_OK, DT_CENTER);
-    }
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02061b20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    // 0x53200002003C        "³µÁ¾ÎÈ¶¨ĞÔ¿ØÖÆÏµÍ³£¨VSC£©£¨VDC£©¶¨ĞÄÄ£Ê½\n½Ç¶È´«¸ĞÆ÷ºÍºáÏòÖØÁ¦¸ĞÓ¦Æ÷ÁãµãÎ»ÖÃ"
-    // 0x53200002003D        "³µÁ¾Í£ÔÚË®Æ½ÃæÉÏ£¬³µÉí°ÚÕı£¬°´ÏÂ¡¾ÊÇ¡¿°´Å¥"
-    /*FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x3C", 6), DF_MB_NOBUTTON, DT_LEFT);
-    Sleep(2000);*/
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x3D", 6), DF_MB_YESNO, DT_CENTER))//³µÁ¾Í£ÔÚË®Æ½ÃæÉÏ£¬³µÉí°ÚÕı£¬°´ÏÂ¡¾ÊÇ¡¿°´Å¥
-        return rect;
-
-    CBinary binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin1003("\x10\x03", 2);
-    CBinary bin221029("\x22\x10\x29", 3);
-    CBinary bin22102D("\x22\x10\x2D", 3);
-    CBinary bin22102C("\x22\x10\x2C", 3);
-    CBinary bin31010024("\x31\x01\x00\x24", 4);
-    CBinary bin31030024("\x31\x03\x00\x24", 4);
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221029, binAns)))
-        return rect;
-    if (binAns.GetByteCount() >= 3 && (binAns[0] != 0x62 || binAns[1] != 0x10 || binAns[2] != 0x29))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binAns.GetByteCount() > 4 && binAns[4] > 0x0C)
-    {
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x3F", 6), DF_MB_OK, DT_CENTER);//×ªÏò½Ç´«¸ĞÆ÷µÄÉè¶¨ÁãµãÒÑ½ÃÍ÷¹ıÕı¡£        
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x26", 6), DF_MB_OK, DT_CENTER);//³µÁ¾ÎÈ¶¨ĞÔ¿ØÖÆÏµÍ³£¨VSC£©´«¸ĞÆ÷ÎŞ·¨¶¨ĞÄ
-        m_pNetLayer->SendReceive(ExitCmd);
-        return rect;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin22102D, binAns)))
-        return rect;
-    if (binAns.GetByteCount() >= 3 && (binAns[0] != 0x62 || binAns[1] != 0x10 || binAns[2] != 0x2D))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binAns.GetByteCount() > 3 && binAns[3] > 0x11)
-    {
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x01\x30", 6), DF_MB_OK, DT_CENTER);//ºáÏòG´«¸ĞÆ÷µÄ0µãÉèÖÃ³¬¹ıÁËĞŞÕıÏŞ¶È    
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x26", 6), DF_MB_OK, DT_CENTER);//³µÁ¾ÎÈ¶¨ĞÔ¿ØÖÆÏµÍ³£¨VSC£©´«¸ĞÆ÷ÎŞ·¨¶¨ĞÄ
-        m_pNetLayer->SendReceive(ExitCmd);
-        return rect;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin22102C, binAns)))
-        return rect;
-    if (binAns.GetByteCount() >= 3 && (binAns[0] != 0x62 || binAns[1] != 0x10 || binAns[2] != 0x2C))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binAns.GetByteCount() > 3 && binAns[3] > 0x11)
-    {
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x01\x30", 6), DF_MB_OK, DT_CENTER);//ºáÏòG´«¸ĞÆ÷µÄ0µãÉèÖÃ³¬¹ıÁËĞŞÕıÏŞ¶È    
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x26", 6), DF_MB_OK, DT_CENTER);//³µÁ¾ÎÈ¶¨ĞÔ¿ØÖÆÏµÍ³£¨VSC£©´«¸ĞÆ÷ÎŞ·¨¶¨ĞÄ
-        m_pNetLayer->SendReceive(ExitCmd);
-        return rect;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin1003, binAns)))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31010024, binAns)))
-        return rect;
-    if (binAns.GetByteCount() < 4)
-    {
-        // 0x532000020040        "³µÁ¾ÎÈ¶¨ĞÔ¿ØÖÆÏµÍ³£¨VSC£©´«¸ĞÆ÷¶¨ĞÄÒì³£"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x40", 6), DF_MB_OK, DT_CENTER);
-        return rect;
-    }
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31030024, binAns)))
-                return rect;
-        }
-        if (binAns.GetByteCount() >= 3 && (binAns[0] != 0x71 || binAns[1] != 0x03 || binAns[2] != 0x00))
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binAns.GetByteCount() >= 4 && 0x02 == binAns[3])
-        {
-            //0x53,0x20,0x00,0x00,0x01,0x32                "VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½Æô¶¯"
-            //0x53,0x20,0x00,0x00,0x01,0x33                "VSC£¨VDC£©ÖĞ¼äÖµÉèÖÃÄ£Ê½½áÊø"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x01\x32", 6), DF_MB_NOBUTTON, DT_CENTER);
-            Sleep(2000);
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x01\x33", 6), DF_MB_OK, DT_CENTER);
-            m_pNetLayer->SendReceive(ExitCmd);
-            break;
-        }
-        else if (binAns.GetByteCount() < 4 || 0x01 != binAns[3])
-        {
-            // 0x532000000026        "³µÁ¾ÎÈ¶¨ĞÔ¿ØÖÆÏµÍ³£¨VSC£©´«¸ĞÆ÷ÎŞ·¨¶¨ĞÄ"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x26", 6), DF_MB_OK, DT_CENTER);
-            m_pNetLayer->SendReceive(ExitCmd);
-            return rect;
-        }
-        else
-            FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_HAVEBUTTON_DRAW_THEN_RETURN | DF_MB_NOBUTTON, DT_CENTER);
-    }
-
-    return rect;
-}
-
-// ABS ĞòÁĞ¿ØÖÆÄ£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02051b20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary bin1003("\x10\x03", 2);
-    CBinary bin22102B("\x22\x10\x2B", 3);
-    CBinary bin31010025("\x31\x01\x00\x25", 4);
-    CBinary bin31030025("\x31\x03\x00\x25", 4);
-    // 0x532000000019        "ÓÃÁ¦²ÈÖÆ¶¯Ì¤°å"
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x19", 6), DF_MB_NOBUTTON, DT_CENTER);
-    Sleep(2000);
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin22102B, binAns)))
-        return rect;
-
-    // 0x53200000001A        "°´¡¾OK¡¿"
-    while (DF_IDOK == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x1A", 6), DF_MB_OKCANCEL, DT_CENTER))
-    {
-        if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin1003, binAns)))
-            return rect;
-        binAns = SubaruCanSendReceive(bin31010025);
-        if (0 >= binAns.GetByteCount())
-        {
-            FxShowMessageBox(binMenu, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return rect;
-        }
-        if (binAns.GetByteCount() < 4 || 0x7f == binAns[0])
-        {
-            // 0x53200000001B        "ÎŞ·¨Æô¶¯ABSĞòÁĞ¿ØÖÆÄ£Ê½"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x1B", 6), DF_MB_OK, DT_LEFT);
-            return rect;
-        }
-        // 0x53000001010E        "ĞòÁĞ¿ØÖÆÄ£Ê½¼´½«¿ªÆô"
-        // 0x53000001010F        "ÕıÔÚÆô¶¯×óÇ°ºÍÓÒºóµç´Å·§"
-        // 0x530000010110        "ÕıÔÚÆô¶¯ÓÒÇ°ºÍ×óºóµç´Å·§"
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x0E", 6), DF_MB_NOBUTTON, DT_CENTER);
-        Sleep(2000);
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x0F", 6), DF_MB_NOBUTTON, DT_CENTER);
-        Sleep(2000);
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x10", 6), DF_MB_NOBUTTON, DT_CENTER);
-        Sleep(2000);
-        DWORD iTimer = 0;
-        while (1)
-        {
-            if (iTimer < GetTickCount())
-            {
-                iTimer = GetTickCount() + 110;
-                if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31030025, binAns)))
-                    return rect;
-            }
-            if (binAns.GetByteCount() < 6 || (0x01 != binAns[5] && 0x02 != binAns[5]))
-            {
-                // 0x532000000022        "¹¦ÄÜ¼ì²âÎŞ·¨Ë³ÀûÍê³É£¬ÇëÔÙÊÔÒ»´Î¡£"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x22", 6), DF_MB_OK, DT_CENTER);
-                return rect;
-            }
-            else if (0x02 == binAns[5])
-            {
-                // 0x532000000083        "ABSĞòÁĞ¿ØÖÆ½«½áÊø"
-                // 0x532000000084        "ÊÇ·ñÔÙÊÔÒ»´Î£¿"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x83", 6), DF_MB_NOBUTTON, DT_CENTER);
-                Sleep(5000);
-                if (DF_IDYES == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x84", 6), DF_MB_YESNO, DT_CENTER))
-                    break;
-                return rect;
-            }
-        }
-    }
-
-    return rect;
-}
-
-// VDC ¼ì²éÄ£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02041b20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary bin1003("\x10\x03", 2);
-    CBinary bin31010026("\x31\x01\x00\x26", 4);
-    CBinary bin31030026("\x31\x03\x00\x26", 4);
-
-    FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x14", 6), DF_MB_NOBUTTON, DT_CENTER);//³µÁ¾¶¯Ì¬¿ØÖÆ(VDC) ¹¦ÄÜ¼ì²éÄ£Ê½
-    Sleep(2000);
-
-    // 0x532000020027        "°´¡¾OK¡¿\nÈç²»ÄÜÆô¶¯·¢¶¯»ú£¬¹Ø±Õµã»ğ¿ª¹Ø£¬ÖØĞÂÆô¶¯·¢¶¯»ú¡£\n²¢ÖØĞÂÆô¶¯ÊÖ¶¯»»µ²£¨TOOL£©¡£"
-    while (DF_IDOK == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x27", 6), DF_MB_OKCANCEL, DT_LEFT))
-    {
-        if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin1003, binAns)))
-            return rect;
-        binAns = SubaruCanSendReceive(bin31010026);
-        if (0 >= binAns.GetByteCount())
-        {
-            FxShowMessageBox(binMenu, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return rect;
-        }
-        if (binAns.GetByteCount() < 4 || 0x7f == binAns[0])
-        {
-            // 0x530000010150        "ĞòÁĞ¿ØÖÆÄ£Ê½ÎŞ·¨Æô¶¯"
-            FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x50", 6), DF_MB_OK, DT_LEFT);
-            return rect;
-        }
-        // 0x53000001010E        "ĞòÁĞ¿ØÖÆÄ£Ê½¼´½«¿ªÆô"
-        // 0x530000010117        "ÕıÔÚ¼ì²é×óÇ°/ÓÒºóÏßÂ·"
-        // 0x530000010152        "ÕıÔÚ¼ì²éÓÒÇ°/×óºóÏßÂ·"
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x0E", 6), DF_MB_NOBUTTON, DT_CENTER);
-        Sleep(2000);
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x17", 6), DF_MB_NOBUTTON, DT_CENTER);
-        Sleep(2000);
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x52", 6), DF_MB_NOBUTTON, DT_CENTER);
-        Sleep(2000);
-        DWORD iTimer = 0;
-        while (1)
-        {
-            if (iTimer < GetTickCount())
-            {
-                iTimer = GetTickCount() + 110;
-                if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31030026, binAns)))
-                    return rect;
-            }
-            if (binAns.GetByteCount() < 6 || (0x01 != binAns[5] && 0x02 != binAns[5]))
-            {
-                // 0x532000000022        "¹¦ÄÜ¼ì²âÎŞ·¨Ë³ÀûÍê³É£¬ÇëÔÙÊÔÒ»´Î¡£"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x22", 6), DF_MB_OK, DT_CENTER);
-                return rect;
-            }
-            else if (0x02 == binAns[5])
-            {
-                // 0x532000020028        "³µÁ¾¶¯Ì¬¿ØÖÆÏµÍ³£¨VDC£©¹¦ÄÜ¼ì²é¼´½«½áÊø¡£"
-                // 0x532000000084        "ÊÇ·ñÔÙÊÔÒ»´Î£¿"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x28", 6), DF_MB_NOBUTTON, DT_CENTER);
-                Sleep(5000);
-                if (DF_IDYES == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x84", 6), DF_MB_YESNO, DT_CENTER))
-                    break;
-                return rect;
-            }
-        }
-    }
-
-    return rect;
-}
-
-// É²³µÎ¬»¤Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02021b20(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary bin19022A("\x19\x02\x2A", 3);
-    CBinary bin1003("\x10\x03", 2);
-    CBinary bin31010122("\x31\x01\x01\x22", 4);
-    CBinary bin31030122("\x31\x03\x01\x22", 4);
-
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin19022A, binAns)))
-        return rect;
-    // 0x532000000008        "´ËÄ£Ê½¿ÉÓÃÓÚ¼ì²â/¸ü»»/Î¬ĞŞÉ²³µÆ¬/ÅÌÊ½×ª×Ó/ÖÆ¶¯Ç¯¡£\nÆô¶¯´ËÄ£Ê½Ê±£¬ÏÈÌ§Æğ³µÁ¾È·±£·¢¶¯»úÒÑÍ£Ö¹ÔË×ª£¬µã»÷¡¾ÊÇ¡¿¡£ \nµã»÷¡¾·ñ¡¿·µ»Øµ½'¹¤×÷Ö§³Ö²Ëµ¥'¡£"
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x08", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    // 0x532000000009        "Æô¶¯ÖÆ¶¯±£ÑøÄ£Ê½¡£\nÆÚ¼äµç¶¯×¤³µÖÆ¶¯Æ÷½«×Ô¶¯ÔËĞĞ£¬È·±£µç¶¯×¤³µÖÆ¶¯Æ÷Î´ÖÆ¶¯£¬ÇÒµ±Ç°ÎŞÈÎºÎÖÆ¶¯¶¯×÷¡£\nµã»÷¡¾·ñ¡¿·µ»Øµ½Ö÷²Ëµ¥¡£"
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x09", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin1003, binAns)))
-        return rect;
-    binAns = SubaruCanSendReceive(bin31010122);
-    if (0 >= binAns.GetByteCount())
-    {
-        FxShowMessageBox(binMenu, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return rect;
-    }
-    if (binAns.GetByteCount() < 4 || 0x7f == binAns[0])
-    {
-        // 0x53200000000A        "ÎŞ·¨Æô¶¯ÖÆ¶¯±£ÑøÄ£Ê½¡£\nÈ·ÈÏÒÔÏÂ¼¸µãÇé¿öºóÔÙÊÔÒ»´Î¡£\nÊÇ·ñÎ´ÆôÓÃµç¶¯×¤³µÖÆ¶¯Æ÷£¿\nÖÆ¶¯×é¼şÊÇ·ñÒÑÍ×ÉÆ°²×°£¿\nÏßÊøÁ¬½ÓÆ÷ÊÇ·ñÒÑÁ¬½ÓºÃ£¿\n·¢¶¯»úÊÇ·ñÔÚÔËĞĞ£¿"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x0A", 6), DF_MB_OK, DT_LEFT);
-        return rect;
-    }
-
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin31030122, binAns)))
-                return rect;
-        }
-        if (binAns.GetByteCount() < 6 || 0x00 != binAns[4] || (0x01 != binAns[5] && 0x02 != binAns[5]))
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x0A", 6), DF_MB_OK, DT_LEFT);
-            break;
-        }
-        else if (0x02 == binAns[5])
-        {
-            // 0x53200000000B        "ÖÆ¶¯ÏµÍ³±£ÑøÄ£Ê½ÒÑÆô¶¯¡£\n±£ÑøÄ£Ê½ÏÂ£¬µç¶¯×¤³µÖÆ¶¯¿ª¹ØÒÑ½ûÓÃ¡£\nÁíÍâ£¬×¤³µ¾¯¸æµÆÒÑ´ò¿ª£¬¹ÊÕÏÂëC1984ÒÑ±£´æ¡£"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x00\x0B", 6), DF_MB_OK, DT_LEFT);
-            break;
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_HAVEBUTTON_DRAW_THEN_RETURN | DF_MB_CANCEL, DT_LEFT))
-        {
-            break;
-        }
-    }
-
-    return rect;
-}
-
-// Ä£Ê½ÒÆ¶¯
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_d2647620(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary bin1001("\x10\x01", 2);
-    CBinary bin1003("\x10\x03", 2);
-    CBinary binAns;
-
-    SubaruCanSendReceive(bin1001);
-    // 0x53200002001A        "µ±Ç°Ä£Ê½£ºÕı³£Ä£Ê½\nÇĞ»»ÖÁ¼ì²âÄ£Ê½¡£\nµã»÷¡¾OK¡¿°´Å¥¡£\nÌáÊ¾£º\nÖ´ĞĞ´Ë¹¦ÄÜÊ±¿ÉÄÜ»áÉ¾³ıÒÑ±£´æµÄÕï¶ÏÂëºÍ¶³½áÊı¾İ¡£"
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x1A", 6), DF_MB_OK, DT_LEFT);
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin1003, binAns)))
-        return rect;
-    // 0x53200002001B        "ÒÑ×ª»»µ½¼ì²âÄ£Ê½"
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x1B", 6), DF_MB_OK, DT_CENTER);
-
-    return rect;
-}
-
-// ²Á³ıÎŞÔ¿IDÂë
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_32667620(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary bin3101000E("\x31\x01\x00\x0E", 4);
-    CBinary bin3103000E("\x31\x03\x00\x0E", 4);
-    CBinary bin3102000E("\x31\x02\x00\x0E", 4);
-
-    // 0x532000020037        "Çå³ıÎŞ³×ID£¡\nÊÇ·ñÈ·¶¨Çå³ıID£¿\n¹Ø±Õµã»ğ¿ª¹Ø£¬Çå³ıÖ®Ç°°Î³öÔ¿³×¡£"
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x37", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-
-    // 0x532000020032        "È·ÈÏµã»ğ¿ª¹ØÒÑ¹Ø±Õ¡¢Ô¿³×ÒÑ°Î³ö¡£"
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x32", 6), DF_MB_NOBUTTON, DT_CENTER);
-    Sleep(2000);
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3101000E, binAns)))
-        return rect;
-
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3103000E, binAns)))
-                return rect;
-        }
-        // 0x53200002003A        "Çå³ıÒÑÍê³É"
-        // 0x532000020039        "ÕıÔÚÇå³ıÎŞ³×ID\nÇëÎğ´ò¿ªµã»ğ"
-        if (binAns.GetByteCount() > 5 && 0x02 == binAns[5])
-        {
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3102000E, binAns)))
-                return rect;
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x3A", 6), DF_MB_OK, DT_CENTER);
-            return rect;
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x39", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-    }
-
-    return rect;
-}
-
-// ÎŞÔ¿³× ID ×¢²á
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_42667620(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin221043("\x22\x10\x43", 3);
-    CBinary bin3101000D("\x31\x01\x00\x0D", 4);
-    CBinary bin3103000D("\x31\x03\x00\x0D", 4);
-    CBinary bin3102000D("\x31\x02\x00\x0D", 4);
-    CBinary bin2210281077("\x22\x10\x28\x10\x77", 5);
-    // 0x532000020031        "ÊÇ·ñ×¢²áÎŞ³×ID£¿\n¹Ø±Õµã»ğ¿ª¹Ø£¬×¢²áÇ°°Î³öÔ¿³×¡£"
-    if (DF_IDYES != FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x31", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
-        return rect;
-
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin221043, binAns)))
-                return rect;
-        }
-        if (binAns.GetByteCount() < 4)
-        {
-            FxShowMessageBox(binMenu, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_ECU_REFUSE;
-        }
-        if (0x00 == binAns[3])
-        {
-            break;
-        }
-        else
-        {
-            // 0x532000020032        "È·ÈÏµã»ğ¿ª¹ØÒÑ¹Ø±Õ¡¢Ô¿³×ÒÑ°Î³ö¡£"
-            if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x32", 6), DF_MB_HAVEBUTTON_DRAW_THEN_RETURN | DF_MB_CANCEL, DT_LEFT))
-                return rect;
-        }
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3101000D, binAns)))
-        return rect;
-
-    if (binAns.GetByteCount() < 3)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_ECU_REFUSE;
-    }
-    iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3103000D, binAns)))
-                return rect;
-        }
-        // 0x532000020033        "ÕıÔÚÇĞ»»µ½×¢²áÄ£Ê½¡­¡­\nÈ·ÈÏµã»ğÒÑ¹Ø±Õ£¬Ô¿³×ÒÑ°Î³ö¡£"
-        if (binAns.GetByteCount() < 6)
-        {
-            FxShowMessageBox(binMenu, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_ECU_REFUSE;
-        }
-        else if (0x02 == binAns[5])
-        {
-            break;
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x33", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            return rect;
-        }
-    }
-
-    DWORD ExitTimer = GetTickCount() + 180000;
-    // 0x532000000119        "´¦ÓÚ×¢²áÄ£Ê½\n×¢²áºÅ= "
-    // 0x53200000011A        "\n°´Ñ¹Ô¿³×ÉÏµÄËø³µ°´Å¥ÊµÏÖ×¢²á£¬È»ºó°´Ñ¹½âËø°´Å¥\n3·ÖÖÓÄÚ×Ô¶¯Íê³É×¢²á"
-    string DisTxt1 = FxGetStdString(CBinary("\x53\x20\x00\x00\x01\x19", 6));
-    string DisTxt2 = FxGetStdString(CBinary("\x53\x20\x00\x00\x01\x1A", 6));
-    char regNum = 0;
-    iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin2210281077, binAns)))
-                return rect;
-        }
-        if (binAns.GetByteCount() < 7)
-        {
-            FxShowMessageBox(binMenu, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_ECU_REFUSE;
-        }
-        if (0x00 == binAns[6])
-        {
-            // 0x532000020035        "ÇëÔÙ´ÓÍ·¿ªÊ¼"
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x35", 6), DF_MB_OK, DT_LEFT);
-            return rect;
-        }
-        else if (0x04 <= binAns[3])
-        {
-            regNum = 0x34;
-        }
-        else
-        {
-            regNum = binAns[3] + 0x30;
-        }
-        if (ExitTimer < GetTickCount())
-        {
-            return rect;
-        }
-        else if (DF_IDOK == FxShowMessageBox(FxGetStdString(binMenu), DisTxt1 + regNum + DisTxt2, DF_MB_OK | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT))
-        {
-            break;
-        }
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3102000D, binAns)))
-        return rect;
-
-    iTimer = 0;
-    FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x01\x18", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3103000D, binAns)))
-                return rect;
-        }
-        // 0x532000000118        "×¢²áÄ£Ê½½áÊø¡­¡­"
-        if (binAns.GetByteCount() < 6)
-        {
-            FxShowMessageBox(binMenu, Subaru_TXT_DONTSUPORTFUNCNOW, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_ECU_REFUSE;
-        }
-        else if (0x02 == binAns[5])
-        {
-            break;
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x00\x01\x18", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT))
-        {
-            return rect;
-        }
-    }
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// ÖØĞÂµ÷Áã
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_c2607620(CBinary binMenu)
-{
-    W_ErrorCode rect = CErrorCode::EC_SUCCESS;
-
-    CBinary binAns;
-    CBinary ExitCmd("\x10\x01", 2);
-    CBinary bin1902AF("\x19\x02\xAF", 3);
-    CBinary bin3101f00d("\x31\x01\xf0\x0d", 4);
-    CBinary bin3103f00d("\x31\x03\xf0\x0d", 4);
-
-    // 0x532000010006        "²ÎÔÄ¡¶Î¬ĞŞÊÖ²á¡·¡£\n\nÌí¼Ó'¼ì²é³µÁ¾ÄÜ³É¹¦ÊµÏÖ¹éÁãµÄÌõ¼ş'"
-    // 0x53200001000E        "¹éÁã\n\n½«³Ë¿Í×ùÒÎµ÷Õûµ½¡¶Î¬ĞŞÊÖ²á¡·ÖĞËµÃ÷µÄ×´Ì¬¡£"
-    // 0x532000010008        "½â¿ª³Ë¿Í×ùÒÎ°²È«´ø"
-    // 0x532000010009        "¹éÁã\n\nÈ·ÈÏ×ùÒÎÎÂ¶ÈÔÚ0µ½40¡æ£¨¼´32µ½104¨H£©Ö®¼ä"
-    // 0x53200001000A        "¹éÁã\n\nÇå¿Õ³Ë¿Í×ùÒÎ¡£\n¹Ø±Õµã»ğ£¬10ÃëÄÚÔÙ´ò¿ªµã»ğ¡£"
-    // 0x53000001016B        "ÕıÔÚÔËĞĞ...\n\n\nÇëÉÔºò£¬Îğ´¥Ãş³µÁ¾"
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x06", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    binAns = SubaruCanSendReceive(bin1902AF);
-    if (binAns.GetByteCount() > 0 && binAns[0] != 0x59)
-    {
-        FxShowMessageBox(binMenu, Subaru_TXT_DONTSUPORTFUNCNOW);
-        return rect;
-    }
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x0E", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x08", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x09", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-    if (DF_IDNO == FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x0A", 6), DF_MB_YESNO, DT_LEFT))
-        return rect;
-
-    CMessageBoxCtrl::SetBusyStatus(true);
-    FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x6B", 6), DF_MB_NOBUTTON, DT_LEFT);
-    Sleep(15000);
-    CMessageBoxCtrl::SetBusyStatus(false);
-
-    if (binAns.GetByteCount() > 3)
-    {
-        // 0x53200001000B        "¼ì²éÕï¶ÏÂë\n\n³öÏÖÒ»Ğ©¹ÊÕÏ\nÇë²ÎÔÄ¡¶Î¬ĞŞÊÖ²á¡·¡£\n°´¡¾ÊÇ¡¿½áÊø"
-        FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x0B", 6), DF_MB_OK, DT_LEFT);
-        return rect;
-    }
-    if (CErrorCode::EC_SUCCESS != (rect = ProtectCal()))
-        return rect;
-    if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3101f00d, binAns)))
-        return rect;
-    DWORD iTimer = 0;
-    while (1)
-    {
-        if (iTimer < GetTickCount())
-        {
-            iTimer = GetTickCount() + 110;
-            if (CErrorCode::EC_SUCCESS != (rect = SendAndRecive(bin3103f00d, binAns)))
-                return rect;
-        }
-        // 0x53200001000C        "¹éÁãÊ§°Ü\n\n²ÎÔÄ¡¶Î¬ĞŞÊÖ²á¡·¡£\n°´¡¾ÊÇ¡¿½áÊø"
-        // 0x53200001000F        "ÒÑ³É¹¦Íê³É¹éÁã\n\n°´¡¾ÊÇ¡¿½áÊø"
-        // 0x530000000012        "\nÇëµÈ´ı"
-        if (binAns.GetByteCount() < 6 || 0x00 != binAns[4] || (0x01 != binAns[5] && 0x02 != binAns[5]))
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x0C", 6), DF_MB_YES, DT_LEFT);
-            break;
-        }
-        else if (0x02 == binAns[5])
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x01\x00\x0F", 6), DF_MB_YES, DT_LEFT);
-            break;
-        }
-        else if (DF_IDCANCEL == FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x00\x00\x12", 6), DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER))
-        {
-            break;
-        }
-    }
-    m_pNetLayer->SendReceive(ExitCmd);
-
-    return rect;
-}
-
-// µ¡ËÙ¿ØÖÆ
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_01844220(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRet, Flag = 0;
-    W_U32            iValue, iValue2;
-    CActTestCtrl    actTest;
-    CBinary            binRecv;
-    CBinary            binStartCmd("\x2F\x41\x10\x03\x00\x00", 6);
-    CBinary            binStopCmd("\x2F\x41\x10\x00", 4);
-    string            strValue, strValue1, strValue2;
-    char            Temp[10];
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = ProtectCal()))
-        return ecRect;
-
-    actTest.InitCtrl(binMenu);
-    actTest.SetColumnWid(50, 25, 25);
-    actTest.AddOneItem(FxGetStdString(CBinary("\x53\x20\x00\x02\x00\x52", 6)), FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xF6", 6)));//Ä¿±êÖµ:
-    actTest.AddOneItem(FxGetStdString(CBinary("\x53\x00\x00\x00\x02\x0C", 6)));//×´Ì¬Êı¾İ
-    actTest.AddOneItem(FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xD8", 6)), FxGetStdString(CBinary("\x53\x20\x00\x00\x00\xF6", 6)));//·¢¶¯»ú×ªËÙ
-    actTest.AddOneBtn(CBinary("\x53\x4D\x0F\x72\x16\x20", 6));//0x53,0x4D,0x0F,0x72,0x16,0x20    "+"
-    actTest.AddOneBtn(CBinary("\x53\x4D\x02\x0C\x16\x20", 6));//0x53,0x4D,0x02,0x0C,0x16,0x20    "-"
-    actTest.AddOneBtn(CBinary("\x53\x4D\x62\x07\x16\x20", 6));//0x53,0x4D,0x62,0x07,0x16,0x20    "¿ªÊ¼"
-    actTest.AddOneBtn(CBinary("\x53\x4D\x6A\x1B\x16\x20", 6));//0x53,0x4D,0x6A,0x1B,0x16,0x20    "Í£Ö¹"
-    strValue1 = "---";
-    strValue2 = "0";
-    iValue = 1000;
-    actTest.SetItemValue(0, "1000");
-    actTest.SetItemValue(1, strValue1);
-    actTest.SetItemValue(2, strValue2);
-    actTest.SetBtnStatus(3, false);
-
-    while (1)
-    {
-        sprintf(Temp, "%d", iValue);
-        strValue = Temp;
-        actTest.SetItemValue(0, strValue);
-
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x00\x0C", 3), binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binRecv.GetByteCount() == 3)
-            iValue2 = 0;
-        else if (binRecv.GetByteCount() == 4)
-            iValue2 = binRecv[3] * 256;
-        else
-            iValue2 = binRecv[3] * 256 + binRecv[4];
-        sprintf(Temp, "%d", iValue2 / 4);
-        strValue2 = Temp;
-        actTest.SetItemValue(2, strValue2);
-
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x30\x03", 3), binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binRecv[4] == 1)
-            strValue1 = FxGetStdString(CBinary("\x53\x20\x00\x02\x00\x53", 6));//0x53,0x20,0x00,0x02,0x00,0x53    "Ö´ĞĞÖĞ"
-        else if (binRecv[4] == 2)
-            strValue1 = FxGetStdString(CBinary("\x53\x4D\x67\x30\x16\x20", 6));//0x53,0x4D,0x67,0x30,0x16,0x20    "Õı³£½áÊø"
-        actTest.SetItemValue(1, strValue1);
-
-        if (Flag)
-        {
-            if (binRecv[4] != 1 && binRecv[4] != 2)
-            {
-                //0x53,0x20,0x00,0x02,0x00,0x54                "²»ÄÜÂú×ã»îĞÔÆÀ¼ÛµÄ²Ù×÷×´Ì¬¡£\n×´Ì¬: Î´Ö´ĞĞ"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x54", 6), DF_MB_OK, DT_LEFT);
-                return ecRect;
-            }
-        }
-
-        if (iValue <= 500)
-            actTest.SetBtnStatus(1, false);
-        else
-            actTest.SetBtnStatus(1, true);
-        if (iValue >= 2000)
-            actTest.SetBtnStatus(0, false);
-        else
-            actTest.SetBtnStatus(0, true);
-
-        iRet = actTest.ShowCtrl();
-        if (iRet == -1)
-            return ecRect;
-
-        if (iRet == 0)
-            iValue += 50;
-        else if (iRet == 1)
-            iValue -= 50;
-        else if (iRet == 2)
-        {
-            actTest.SetBtnStatus(2, false);
-            actTest.SetBtnStatus(3, true);
-            actTest.ShowCtrl();
-
-            binStartCmd.SetByteAt(4, ((iValue * 4) & 0xFF00) >> 8);
-            binStartCmd.SetByteAt(5, ((iValue * 4) & 0xFF));
-            if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binStartCmd, binRecv)))
-                return ecRect;
-            if (binRecv.GetByteCount() < 3 || binRecv[0] != 0x6F)
-            {
-                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_COMMUNICATION;
-            }
-        }
-        else if (iRet == 3)
-        {
-            Flag = 1;
-            actTest.SetBtnStatus(2, true);
-            actTest.SetBtnStatus(3, false);
-            actTest.ShowCtrl();
-
-            if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binStopCmd, binRecv)))
-                return ecRect;
-            if (binRecv.GetByteCount() < 3 || binRecv[0] != 0x6F)
-            {
-                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_COMMUNICATION;
-            }
-        }
-    }
-
-    return ecRect;
-}
-
-// ¹Ì¶¨µ¡ËÙµã»ğ¶¨Ê±
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_00844220(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRet, Flag = 0;
-    CActTestCtrl    actTest;
-    CBinary            binRecv;
-    string            strValue1, strValue2;
-    char            Temp[10];
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = ProtectCal()))
-        return ecRect;
-
-    actTest.InitCtrl(binMenu);
-    actTest.SetColumnWid(50, 25, 25);
-    actTest.AddOneItem(FxGetStdString(CBinary("\x53\x4D\xA8\x15\x16\x20", 6)));//¹Ì¶¨µ¡ËÙµã»ğ¶¨Ê±
-    actTest.AddOneItem(FxGetStdString(CBinary("\x53\x4D\x14\x0A\x16\x20", 6)), FxGetStdString(CBinary("\x53\x4D\x08\x16\x16\x20", 6)));//µã»ğ¶¨Ê± 1
-    actTest.AddOneBtn(CBinary("\x53\x4D\x62\x07\x16\x20", 6));//0x53,0x4D,0x62,0x07,0x16,0x20    "¿ªÊ¼"
-    actTest.AddOneBtn(CBinary("\x53\x4D\x6A\x1B\x16\x20", 6));//0x53,0x4D,0x6A,0x1B,0x16,0x20    "Í£Ö¹"
-    strValue1 = "---";
-    strValue2 = "0";
-    actTest.SetItemValue(0, strValue1);
-    actTest.SetItemValue(1, strValue2);
-    actTest.SetBtnStatus(1, false);
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x00\x0E", 3), binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3 || binRecv[0] != 0x62 || binRecv[1] != 0x00 || binRecv[2] != 0x0E)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binRecv.GetByteCount() >= 4)
-        {
-            sprintf(Temp, "%d", (int)(-64 + binRecv[3] * 0.5));
-            strValue2 = Temp;
-            actTest.SetItemValue(1, strValue2);
-        }
-
-        if (Flag)
-        {
-            if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x31\x03\x41\x00", 4), binRecv)))
-                return ecRect;
-            if (binRecv.GetByteCount() < 3 || binRecv[0] != 0x71 || binRecv[1] != 0x03 || binRecv[2] != 0x41)
-            {
-                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_COMMUNICATION;
-            }
-            if ((binRecv.GetByteCount() >= 6) && (binRecv[5] == 1 || binRecv[5] == 2))
-            {
-                if (binRecv[5] == 1)
-                    strValue1 = FxGetStdString(CBinary("\x53\x20\x00\x02\x00\x53", 6));//0x53,0x20,0x00,0x02,0x00,0x53    "Ö´ĞĞÖĞ"
-                else if (binRecv[5] == 2)
-                    strValue1 = FxGetStdString(CBinary("\x53\x4D\x1A\x3A\x16\x20", 6));//0x53,0x4D,0x1A,0x3A,0x16,0x20    "Í£Ö¹"
-                actTest.SetItemValue(0, strValue1);
-            }
-            else
-            {
-                //0x53,0x20,0x00,0x02,0x00,0x54                "²»ÄÜÂú×ã»îĞÔÆÀ¼ÛµÄ²Ù×÷×´Ì¬¡£\n×´Ì¬: Î´Ö´ĞĞ"
-                FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x54", 6), DF_MB_OK, DT_LEFT);
-                return ecRect;
-            }
-        }
-
-        iRet = actTest.ShowCtrl();
-        if (iRet == -1)
-        {
-            if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x10\x01", 2), binRecv)))
-                return ecRect;
-            return ecRect;
-        }
-
-        if (iRet == 0)
-        {
-            Flag = 1;
-            actTest.SetBtnStatus(0, false);
-            actTest.SetBtnStatus(1, true);
-            actTest.ShowCtrl();
-
-            if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x31\x01\x41\x00", 4), binRecv)))
-                return ecRect;
-            if (binRecv.GetByteCount() < 3 || binRecv[0] != 0x71 || binRecv[1] != 0x01 || binRecv[2] != 0x41)
-            {
-                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_COMMUNICATION;
-            }
-        }
-        else if (iRet == 1)
-        {
-            Flag = 0;
-            actTest.SetBtnStatus(0, true);
-            actTest.SetBtnStatus(1, false);
-            actTest.SetItemValue(0, "---");
-            actTest.ShowCtrl();
-            if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x31\x02\x41\x00", 4), binRecv)))
-                return ecRect;
-            if (binRecv.GetByteCount() < 3 || binRecv[0] != 0x71 || binRecv[1] != 0x02 || binRecv[2] != 0x41)
-            {
-                FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-                return CErrorCode::EC_COMMUNICATION;
-            }
-        }
-    }
-
-    return ecRect;
-}
-
-// ×Ô¶¯±äËÙÆ÷¼ÇÒäÄ£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_22637620(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iKey, iLength, iPos;
-    CBinary            binRecv;
-    string            strValue, strShow, strTemp, strValue1, strValue2, strValue3;
-    char            Temp[50];
-
-    iKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x04\x0A", 6), DF_MB_OKCANCEL, DT_LEFT);
-    if (iKey == DF_IDCANCEL)
-        return ecRect;
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x4C", 3), binRecv)))
-        return ecRect;
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x4D\x10\x4E\x10\x4F\x10\xD2", 9), binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() <= 0 || binRecv[0] != 0x62)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binRecv.GetByteCount() < 13)
-        {
-            iLength = binRecv.GetByteCount();
-            for (int i = iLength; i < 13; i++)
-                binRecv += CBinary("\x00", 1);
-        }
-
-        sprintf(Temp, "%d", -50 + binRecv[6]);
-        strValue1 = Temp;
-        sprintf(Temp, "%d", -50 + binRecv[9]);
-        strValue2 = Temp;
-        strValue2 += "¡æ";
-
-        strShow = FxGetStdString(CBinary("\x53\x4D\x10\x02\x16\x20", 6));//"¼ÓÈÈ·¢¶¯»úÖ±µ½ATF ÎÂ¶È´ïµ½%s ¡ª %s%s,\n»òÔÚATF±äÀäÖ®ºóÔÙÖ´ĞĞAT¼ÇÒä¡£"
-        iPos = strShow.find("%s");
-        if (iPos >= 0)
-            strShow.replace(iPos, 2, strValue1);
-        iPos = strShow.find("%s%s");
-        if (iPos >= 0)
-            strShow.replace(iPos, 4, strValue2);
-        strTemp = FxGetStdString(CBinary("\x53\x4D\xA2\x58\x16\x20", 6));//"µ±Ç°ATFÎÂ¶È  %d ¡æ"
-        sprintf(Temp, strTemp.c_str(), -50 + binRecv[12]);
-        strShow += "\n";
-        strShow += Temp;
-        iKey = FxShowMessageBox(FxGetStdString(binMenu), strShow, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-        if (iKey == DF_IDCANCEL)
-            return ecRect;
-
-        Sleep(150);
-        if (binRecv[3] == 0xFF)
-            break;
-    }
-
-    iKey = FxShowMessageBox(binMenu, CBinary("\x53\x4D\x66\x56\x16\x20", 6), DF_MB_OKCANCEL, DT_LEFT);//"ÌáÆğ³µÉíÖÃÓÚÍ£³µÉ²³µ×´Ì¬¡£"
-    if (iKey == DF_IDCANCEL)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = ProtectCal()))
-        return ecRect;
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x31\x01\xFF\x00\x00\x01", 6), binRecv)))//31 01 FF 00 00 01
-        return ecRect;
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x31\x03\xFF\x00", 4), binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() <= 0 || binRecv[0] != 0x71)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binRecv.GetByteCount() < 6)
-        {
-            iLength = binRecv.GetByteCount();
-            for (int i = iLength; i < 6; i++)
-                binRecv += CBinary("\x00", 1);
-        }
-
-        if (0x00 != binRecv[4])
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x4D\x62\x56\x16\x20", 6), DF_MB_YESNO, DT_LEFT);//AT¼ÇÒäÎ´Çå³ı¡£\nÔÙ´Î³¢ÊÔÂğ£¿
-            break;
-        }
-        else if (0x00 == binRecv[4] && 0x02 == binRecv[5])
-            break;
-        else
-            FxShowMessageBox(binMenu, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER);
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x12\x27", 3), binRecv)))
-        return ecRect;
-    if (binRecv[0] != 0x62)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    while (1)
-    {
-        binRecv = m_pNetLayer->SendReceive(CBinary("\x22\x12\x27", 3));
-        if (binRecv.GetByteCount() <= 0 || binRecv[0] != 0x62)//ÌáÊ¾ĞÅÏ¢Îª¹Ø±Õµã»ğ¿ª¹Ø£¬ËùÒÔÃ»ÓĞÓ¦´ğ²Å»á½øÈëÏÂÒ»¸ö½çÃæ
-            break;
-
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x6B\x75\x16\x20", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER);//¹Ø±Õµã»ğ¿ª¹Ø
-    }
-
-    FxShowMessageBox(binMenu, CBinary("\x53\x4D\x21\x60\x16\x20", 6), DF_MB_OK, DT_CENTER);//´øEyeSightµÄ³µÁ¾£¬Æğ¶¯ºóÇë½«¡°·À×²¡±¹¦ÄÜ¹Ø±Õ¡£
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x51", 3), binRecv)))
-            return ecRect;
-        if (binRecv[0] != 0x62)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x4D\x16\x02\x16\x20", 6), DF_MB_OK, DT_LEFT);//×Ô¶¯±äËÙÆ÷¼ÇÒäÒì³£½áÊø¡£\nÇëÔÙ´Î´Ó¿ªÊ¼½øĞĞ¡£
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() >= 4 && binRecv[3] == 0xFF)
-            break;
-
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x21\x60\x16\x20", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER);//´øEyeSightµÄ³µÁ¾£¬Æğ¶¯ºóÇë½«¡°·À×²¡±¹¦ÄÜ¹Ø±Õ¡£
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = ProtectCal()))
-        return ecRect;
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x4D\x10\x4E\x10\x4F\x10\xD2", 9), binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() <= 0 || binRecv[0] != 0x62)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        else if (binRecv.GetByteCount() < 13)
-        {
-            iLength = binRecv.GetByteCount();
-            for (int i = iLength; i < 13; i++)
-                binRecv += CBinary("\x00", 1);
-        }
-
-        sprintf(Temp, "%d", -50 + binRecv[6]);
-        strValue1 = Temp;
-        sprintf(Temp, "%d", -50 + binRecv[9]);
-        strValue2 = Temp;
-        strValue2 += "¡æ";
-
-        strShow = FxGetStdString(CBinary("\x53\x4D\x10\x02\x16\x20", 6));//"¼ÓÈÈ·¢¶¯»úÖ±µ½ATF ÎÂ¶È´ïµ½%s ¡ª %s%s,\n»òÔÚATF±äÀäÖ®ºóÔÙÖ´ĞĞAT¼ÇÒä¡£"
-        iPos = strShow.find("%s");
-        if (iPos >= 0)
-            strShow.replace(iPos, 2, strValue1);
-        iPos = strShow.find("%s%s");
-        if (iPos >= 0)
-            strShow.replace(iPos, 4, strValue2);
-        strTemp = FxGetStdString(CBinary("\x53\x4D\xA2\x58\x16\x20", 6));//"µ±Ç°ATFÎÂ¶È  %d ¡æ"
-        sprintf(Temp, strTemp.c_str(), -50 + binRecv[12]);
-        strShow += "\n";
-        strShow += Temp;
-        iKey = FxShowMessageBox(FxGetStdString(binMenu), strShow, DF_MB_CANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-        if (iKey == DF_IDCANCEL)
-            return ecRect;
-
-        Sleep(150);
-        if (binRecv[3] == 0xFF)
-            break;
-    }
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x11\xFA", 3), binRecv)))
-            return ecRect;
-        if (binRecv[0] != 0x62)
-            break;
-        if (binRecv.GetByteCount() >= 4 && binRecv[3] == 0xFF)
-            break;
-
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x0A\x02\x16\x20", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER);//³ÖĞøµØ²ÈÑ¹ÖÆ¶¯Ì¤°åÖÁµ×´¦
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x2E\x10\x54\x5A", 4), binRecv)))
-        return ecRect;
-
-    iKey = FxShowMessageBox(binMenu, CBinary("\x53\x4D\x58\x5C\x16\x20", 6), DF_MB_OKCANCEL, DT_LEFT);//»»µµ¸Ë·ÅÈëPµµ¡£\n ´ËÄ£Ê½ÎªÂí´ïÌØÊâÄ£Ê½¡£\n ¼ì²é½áÊøÊ±ÇëÈ·ÈÏIGÎªOFF¡£
-    if (iKey == DF_IDCANCEL)
-        return ecRect;
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x12\x04", 3), binRecv)))
-            return ecRect;
-        if (binRecv[0] != 0x62)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() >= 4 && binRecv[3] == 0xFF)
-            break;
-
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x0B\x02\x16\x20", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);//ÔÚÆô¶¯·¢¶¯»úºó\nµ±·¢¶¯»úËÙ¶È´ïµ½ÎÈ¶¨Ê±Ñ¡ÔñDµµ¡£
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x2E\x10\x4A\x01", 4), binRecv)))
-        return ecRect;
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x2E\x10\x4B\x09", 4), binRecv)))
-        return ecRect;
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x4B", 3), binRecv)))
-            return ecRect;
-        if (binRecv[0] != 0x62)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() >= 4 && binRecv[3] == 0x40)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x4D\x16\x02\x16\x20", 6), DF_MB_OK, DT_LEFT);//×Ô¶¯±äËÙÆ÷¼ÇÒäÒì³£½áÊø¡£\nÇëÔÙ´Î´Ó¿ªÊ¼½øĞĞ¡£
-            //FxShowMessageBox(binMenu, CBinary("\x53\x4D\x1B\x02\x16\x20", 6), DF_MB_OK, DT_LEFT);//×Ô¶¯±äËÙÆ÷¼ÇÒäÕı³£½áÊø¡£
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() >= 4 && binRecv[3] == 0x14)
-            break;
-
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x61\x56\x16\x20", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER);//³ÖĞø²È×¡É²³µÌ¤°å¡£\n\nÕıÔÚ×¼±¸AT¼ÇÒä¡£
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x50", 3), binRecv)))
-        return ecRect;
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x10\x53", 3), binRecv)))
-        return ecRect;
-
-    //while (1)
-    //{
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(CBinary("\x22\x11\xFA\x10\x4B", 5), binRecv)))
-        return ecRect;
-    if (binRecv[0] != 0x62)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() >= 7 && binRecv[6] == 0x40)
-    {
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x16\x02\x16\x20", 6), DF_MB_OK, DT_LEFT);//×Ô¶¯±äËÙÆ÷¼ÇÒäÒì³£½áÊø¡£\nÇëÔÙ´Î´Ó¿ªÊ¼½øĞĞ¡£
-        //FxShowMessageBox(binMenu, CBinary("\x53\x4D\x1B\x02\x16\x20", 6), DF_MB_OK, DT_LEFT);//×Ô¶¯±äËÙÆ÷¼ÇÒäÕı³£½áÊø¡£
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    else
-        FxShowMessageBox(binMenu, CBinary("\x53\x4D\x1B\x02\x16\x20", 6), DF_MB_OK, DT_LEFT);//×Ô¶¯±äËÙÆ÷¼ÇÒäÕı³£½áÊø¡£
-
-    //FxShowMessageBox(binMenu, CBinary("\x53\x4D\x61\x56\x16\x20", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_CENTER);//³ÖĞø²È×¡É²³µÌ¤°å¡£\n\nÕıÔÚ×¼±¸AT¼ÇÒä¡£
-//}    
-
-    return ecRect;
-}
-
-// Á¦´«¸ĞÆ÷Ğ£×¼Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02a64f20(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRetKey;
-    CBinary            binRecv;
-    CBinary            binCmd224403("\x22\x44\x03", 3);
-    CBinary            binCmd1003("\x10\x03", 2);
-    CBinary            binCmd3101("\x31\x01\x03\x02", 4);
-    CBinary            binCmd3103("\x31\x03\x03\x02", 4);
-
-    FxShowMessageBox(binMenu, binMenu, DF_MB_NOBUTTON);
-    Sleep(1500);
-    //±ê¶¨Á¦´«¸ĞÆ÷Ö®Ç°£¬\nÓÚË®Æ½·½Î»Í£Ö¹³µÁ¾²¢·ÅÖÃ³µÂÖµ²¿éÈ·±£°²È«¡£\nÈôÇé¿öÕı³£Çë°´\'ÊÇ\'¡£
-    iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x99", 6), DF_MB_YESNO, DT_LEFT);
-    if (iRetKey == DF_IDNO)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd224403, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x62 || binRecv[1] != 0x44 || binRecv[2] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 5)
-        binRecv += CBinary("\x00\x00", 2);
-    if (binRecv[3] != 0 || binRecv[4] != 0)
-    {
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x9A", 6));//ÓÉÓÚ³µÁ¾²»´¦ÓÚÍ£Ö¹×´Ì¬£¬ÎŞ·¨Ö´ĞĞÁ¦´«¸ĞÆ÷±ê¶¨¡£
-        return ecRect;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd1003, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x50 || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3101, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x71 || binRecv[1] != 0x01 || binRecv[2] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    W_U32    iBeginTime = GetTickCount();
-    W_I16    iCount;
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3103, binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x71 || binRecv[1] != 0x03 || binRecv[2] != 0x03))
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() < 5)
-            binRecv += CBinary("\x00\x00", 2);
-
-        if (binRecv[4] == 0x01)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x9C", 6), DF_MB_OK, DT_LEFT);//Á¦´«¸ĞÆ÷±ê¶¨Íê³É¡£\n¹Ø±Õµã»ğ¿ª¹Ø¡£
-            return ecRect;
-        }
-        else if (binRecv[4] == 0x02)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xB5", 6), DF_MB_YES);//Á¦´«¸ĞÆ÷Ğ£×¼ÖĞÖ¹£¬ÇëÔÙ´ÎÖ´ĞĞĞ£×¼¡£
-            return ecRect;
-        }
-
-        //ÕıÔÚ½øĞĞÁ¦´«¸ĞÆ÷±ê¶¨¡£\nÇëÉÔºò£¨Ô¼20Ãë£©
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x9B", 6), DF_MB_NOBUTTON | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN);
-        Sleep(150);
-
-        iCount = (GetTickCount() - iBeginTime) / 1000;
-        if (iCount >= 20)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x20\x00\x02\x00\x51", 6), DF_MB_OK);//³¬Ê±
-            return ecRect;
-        }
-    }
-
-    return ecRect;
-}
-
-// Í£³µÉ²³µµÄÎ¥ÕÂ¼İÊ»Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02a54f20(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRetKey;
-    CBinary            binRecv;
-    CBinary            binCmd1003("\x10\x03", 2);
-    CBinary            binCmd3101("\x31\x01\x03\x01\x01\xC8", 6);
-    CBinary            binCmd3E("\x3E", 1);
-
-    FxShowMessageBox(binMenu, binMenu, DF_MB_NOBUTTON);
-    Sleep(1500);
-    //ÊÇ·ñÖ´ĞĞÄ¥ºÏ×¤³µÖÆ¶¯Çı¶¯£¿\nÍ£Ö¹³µÁ¾²¢ÊÍ·Å×¤³µÖÆ¶¯¡£\n°´\'ÊÇ\'»òÕß\'·ñ\'¡£
-    iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x9E", 6), DF_MB_YESNO, DT_LEFT);
-    if (iRetKey == DF_IDNO)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd1003, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x50 || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3101, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 6 || (binRecv[0] != 0x71 || binRecv[1] != 0x01 || binRecv[2] != 0x03 || binRecv[3] != 0x01 || binRecv[4] != 0x01 || binRecv[5] != 0xC8))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3E, binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 1 || binRecv[0] != 0x7E)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() < 3)
-            binRecv += CBinary("\x00\x00", 2);
-
-        if (binRecv[1] != 0 || binRecv[2] != 0)
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return ecRect;
-        }
-
-        //ÊÇ·ñÖ´ĞĞÄ¥ºÏÇı¶¯Ä£Ê½£¿\nÄ¥ºÏÇı¶¯Ä£Ê½¿ÉÔÚ°´ÏÂ×¤³µ¿ª¹ØÊ±Ö´ĞĞ¡£\nÖ´ĞĞÇ°ÇëÈ·ÈÏÖÜÎ§ÊÇ·ñ°²È«¡£\nÍê³Éºó¹Ø±Õµã»ğ¿ª¹Ø¡£\n¹Ø±Õµã»ğ¿ª¹ØºóÇë°´¡¾È·¶¨¡¿°´Å¥¡£
-        iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\x9F", 6), DF_MB_OK | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-        if (iRetKey == DF_IDOK)
-            return ecRect;
-        Sleep(150);
-    }
-
-    return ecRect;
-}
-
-// Í£³µÉ²³µ²ğĞ¶Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02a44f20(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRetKey;
-    CBinary            binRecv;
-    CBinary            binCmd1003("\x10\x03", 2);
-    CBinary            binCmd3001("\x30\x01\x07\x04\x00", 5);
-
-    FxShowMessageBox(binMenu, binMenu, DF_MB_NOBUTTON);
-    Sleep(1500);
-    //Ö´ĞĞ×¤³µÖÆ¶¯ÒÆ³ıÄ£Ê½Ê±ĞëÉıÆğ³µÁ¾¡£\nÊÇ·ñÖ´ĞĞ×¤³µÖÆ¶¯ÒÆ³ı£¿\n°´\'ÊÇ\'»òÕß\'·ñ\'¡£
-    iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xA1", 6), DF_MB_YESNO, DT_LEFT);
-    if (iRetKey == DF_IDNO)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd1003, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x50 || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3001, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 4 || (binRecv[0] != 0x70 || binRecv[1] != 0x01 || binRecv[2] != 0x07 || binRecv[3] != 0x04))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xA2", 6), DF_MB_OK);//ÊÍ·Å×¤³µÏßÀÂÖ±ÖÁÒÆ³ıÎ»ÖÃ¡£
-    FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xA3", 6), DF_MB_OK, DT_LEFT);//ÊÍ·Å×¤³µÏßÀÂÖ±ÖÁÒÆ³ıÎ»ÖÃ¡£\n¹Ø±Õµã»ğ¿ª¹Ø£¬È»ºóÒÆ³ı×¤³µÏßÀÂ¡£
-
-    return ecRect;
-}
-
-// ÀëºÏÆ÷½áºÏÎ»ÖÃÉè¶¨
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02a24f20(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRetKey;
-    CBinary            binRecv;
-    CBinary            binCmd1003("\x10\x03", 2);
-    CBinary            binCmd224414("\x22\x44\x14", 3);
-    CBinary            binCmd224415("\x22\x44\x15", 3);
-    CBinary            binCmd3B03("\x3B\x03\x00\x00", 4);
-    string            strShow;
-    char            Temp[10];
-
-    FxShowMessageBox(binMenu, binMenu, DF_MB_NOBUTTON);
-    Sleep(1500);
-    //ÊÇ·ñÉèÖÃÀëºÏÆ÷½ÓºÏÎ»ÖÃ£¿\nÊäÈë½ÓºÏÎ»ÖÃ£¬\n°´\'Ö´ĞĞ\'°´Å¥¡£
-    iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xA5", 6), DF_MB_YESNO, DT_LEFT);
-    if (iRetKey == DF_IDNO)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-
-    while (1)
-    {
-        strShow = FxGetStdString(CBinary("\x53\x00\x00\x37\x07\x05", 6));
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd224414, binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x62 || binRecv[1] != 0x44 || binRecv[2] != 0x14))
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() < 5)
-            binRecv += CBinary("\x00\x00", 1);
-        sprintf(Temp, "%.1f", (binRecv[4] * 2.55 + binRecv[3] * 0.01));
-        strShow += Temp;
-        strShow += " %";
-        strShow += "\n";
-        strShow += FxGetStdString(CBinary("\x53\x00\x00\x37\x07\x06", 6));
-
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd224415, binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x62 || binRecv[1] != 0x44 || binRecv[2] != 0x15))
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() < 5)
-            binRecv += CBinary("\x00\x00", 1);
-        sprintf(Temp, "%.1f", (binRecv[4] * 2.55 + binRecv[3] * 0.01));
-        strShow += Temp;
-        strShow += " %";
-
-        iRetKey = FxShowMessageBox(FxGetStdString(binMenu), strShow, DF_MB_OKCANCEL | DF_MB_HAVEBUTTON_DRAW_THEN_RETURN, DT_LEFT);
-        if (iRetKey == DF_IDOK)
-            break;
-        else if (iRetKey == DF_IDCANCEL)
-            return ecRect;
-    }
-
-    CInputCtrl    uiInput;
-    string        strCaption, strPrompt, strMask, strDefault, strMinValue, strMaxValue, strInputValue;
-    char* p;
-    DOUBLE        dValue = 0.0;
-    W_I32        iValue, iValue1, iValue2;
-
-    while (1)
-    {
-        uiInput.SetKeyboardShow(true);
-        strCaption = FxGetStdString(binMenu);
-        strPrompt = FxGetStdString(CBinary("\x53\x00\x00\x01\x01\xA6", 6));
-        strMask = "0000";
-        strDefault = "00.0";
-        strMinValue = "50.1";
-        strMaxValue = "79.9";
-
-        iRetKey = uiInput.ShowCtrl(strCaption, strPrompt, strMask, strDefault, strMinValue, strMaxValue);
-        if (iRetKey == 7)
-            return ecRect;
-        strInputValue = uiInput.GetStringValue();
-        break;
-    }
-
-    dValue = strtod(strInputValue.c_str(), &p);
-    iValue = dValue * 100;
-    iValue1 = iValue / 256;
-    iValue2 = iValue % 256;
-    binCmd3B03.SetByteAt(3, iValue1);
-    binCmd3B03.SetByteAt(2, iValue2);
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd1003, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x50 || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3B03, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x7B || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    strShow = FxGetStdString(CBinary("\x53\x00\x00\x01\x01\xAB", 6));
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd224415, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x62 || binRecv[1] != 0x44 || binRecv[2] != 0x15))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 5)
-        binRecv += CBinary("\x00\x00", 1);
-    sprintf(Temp, "%.1f", (binRecv[4] * 2.55 + binRecv[3] * 0.01));
-    strShow += Temp;
-    strShow += " %";
-    FxShowMessageBox(FxGetStdString(binMenu), strShow);
-
-    return ecRect;
-}
-
-// ÀëºÏÆ÷´«¸ĞÆ÷Ğ£×¼Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02a14f20(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRetKey;
-    CBinary            binRecv;
-    CBinary            binCmd224403("\x22\x44\x03", 3);
-    CBinary            binCmd1003("\x10\x03", 2);
-    CBinary            binCmd3101("\x31\x01\x03\x03", 4);
-    CBinary            binCmd3103("\x31\x03\x03\x03", 4);
-
-    FxShowMessageBox(binMenu, binMenu, DF_MB_NOBUTTON);
-    Sleep(1500);
-    //Ö´ĞĞÀëºÏÆ÷´«¸ĞÆ÷±ê¶¨Ê±\nĞëÊÍ·ÅÀëºÏÆ÷Ì¤°å¡£\nÊÇ·ñÖ´ĞĞÀëºÏÆ÷´«¸ĞÆ÷±ê¶¨£¿\n°´\'ÊÇ\'»òÕß\'·ñ\'¡£
-    iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xAD", 6), DF_MB_YESNO, DT_LEFT);
-    if (iRetKey == DF_IDNO)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd224403, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x62 || binRecv[1] != 0x44 || binRecv[2] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 5)
-        binRecv += CBinary("\x00\x00", 2);
-    if (binRecv[3] != 0 || binRecv[4] != 0)
-    {
-        FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xAE", 6));//ÓÉÓÚ³µÁ¾²»´¦ÓÚÍ£Ö¹×´Ì¬£¬ÎŞ·¨Ö´ĞĞÀëºÏÆ÷´«¸ĞÆ÷±ê¶¨¡£
-        return ecRect;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd1003, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x50 || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3101, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x71 || binRecv[1] != 0x01 || binRecv[2] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    while (1)
-    {
-        if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3103, binRecv)))
-            return ecRect;
-        if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x71 || binRecv[1] != 0x03 || binRecv[2] != 0x03))
-        {
-            FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-            return CErrorCode::EC_COMMUNICATION;
-        }
-        if (binRecv.GetByteCount() < 5)
-            binRecv += CBinary("\x00\x00", 2);
-
-        if (binRecv[4] == 0x01)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xAF", 6), DF_MB_OK, DT_LEFT);//ÀëºÏÆ÷´«¸ĞÆ÷±ê¶¨Íê³É¡£\n¹Ø±Õµã»ğ¿ª¹Ø¡£
-            return ecRect;
-        }
-        else if (binRecv[4] == 0x02)
-        {
-            FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xB0", 6), DF_MB_YES, DT_LEFT);//ÒÑÈ¡ÏûÀëºÏÆ÷´«¸ĞÆ÷±ê¶¨¡£\nÔÙ´ÎÖ´ĞĞ±ê¶¨£¡
-            return ecRect;
-        }
-
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-        Sleep(150);
-    }
-
-    return ecRect;
-}
-
-// ²ÎÊı³õÊ¼»¯Ä£Ê½
-W_ErrorCode CSubaruBaseCanApp::SpecFunsID_02a34f20(CBinary binMenu)
-{
-    W_ErrorCode        ecRect = CErrorCode::EC_SUCCESS;
-    W_I16            iRetKey;
-    CBinary            binRecv;
-    CBinary            binCmd1003("\x10\x03", 2);
-    CBinary            binCmd3B01("\x3B\x01", 2);
-    CBinary            binCmd3B04("\x3B\x04\x00", 3);
-
-    //Ö´ĞĞ²ÎÊı³õÊ¼»¯Ê±ĞëÁ¬½ÓËùÓĞECM¡£\nÊÇ·ñÖ´ĞĞ²ÎÊı³õÊ¼»¯£¿\n°´\'ÊÇ\'»òÕß\'·ñ\'
-    iRetKey = FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xB2", 6), DF_MB_YESNO, DT_LEFT);
-    if (iRetKey == DF_IDNO)
-        return ecRect;
-
-    FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_INFO_ESTAB_VEH_COMMUNICATION, DF_MB_NOBUTTON);
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd1003, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x50 || binRecv[1] != 0x03))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3B01, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 2 || (binRecv[0] != 0x7B || binRecv[1] != 0x01))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-    if (binRecv.GetByteCount() < 3)
-        binRecv += CBinary("\x00", 1);
-    if (binRecv[2] != 0)
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    if (CErrorCode::EC_SUCCESS != (ecRect = SendAndRecive(binCmd3B04, binRecv)))
-        return ecRect;
-    if (binRecv.GetByteCount() < 3 || (binRecv[0] != 0x7B || binRecv[1] != 0x04 || binRecv[2] != 0x00))
-    {
-        FxShowMessageBox(STD_TTL_MSG_INFORMATION, STD_TXT_MSG_COMMFAIL, DF_MB_OK, DT_LEFT);
-        return CErrorCode::EC_COMMUNICATION;
-    }
-
-    FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xB3", 6), DF_MB_NOBUTTON);
-    Sleep(5000);
-    FxShowMessageBox(binMenu, CBinary("\x53\x00\x00\x01\x01\xB4", 6), DF_MB_YES, DT_LEFT);
-
-    return ecRect;
-}
+    if (DF_IDCANCEL == FxShowMessageBox(FxGetStdString(binMenu), strDisPlay, DF_MB_OKCANCEL, DT_
